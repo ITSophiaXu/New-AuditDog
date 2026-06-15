@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抽取步骤 × 4 层映射 — 方法 A vs 方法 B</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+    --L1: #2563eb;   --L1-bg: #dbeafe;   --L1-soft: #eff6ff;
+    --L2: #0d9488;   --L2-bg: #ccfbf1;   --L2-soft: #f0fdfa;
+    --L3: #d97706;   --L3-bg: #fed7aa;   --L3-soft: #fffbeb;
+    --L4: #7c3aed;   --L4-bg: #ede9fe;   --L4-soft: #faf5ff;
+    --L0: #64748b;   --L0-bg: #e2e8f0;   --L0-soft: #f8fafc;
+    --method-a: #7c3aed;
+    --method-b: #0d9488;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; font-size: 13.5px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 30%, #6d28d9 60%, #b45309 100%);
+    color: white; padding: 34px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
+  header .sub { font-size: 13px; opacity: 0.92; line-height: 1.6; max-width: 1000px; }
+  header .meta { margin-top: 14px; display: flex; gap: 22px; font-size: 12px; opacity: 0.85; }
+
+  main { max-width: 1320px; margin: 0 auto; padding: 26px 40px 60px; }
+  section { margin-bottom: 36px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 32px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 22px 0 10px; color: #334155; }
+  h4 { font-size: 13.5px; font-weight: 600; margin: 16px 0 8px; color: #475569; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    background: #f1f5f9; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, monospace; font-size: 12px;
+    color: #be185d;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 12px 16px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 11.5px; line-height: 1.55;
+    overflow-x: auto; margin: 8px 0;
+  }
+  pre .k { color: #c084fc; }
+  pre .s { color: #86efac; }
+  pre .n { color: #fde68a; }
+  pre .c { color: #94a3b8; }
+
+  /* —— pill —— */
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 600; margin-right: 3px;
+    white-space: nowrap;
+  }
+  .pill.L0 { background: var(--L0-bg); color: var(--L0); }
+  .pill.L1 { background: var(--L1-bg); color: var(--L1); }
+  .pill.L2 { background: var(--L2-bg); color: var(--L2); }
+  .pill.L3 { background: var(--L3-bg); color: var(--L3); }
+  .pill.L4 { background: var(--L4-bg); color: var(--L4); }
+  .pill.A { background: #ede9fe; color: var(--method-a); }
+  .pill.B { background: #ccfbf1; color: var(--method-b); }
+  .pill.gray { background: #f1f5f9; color: var(--muted); }
+  .pill.mechanism-machine { background: #ecfeff; color: #0e7490; border: 1px solid #67e8f9; }
+  .pill.mechanism-human { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+  .pill.mechanism-llm { background: #f3e8ff; color: #7c3aed; border: 1px solid #d8b4fe; }
+  .pill.mechanism-hybrid { background: #fce7f3; color: #be185d; border: 1px solid #f9a8d4; }
+
+  /* —— 步骤表格 —— */
+  table.steps {
+    width: 100%; border-collapse: collapse; margin: 12px 0;
+    background: var(--card); border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    font-size: 12px;
+  }
+  table.steps th {
+    background: #f8fafc; padding: 8px 10px; text-align: left;
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid var(--border); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  table.steps td {
+    padding: 8px 10px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.steps tr:last-child td { border-bottom: 0; }
+  table.steps td.step-num {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    color: white; font-weight: 700; text-align: center;
+    width: 32px; font-size: 13px;
+  }
+  table.steps.B td.step-num {
+    background: linear-gradient(135deg, #0d9488, #14b8a6);
+  }
+  table.steps td.action { font-weight: 600; color: var(--text); width: 18%; }
+  table.steps td.tool { font-family: ui-monospace, monospace; color: #be185d; font-size: 11px; }
+  table.steps td.output { font-size: 11.5px; }
+  table.steps td.layer { width: 14%; text-align: center; }
+  table.steps td.mech { width: 8%; text-align: center; }
+
+  /* —— 卡片 —— */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 20px; margin: 12px 0;
+    border-top: 4px solid;
+  }
+  .card.A { border-top-color: var(--method-a); }
+  .card.B { border-top-color: var(--method-b); }
+  .card h4 { margin-top: 0; }
+  .card.A h4 { color: var(--method-a); }
+  .card.B h4 { color: var(--method-b); }
+
+  /* —— 来源链 —— */
+  .chain {
+    display: flex; align-items: center; gap: 6px;
+    flex-wrap: wrap; font-size: 11.5px; margin: 8px 0;
+  }
+  .chain .arrow { color: var(--muted); font-weight: 700; }
+  .chain .node {
+    padding: 3px 8px; border-radius: 4px;
+    background: var(--card); border: 1px solid var(--border);
+    font-family: ui-monospace, monospace; font-size: 11px;
+  }
+  .chain .node.raw { background: #fef3c7; border-color: #fcd34d; }
+  .chain .node.intermediate { background: #e0e7ff; border-color: #a5b4fc; }
+  .chain .node.final { background: #d1fae5; border-color: #6ee7b7; }
+
+  /* —— 维恩 —— */
+  .venn {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+    margin: 14px 0;
+  }
+  .venn .seg {
+    border-radius: 6px; padding: 10px; text-align: center;
+    font-size: 11.5px; line-height: 1.4;
+  }
+  .venn .seg .head { font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .venn .seg.L1 { background: var(--L1-soft); color: var(--L1); border: 1px solid #93c5fd; }
+  .venn .seg.L2 { background: var(--L2-soft); color: var(--L2); border: 1px solid #5eead4; }
+  .venn .seg.L3 { background: var(--L3-soft); color: var(--L3); border: 1px solid #fcd34d; }
+  .venn .seg.L4 { background: var(--L4-soft); color: var(--L4); border: 1px solid #c4b5fd; }
+  .venn .seg.L0 { background: var(--L0-soft); color: var(--L0); border: 1px solid #cbd5e1; }
+
+  /* —— 流程箭头 —— */
+  .pipeline {
+    display: grid; gap: 12px; margin: 14px 0;
+    grid-template-columns: 1fr;
+  }
+  .pipeline-step {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px; position: relative;
+  }
+  .pipeline-step::after {
+    content: "▼"; position: absolute; left: 50%; bottom: -18px;
+    transform: translateX(-50%); color: var(--muted); font-size: 14px;
+  }
+  .pipeline-step:last-child::after { content: ""; }
+  .pipeline-step .ph { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+  .pipeline-step .ph .pn {
+    background: var(--method-a); color: white; border-radius: 50%;
+    width: 22px; height: 22px; display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .pipeline-step.B .ph .pn { background: var(--method-b); }
+  .pipeline-step .ph .title { font-size: 13px; font-weight: 600; }
+
+  /* —— layer-stat box —— */
+  .layer-stats {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+    margin: 12px 0;
+  }
+  .ls-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px; text-align: center;
+  }
+  .ls-card.L1 { border-top: 3px solid var(--L1); }
+  .ls-card.L2 { border-top: 3px solid var(--L2); }
+  .ls-card.L3 { border-top: 3px solid var(--L3); }
+  .ls-card.L4 { border-top: 3px solid var(--L4); }
+  .ls-card.L0 { border-top: 3px solid var(--L0); }
+  .ls-card .v { font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .ls-card.L1 .v { color: var(--L1); }
+  .ls-card.L2 .v { color: var(--L2); }
+  .ls-card.L3 .v { color: var(--L3); }
+  .ls-card.L4 .v { color: var(--L4); }
+  .ls-card.L0 .v { color: var(--L0); }
+  .ls-card .l { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+
+  /* —— callout —— */
+  .callout {
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.info { background: #eff6ff; border-color: var(--L1); }
+  .callout.success { background: #f0fdf4; border-color: #22c55e; }
+  .callout.diff { background: #fef2f2; border-color: #ef4444; }
+  .callout strong { display: inline-block; margin-bottom: 4px; }
+
+  /* —— side-by-side —— */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin: 14px 0;
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* —— v4 专用样式 —— */
+  .v4-banner {
+    background: linear-gradient(135deg, #be185d 0%, #9f1239 50%, #7c2d12 100%);
+    color: white; padding: 22px 28px; border-radius: 10px;
+    margin: 20px 0; box-shadow: 0 4px 12px rgba(190, 24, 93, 0.25);
+  }
+  .v4-banner .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 16px;
+    background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em; margin-bottom: 8px;
+  }
+  .v4-banner h3 { color: white; margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+  .v4-banner p { margin: 6px 0 0; opacity: 0.92; font-size: 13px; line-height: 1.6; }
+
+  .v4-phases {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
+    margin: 16px 0;
+  }
+  .v4-phase {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px; position: relative;
+    border-top: 4px solid;
+    transition: transform 0.15s;
+  }
+  .v4-phase:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.06); }
+  .v4-phase::after {
+    content: "→"; position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%); color: var(--muted); font-size: 18px;
+    font-weight: 700; z-index: 1;
+  }
+  .v4-phase:last-child::after { content: ""; }
+  .v4-phase .pn {
+    display: inline-block; width: 24px; height: 24px;
+    background: var(--method-a); color: white; border-radius: 50%;
+    text-align: center; line-height: 24px; font-weight: 700;
+    font-size: 11px; margin-right: 6px;
+  }
+  .v4-phase.p0 { border-top-color: var(--L1); }
+  .v4-phase.p0 .pn { background: var(--L1); }
+  .v4-phase.p1 { border-top-color: var(--method-b); }
+  .v4-phase.p1 .pn { background: var(--method-b); }
+  .v4-phase.p2 { border-top-color: #d946ef; }
+  .v4-phase.p2 .pn { background: #d946ef; }
+  .v4-phase.p3 { border-top-color: var(--method-a); }
+  .v4-phase.p3 .pn { background: var(--method-a); }
+  .v4-phase.p4 { border-top-color: #f59e0b; }
+  .v4-phase.p4 .pn { background: #f59e0b; }
+  .v4-phase.p5 { border-top-color: var(--L4); }
+  .v4-phase.p5 .pn { background: var(--L4); }
+  .v4-phase .ph-title { font-weight: 600; font-size: 12.5px; margin: 4px 0; }
+  .v4-phase .ph-out { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+
+  .v4-tree {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 14px 18px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 11.5px; line-height: 1.6;
+    margin: 8px 0; overflow-x: auto;
+  }
+  .v4-tree .dir { color: #93c5fd; font-weight: 600; }
+  .v4-tree .new { color: #86efac; }
+  .v4-tree .from-a { color: #c084fc; }
+  .v4-tree .from-b { color: #5eead4; }
+  .v4-tree .annot { color: #94a3b8; }
+
+  .innovation-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    margin: 14px 0;
+  }
+  .innovation-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px;
+    border-left: 5px solid #be185d;
+  }
+  .innovation-card h5 {
+    margin: 0 0 8px; font-size: 13.5px; color: #be185d;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .innovation-card h5 .badge {
+    background: #fce7f3; color: #be185d; padding: 2px 6px;
+    border-radius: 3px; font-size: 10px; font-weight: 700;
+  }
+  .innovation-card p { margin: 4px 0; font-size: 12.5px; }
+  .innovation-card pre { font-size: 10.5px; margin: 6px 0 0; }
+
+  .migration-tbl {
+    margin: 14px 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px;
+  }
+  .migration-tbl table { box-shadow: none; }
+  .migration-tbl h5 {
+    margin: 0 0 10px; font-size: 14px; color: #be185d;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>抽取步骤 × 4 层映射 — 方法 A vs 方法 B</h1>
+  <div class="sub">把方法 A（我们用的）和方法 B（v3 用的）的<strong>每一个抽取动作</strong>拆开看：用什么工具？输入是什么？产物落到 4 层中的哪一层？是机器抽 / LLM 抽 / 人工编码 / 半自动？最后做横向对比，理清两套方法对每一层的处理深度。</div>
+  <div class="meta">
+    <span>📅 2026-05-24</span>
+    <span>📂 backend/data/donglin/extraction_steps_layer_mapping.html</span>
+    <span>🔬 步骤级 × 层级 双维度分析</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ §0 图例 ═══════════ -->
+<section>
+  <h2>§0 图例 — 5 层 + 4 类机制</h2>
+  <p style="margin-bottom: 12px">在 4 层模型之外加一个 <strong>L0 客户事实层</strong>（江苏大王这家公司本身的具体数据，不属于任何"知识"，是"事实"）：</p>
+  <div class="venn">
+    <div class="seg L1"><div class="head">L1</div>国际通用<br>ISA / IFRS</div>
+    <div class="seg L2"><div class="head">L2</div>中国本地化<br>CSA / CAS</div>
+    <div class="seg L3"><div class="head">L3</div>事务所内规<br>东林专有</div>
+    <div class="seg L4"><div class="head">L4</div>审计师经验<br>未捕获</div>
+    <div class="seg L0"><div class="head">L0</div>客户事实<br>江苏大王数据</div>
+  </div>
+  <p style="margin-top: 10px">抽取机制 4 类：</p>
+  <p style="font-size:12.5px">
+    <span class="pill mechanism-machine">⚙ 机器</span> 纯脚本（openpyxl / regex / xml parsing）<br>
+    <span class="pill mechanism-llm">🤖 LLM</span> 大模型生成候选 + 人工 confirm<br>
+    <span class="pill mechanism-human">✍ 人工</span> 审计师 / 工程师手工读取 + 编码<br>
+    <span class="pill mechanism-hybrid">🔀 混合</span> 机器抽 + 人工 review / 人写 + 机器校验
+  </p>
+</section>
+
+<!-- ═══════════ §1 方法 A 全步骤 ═══════════ -->
+<section>
+  <h2>§1 方法 A 全步骤 × 层映射</h2>
+  <p>方法 A 是 <strong>"自上而下设计 TBox + 自下而上填 ABox"</strong>，分 7 步，每步拆解如下：</p>
+
+  <table class="steps">
+    <thead>
+      <tr>
+        <th style="width: 32px">#</th>
+        <th>动作</th>
+        <th>工具 / 脚本</th>
+        <th style="width: 24%">输入 → 输出</th>
+        <th>落到哪一层</th>
+        <th>机制</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="step-num">1</td>
+        <td class="action">设计 TBox 骨架</td>
+        <td class="tool">audit_ontology_implementation_guide.md (769 行)<br>+ Claude/GPT 候选</td>
+        <td class="output">人读 ISA + CSA + 中注协准则文档<br>→ <code>object_types.json</code> (52 OT)<br>+ <code>link_types.json</code> (73 LT)<br>+ <code>action_types.json</code> (11 AT)</td>
+        <td class="layer">
+          <span class="pill L1">L1</span>
+          <span class="pill L2">L2</span>
+          <span class="pill L3">L3 少量</span>
+        </td>
+        <td class="mech"><span class="pill mechanism-llm">🤖 LLM</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">2</td>
+        <td class="action">读 442-sheet 模板</td>
+        <td class="tool">extract_wp.py (52 行)<br>openpyxl + 80 白名单</td>
+        <td class="output">WP_FSR.xlsm (442 sheets)<br>→ stdout markdown 表格</td>
+        <td class="layer"><span class="pill L3">L3</span></td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">3</td>
+        <td class="action">读客户结构化数据</td>
+        <td class="tool">openpyxl.iter_rows(values_only=True)<br>硬编码列偏移</td>
+        <td class="output">input_tb.xlsx / input_aux.xlsx / input_vouchers.xlsx<br>→ Python list[dict]<br>(808 客户 + 12,620 凭证)</td>
+        <td class="layer"><span class="pill L0">L0</span></td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">4</td>
+        <td class="action">读报告 PDF</td>
+        <td class="tool">pdftotext + 人读</td>
+        <td class="output">FSR_2025.pdf + CIT_2025.pdf<br>→ UTF-8 文本<br>→ 提取实控人 / 项目组 / 关联担保等</td>
+        <td class="layer"><span class="pill L0">L0</span> 客户事实<br><span class="pill L3">L3</span> 项目组</td>
+        <td class="mech"><span class="pill mechanism-hybrid">🔀 混合</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">5</td>
+        <td class="action">人工总结 → 10 个 md 知识卡</td>
+        <td class="tool">extracted_knowledge/0X_*.md<br>(1,154 行)</td>
+        <td class="output">把第 2-4 步的原料按 TBox 主题分类:<br>02_engagement / 03_entity / 06_risk_materiality / ...<br><strong>审计语义在此步注入</strong></td>
+        <td class="layer">
+          <span class="pill L0">L0</span>
+          <span class="pill L3">L3</span>
+          按 <span class="pill L1">L1</span>/<span class="pill L2">L2</span> TBox 分类
+        </td>
+        <td class="mech"><span class="pill mechanism-human">✍ 人工</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">6</td>
+        <td class="action">编码 ABox + Rule</td>
+        <td class="tool">build_instances.py (582 行)<br>Python 字面量 + add()/link()</td>
+        <td class="output">10 个 md 知识卡<br>→ object_instances.json (114 实例)<br>+ link_instances.json (139 链接)<br>+ 14 条 AuditRule (含 source 字段)</td>
+        <td class="layer">
+          <span class="pill L0">L0</span> 实例<br>
+          <span class="pill L2">L2</span> 5 条规则<br>
+          <span class="pill L3">L3</span> 7 条规则
+        </td>
+        <td class="mech"><span class="pill mechanism-human">✍ 人工</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">7</td>
+        <td class="action">Agent 填稿 + Provenance</td>
+        <td class="tool">agent_fill.py (1500 行)<br>prov.add(cell_key, source_kind, refs)</td>
+        <td class="output">5 张底稿 sheet_data 填完<br>+ 4,250 条单元格追溯<br>每条指回 OT / AT / Rule</td>
+        <td class="layer">
+          <span class="pill L0">L0</span> 数据来源<br>
+          <span class="pill L1">L1</span>+<span class="pill L2">L2</span> 用 OT/AT<br>
+          <span class="pill L3">L3</span> 用 Rule
+        </td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>方法 A 的产物按层级汇总</h3>
+  <div class="layer-stats">
+    <div class="ls-card L1"><div class="v">~18</div><div class="l">L1 OT (跨国通用)</div></div>
+    <div class="ls-card L2"><div class="v">~12</div><div class="l">L2 OT + 5 规则</div></div>
+    <div class="ls-card L3"><div class="v">~22</div><div class="l">L3 OT + 7 规则</div></div>
+    <div class="ls-card L4"><div class="v">0</div><div class="l">L4 (未捕获)</div></div>
+    <div class="ls-card L0"><div class="v">114</div><div class="l">L0 实例 (江苏大王)</div></div>
+  </div>
+
+  <div class="callout info">
+    <strong>方法 A 的来源链 (单条规则示例)</strong>
+    <div class="chain">
+      <span class="node raw">CSA 1311 准则文档</span>
+      <span class="arrow">→</span>
+      <span class="node intermediate">audit_ontology_implementation_guide.md</span>
+      <span class="arrow">→</span>
+      <span class="node intermediate">07_audit_procedures.md (人工写)</span>
+      <span class="arrow">→</span>
+      <span class="node intermediate">build_instances.py 字面量</span>
+      <span class="arrow">→</span>
+      <span class="node final">AR-RULE-001 (source="无锡东林")</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §2 方法 B 全步骤 ═══════════ -->
+<section>
+  <h2>§2 方法 B 全步骤 × 层映射</h2>
+  <p>方法 B 是 <strong>"自下而上从 Excel/VBA 抽证据 + 反推 TBox"</strong>，分 5 个 Team 阶段，每阶段拆解如下：</p>
+
+  <table class="steps B">
+    <thead>
+      <tr>
+        <th style="width: 32px">#</th>
+        <th>动作</th>
+        <th>工具 / 脚本</th>
+        <th style="width: 24%">输入 → 输出</th>
+        <th>落到哪一层</th>
+        <th>机制</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="step-num">0</td>
+        <td class="action">Team 0 Probe</td>
+        <td class="tool">explorer_probe.md</td>
+        <td class="output">探测 Explorer 接受的格式<br>→ ACCEPTED_FORMAT = custom-json</td>
+        <td class="layer"><span class="pill gray">meta</span></td>
+        <td class="mech"><span class="pill mechanism-human">✍ 人工</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">1</td>
+        <td class="action">Team 1 Critique</td>
+        <td class="tool">critique_v2.md (人读 + 评判)</td>
+        <td class="output">上一版 (v2) 的 68 Class + 60 OP + 60 DP<br>→ 逐条 ✅ Keep / ⚠ Modify / ❌ Drop 49 条判断</td>
+        <td class="layer"><span class="pill gray">meta</span></td>
+        <td class="mech"><span class="pill mechanism-human">✍ 人工</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">2a</td>
+        <td class="action">Team 2 抽 Excel 公式</td>
+        <td class="tool">extract_excel.py (~200 行)<br>openpyxl + regex REF_RE</td>
+        <td class="output">audit Knowledge/ 下所有 .xlsx/.xlsm<br>→ cell_formulas.jsonl (106,614 行)<br>+ cross_sheet_edges.jsonl (formula 部分)</td>
+        <td class="layer">
+          <span class="pill L3">L3</span>
+          (东林模板里的公式)
+        </td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">2b</td>
+        <td class="action">Team 2 抽 VBA 代码</td>
+        <td class="tool">extract_vba.py (~150 行)<br>oletools + regex SUB_RE / SHEET_TOKEN</td>
+        <td class="output">.xlsm 的 VBA 源代码<br>→ vba_account_map.jsonl (369 行)<br>+ cross_sheet_edges.jsonl (VBA 部分追加)</td>
+        <td class="layer"><span class="pill L3">L3</span></td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">3a</td>
+        <td class="action">Team 3 设计 TBox</td>
+        <td class="tool">schema_v3.md<br>(每条带 EVIDENCE jsonl 行号)</td>
+        <td class="output">20 Class + 10 OP + 12 DP<br>每条 Class 必须能在 jsonl 找到证据 (cell_formulas.jsonl#L14607-L14625)</td>
+        <td class="layer">
+          <span class="pill L1">L1</span> 13 个 (Engagement/Account/Voucher 等)<br>
+          <span class="pill L3">L3</span> 7 个 (FillRule/SummarySheet 等)
+        </td>
+        <td class="mech"><span class="pill mechanism-hybrid">🔀 混合</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">3b</td>
+        <td class="action">Team 3 设计 FillRule 模板</td>
+        <td class="tool">schema_v3.md §6</td>
+        <td class="output">37 条 FillRule 候选<br>5 种 kind: formula / vba-copy / vba-aggregate / cross-sheet / manual</td>
+        <td class="layer"><span class="pill L3">L3</span></td>
+        <td class="mech"><span class="pill mechanism-human">✍ 人工</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">4a</td>
+        <td class="action">Team 4 生成 TBox Turtle</td>
+        <td class="tool">build_tbox.py<br>(rdflib 写 .ttl)</td>
+        <td class="output">tbox.ttl<br>(20 Class + 10 OP + 12 DP<br>+ 每条带 rdfs:label @en/@zh 双语)</td>
+        <td class="layer">
+          <span class="pill L1">L1</span>
+          <span class="pill L3">L3</span>
+        </td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">4b</td>
+        <td class="action">Team 4 生成 ABox + FillRule</td>
+        <td class="tool">build_abox.py / build_fill_rules.py</td>
+        <td class="output">abox.ttl (5 Account + 5 WP + 7 Template 等)<br>+ fill_rules.ttl (37 FillRule, 每条带 hasEvidenceRef)</td>
+        <td class="layer">
+          <span class="pill L0">L0</span> 一点<br>
+          <span class="pill L3">L3</span> 大头
+        </td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">4c</td>
+        <td class="action">Team 4 验证</td>
+        <td class="tool">validate.py (18 个 check)</td>
+        <td class="output">rdflib 解析 + bilingual label / domain-range / individual-class 三联校验</td>
+        <td class="layer"><span class="pill gray">meta</span></td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+      <tr>
+        <td class="step-num">4d</td>
+        <td class="action">Team 4 派生 Explorer 数据</td>
+        <td class="tool">derive_explorer_feed.py</td>
+        <td class="output">.ttl → custom-json bundle (object_types/link_types/instances)</td>
+        <td class="layer"><span class="pill gray">meta</span></td>
+        <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>方法 B 的产物按层级汇总</h3>
+  <div class="layer-stats">
+    <div class="ls-card L1"><div class="v">~13</div><div class="l">L1+L2 Class (Engagement/Account/...)</div></div>
+    <div class="ls-card L2"><div class="v">0</div><div class="l">L2 显式 (无独立)</div></div>
+    <div class="ls-card L3"><div class="v">7 + 37</div><div class="l">L3 Class + FillRule</div></div>
+    <div class="ls-card L4"><div class="v">0</div><div class="l">L4 (未捕获)</div></div>
+    <div class="ls-card L0"><div class="v">~12</div><div class="l">L0 个体 (Account/WP)</div></div>
+  </div>
+
+  <div class="callout info">
+    <strong>方法 B 的来源链 (单条 FillRule 示例)</strong>
+    <div class="chain">
+      <span class="node raw">东林 WP_FSR.xlsm</span>
+      <span class="arrow">→</span>
+      <span class="node intermediate">extract_excel.py 扫公式</span>
+      <span class="arrow">→</span>
+      <span class="node intermediate">cell_formulas.jsonl#L14614</span>
+      <span class="arrow">→</span>
+      <span class="node intermediate">schema_v3.md §6 (人工选公式)</span>
+      <span class="arrow">→</span>
+      <span class="node final">:fillrule-a6-c11-from-a62 (Turtle)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §3 横向对比 ═══════════ -->
+<section>
+  <h2>§3 横向对比 — 每一层的处理深度</h2>
+
+  <table class="steps">
+    <thead>
+      <tr>
+        <th style="width: 12%">层级</th>
+        <th style="width: 36%"><span class="pill A">方法 A</span> 怎么产出</th>
+        <th style="width: 36%"><span class="pill B">方法 B</span> 怎么产出</th>
+        <th style="width: 16%">谁更强</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill L1">L1</span> 国际通用</td>
+        <td>
+          <strong>主动设计</strong>：人读 ISA / IFRS 文档 + LLM 候选 → 18 个 OT (AuditedEntity/Engagement/TrialBalance/Account/Voucher/Assertion 6 子类 / 11 AT)<br>
+          <span class="pill mechanism-llm">🤖 LLM</span> <span class="pill mechanism-human">✍ 人</span>
+        </td>
+        <td>
+          <strong>反推</strong>：看 .xlsm 公式存在性 → schema_v3 § §1 决定建 13 个 Class<br>
+          但因为 Excel 公式不直接体现"认定 Assertion" → 这层 B 相对薄<br>
+          <span class="pill mechanism-machine">⚙ 机器</span> 提供证据 + <span class="pill mechanism-human">✍ 人</span> 决定 Class
+        </td>
+        <td><span class="pill A">A 强</span><br>主动设计完整</td>
+      </tr>
+      <tr>
+        <td><span class="pill L2">L2</span> 中国本地化</td>
+        <td>
+          <strong>显式建模</strong>：MaterialityLevel(PM/TE/SUM)、RelatedPartyRisk、AuditOpinion 4 类、ReviewLevel(三级复核)<br>
+          + 5 条 L2 规则: TAX-RULE-001 / CASH-RULE-001/002 / REV-RULE-001 / FA-RULE-001<br>
+          每条 <code>source="中注协"</code> / <code>"财政部"</code>
+        </td>
+        <td>
+          <strong>缺位</strong>：tbox.ttl 不区分 L1/L2，没有 PM/TE/SUM 一等公民 Class<br>
+          没有显式准则映射 (CSA 1221 / CAS 36 等)<br>
+          所有公式都被当成 L3 FillRule 处理
+        </td>
+        <td><span class="pill A">A 强</span><br>B 完全缺位</td>
+      </tr>
+      <tr>
+        <td><span class="pill L3">L3</span> 东林事务所</td>
+        <td>
+          <strong>22 OT + 7 规则</strong>，但是<strong>人工字面量编码</strong><br>
+          5 笔关联担保 / AR-RULE-001 等都是 Python 字面量<br>
+          换一家所就要重写<br>
+          <span class="pill mechanism-human">✍ 人</span> 100%
+        </td>
+        <td>
+          <strong>真自动抽取</strong>：106,614 公式 + 369 VBA + 29,503 跨表边<br>
+          37 条 FillRule 含 evidenceRef 行号<br>
+          换新所 .xlsm 重跑 extract_excel.py 即可<br>
+          <span class="pill mechanism-machine">⚙ 机器</span> 100%
+        </td>
+        <td><span class="pill B">B 强</span><br>可重跑可校验</td>
+      </tr>
+      <tr>
+        <td><span class="pill L4">L4</span> 审计师经验</td>
+        <td>
+          <strong>暂无捕获</strong>，但 ChatPanel 对话面板是潜在入口
+        </td>
+        <td>
+          <strong>暂无捕获</strong>，VBA 抽出的"审计师手写宏"算半个证据
+        </td>
+        <td><span class="pill gray">都缺</span></td>
+      </tr>
+      <tr>
+        <td><span class="pill L0">L0</span> 客户事实</td>
+        <td>
+          <strong>114 个 ObjectInstance</strong> (江苏大王 / 杨春平 / G-001~G-005 / 12,620 凭证)<br>
+          客户原始数据完整 ETL
+        </td>
+        <td>
+          <strong>~12 个个体</strong> (Account / WP / Template)<br>
+          客户原始数据 <strong>没读</strong> (只读模板公式, 不读 TB/Aux/Voucher)
+        </td>
+        <td><span class="pill A">A 强</span><br>有完整客户数据</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout diff">
+    <strong>核心差异 (一图说清)</strong>
+    <p style="margin: 8px 0 0; font-size: 13px">
+      A 的工作量花在了 <strong>"L1+L2 把准则建模成 TBox + L3 把东林材料人工翻译"</strong> 两端 →
+      所以 L1/L2 强、L0 全 (客户实例完整)、但 L3 不可重跑。<br>
+      B 的工作量花在了 <strong>"L3 自动化抽取"</strong> 一端 →
+      所以 L3 可重跑、证据强、但 L1/L2 显得弱、L0 几乎没读客户原始数据。
+    </p>
+    <p style="margin: 8px 0 0; font-size: 13px">
+      两套方法本质上 <strong>选择了 4 层的不同切片优化</strong>，没有冲突，但目前都缺 L4。
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════ §4 一条规则在两套方法里的完整溯源 ═══════════ -->
+<section>
+  <h2>§4 同一条规则在 A / B 两套方法里的完整溯源</h2>
+  <p>挑 <code>AR-RULE-001</code>「应收账款贷方余额重分类」这条规则，对比两套方法分别怎么处理：</p>
+
+  <div class="two-col">
+    <div class="card A">
+      <h4><span class="pill A">方法 A</span> 这条规则怎么进本体</h4>
+      <ol style="font-size: 12.5px">
+        <li><strong>步骤 1</strong>：人读 CSA 1311 应收账款审计准则 + 东林 2024-01 内部沉淀 → 写到 implementation_guide.md</li>
+        <li><strong>步骤 5</strong>：人写 <code>07_audit_procedures.md</code> 把"客户级期末贷方余额需重分类"明确为东林做法</li>
+        <li><strong>步骤 6</strong>：build_instances.py line 485-489 编码：
+<pre><span class="s">"AR-RULE-001"</span>, <span class="s">"应收账款贷方余额重分类"</span>, <span class="s">"应收应付"</span>,
+<span class="s">"IF customer.closing_balance &lt; 0 THEN 重分类至 2203"</span>,
+<span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"无锡东林"</span>, <span class="s">"2024-01"</span>,
+<span class="s">"客户级期末贷方余额 = 客户预付/超付 → 移到「预收款项」"</span>,
+<span class="s">"closing_cr &gt; 0"</span>  <span class="c"># formal_expression</span></pre></li>
+        <li><strong>步骤 7</strong>：agent_fill.py 跑 A6 时, FOR 每个客户 IF closing_cr&gt;0 THEN 触发 → 153 客户命中, 累计 ¥7.11M 建议重分类</li>
+      </ol>
+      <p style="font-size: 12px; color: var(--muted); margin-top: 10px;">
+        <strong>层级标签</strong>：<span class="pill L2">L2 法理</span> CSA 1311 → <span class="pill L3">L3 形式化</span> 东林阈值 → <span class="pill L0">L0 实例化</span> 江苏大王 153 命中
+      </p>
+    </div>
+
+    <div class="card B">
+      <h4><span class="pill B">方法 B</span> 这条规则怎么进本体</h4>
+      <ol style="font-size: 12.5px">
+        <li><strong>步骤 2a</strong>: extract_excel.py 扫到 A6-2!I8 的公式 <code>=D8+G8-H8</code> 并把这条写到 cell_formulas.jsonl#L14627</li>
+        <li><strong>步骤 3a</strong>：Team 3 设计 schema_v3.md 时, 看 A6-2 第 I 列 = 期初+借-贷 即"调整后" → 决定建 <code>:AuditAdjustingEntry</code> Class</li>
+        <li><strong>步骤 4b</strong>：build_fill_rules.py 生成:
+<pre>:fillrule-a62-i8-from-d8g8h8 a :FillRule ;
+    :hasRuleKind <span class="s">"formula"</span> ;
+    :hasFormulaExpression <span class="s">"=D8+G8-H8"</span> ;
+    :hasEvidenceRef <span class="s">"cell_formulas.jsonl#L14627"</span> ;
+    :outputField :field-a62-i8 ;
+    :inputField :field-a62-d8, :field-a62-g8, :field-a62-h8 .</pre></li>
+        <li><strong>缺失</strong>：没有规则说"如果 D8+G8-H8 &lt; 0 触发重分类" → 这是业务语义，需要叠 A 才能补</li>
+      </ol>
+      <p style="font-size: 12px; color: var(--muted); margin-top: 10px;">
+        <strong>层级标签</strong>：<span class="pill L3">L3 公式</span> A6-2!I8 的求值规则 (机械的, 不知道是"重分类")<br>
+        <strong>未覆盖</strong>：L1+L2 的 CSA 1311 / 重分类语义
+      </p>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <strong>同一条业务规则的两个视角</strong>
+    <ul style="margin-top: 6px">
+      <li><strong>A 知道</strong> "这是 CSA 1311 应收账款审计准则要求的，东林 2024-01 沉淀了 closing_cr&gt;0 形式化阈值"</li>
+      <li><strong>B 知道</strong> "A6-2!I8 这格 = D8+G8-H8 (Excel 公式) — 这是底稿模板里 hardcoded 的算法"</li>
+      <li><strong>完整 = A + B</strong>: A 提供 <em>为什么这样算</em>，B 提供 <em>具体在哪格算的</em></li>
+      <li><strong>如果只有 B</strong>，给客户看 A6-2!I8 的公式他知道是怎么算的，但不知道"为什么算" → 无法 review</li>
+      <li><strong>如果只有 A</strong>，知道"重分类是规则"但不知道<em>东林模板把这步放在了 A6-2 的 I 列</em> → 写回 .xlsm 时找不到位置</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════ §5 一条 OT 在两套方法里的完整对比 ═══════════ -->
+<section>
+  <h2>§5 同一个 ObjectType 在 A / B 两套方法里的完整对比</h2>
+  <p>挑 <code>WorkingPaper</code> (底稿实例) 这个 OT：</p>
+
+  <table class="steps">
+    <thead>
+      <tr>
+        <th style="width: 16%">维度</th>
+        <th style="width: 42%"><span class="pill A">方法 A</span></th>
+        <th style="width: 42%"><span class="pill B">方法 B</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>TBox 定义来源</td>
+        <td>implementation_guide.md 设计 → JSON 编辑</td>
+        <td>schema_v3.md 设计 (EVIDENCE: payload.object-types.json#WorkingPaper)</td>
+      </tr>
+      <tr>
+        <td>属性 (DataProperty)</td>
+        <td>index / name / template_code / engagement_code / sheet_data / cross_references / audit_conclusion / review_status (8 个, 业务化)</td>
+        <td>hasFilePath / hasSheetName (2 个, 文件化)</td>
+      </tr>
+      <tr>
+        <td>实例数量</td>
+        <td>67 个 (5 已填 + 62 骨架)</td>
+        <td>5 个 (江苏大王 A6/A6-2/A6-99/B6-2/ZK4)</td>
+      </tr>
+      <tr>
+        <td>实例属性</td>
+        <td>含完整 sheet_data + Provenance + 审计结论</td>
+        <td>只有 hasFilePath 指向 .xlsm 文件路径</td>
+      </tr>
+      <tr>
+        <td>跨表引用</td>
+        <td>cross_references[] 字段 (不强制)</td>
+        <td>:rollsUpTo / :dependsOn / :feedsBack 显式 ObjectProperty</td>
+      </tr>
+      <tr>
+        <td>层级归属</td>
+        <td><span class="pill L1">L1</span> 通用 + <span class="pill L3">L3</span> 东林模板字段</td>
+        <td><span class="pill L1">L1</span> 通用 + 含 <span class="pill L3">L3</span> SummarySheet/DetailSheet/AggregationSheet 子类</td>
+      </tr>
+      <tr>
+        <td>面向场景</td>
+        <td>给 Agent 填稿用 (业务驱动)</td>
+        <td>给审计师查"这数从哪格来" (证据驱动)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════ §6 启示 ═══════════ -->
+<section>
+  <h2>§6 启示 — 这套分析回答了 3 个问题</h2>
+
+  <ol>
+    <li>
+      <strong>"哪些层是机器抽出来的，哪些是人脑里来的"</strong> —
+      <span class="pill L3">L3 东林专有</span> 这层在 A 里全是人脑/字面量, 在 B 里全是机器抽。
+      <span class="pill L1">L1</span>+<span class="pill L2">L2</span> 在 A 里是人 + LLM 设计, 在 B 里是人从证据反推。
+      <span class="pill L0">L0 客户事实</span> 在 A 里有 (openpyxl 读 TB/Aux/Voucher), 在 B 里几乎没读 (B 只读模板不读数据)。
+    </li>
+    <li>
+      <strong>"为什么需要 A + B 才能闭环"</strong> —
+      A 缺<span class="pill L3">L3</span>抽取自动化, B 缺<span class="pill L1">L1</span>+<span class="pill L2">L2</span>准则映射 + <span class="pill L0">L0</span>客户事实。
+      A 知道"为什么这样填", B 知道"具体填到哪格"。
+      <strong>A 算数, B 写到 .xlsm 模板里。</strong>
+    </li>
+    <li>
+      <strong>"L4 怎么补"</strong> —
+      两种方法都缺 L4, 但有不同进入路径:
+      <ul style="font-size: 12.5px; margin-top: 4px">
+        <li>A 的入口: ChatPanel 对话日志 + 用户改写 Agent 填的内容</li>
+        <li>B 的入口: VBA 源码里"审计师定制的宏" (369 条 VBA assignment 部分含审计师手写偏好)</li>
+        <li>合流: <strong>双管道 LearningInbox</strong> — 对话事件 + VBA 模式 → ProposedRule → 累积 ≥ 3 次 → 审计师 sign-off → 升级 L3</li>
+      </ul>
+    </li>
+  </ol>
+
+  <div class="callout">
+    <strong>给侯佳成展示这张表的话术</strong>
+    <p style="margin: 8px 0 0; font-size: 13px">
+      "侯老师，这是我对两套抽取方法的步骤拆解。
+      <strong>我们用的方法 A</strong> 强在 L1+L2 准则建模 + L0 客户数据 (Agent 能算能填)，
+      <strong>v3 用的方法 B</strong> 强在 L3 自动抽东林模板 (可重跑 + 证据链)。
+      把两个串起来 = 真正能跑生产的本体: A 算数, B 把数字写回你熟悉的 .xlsm 模板，
+      再加 L4 经验沉淀, 就是你跟我说的<strong>『审计本体长期资产化』</strong>的路径。"
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════ §7 v4 设计 ═══════════ -->
+<section>
+  <h2>§7 v4 设计 — 把 A + B + L4 合并成统一管线</h2>
+
+  <div class="v4-banner">
+    <span class="tag">PROPOSED · v4</span>
+    <h3>统一抽取与本体管线</h3>
+    <p>融合方法 A 的<strong>业务驱动 (L1+L2 准则 + L0 客户数据 + AuditRule formal_expression)</strong> +
+       方法 B 的<strong>证据驱动 (L3 自动抽取 + W3C Turtle + evidenceRef)</strong> +
+       新增的<strong>L4 经验捕获双管道 (ChatPanel 改写事件 + VBA 个性化模式)</strong>。
+       支持跨所部署：L1+L2 复用，L3 换 audit Knowledge/ 目录重跑，L0 换客户数据重跑，L4 各所独立累积。</p>
+  </div>
+
+  <h3>7.1 v4 流水线 (6 阶段)</h3>
+
+  <div class="v4-phases">
+    <div class="v4-phase p0">
+      <span class="pn">0</span><span class="ph-title">TBox 设计</span>
+      <div class="ph-out">
+        ✍ 人工 + 🤖 LLM<br>
+        ISA / CSA 准则 → 52 OT + 73 LT + 11 AT<br>
+        每个 OT 带 <code>_layer: L1/L2/L3</code><br>
+        输出: tbox.ttl + tbox.json
+      </div>
+    </div>
+    <div class="v4-phase p1">
+      <span class="pn">1</span><span class="ph-title">证据自动抽取</span>
+      <div class="ph-out">
+        ⚙ 机器<br>
+        4 个 extractor (Excel/VBA/PDF/TB)<br>
+        → 4 个 jsonl 证据库<br>
+        每行带 #L&lt;n&gt; 行号
+      </div>
+    </div>
+    <div class="v4-phase p2">
+      <span class="pn">2</span><span class="ph-title">知识对齐</span>
+      <div class="ph-out">
+        🤖 LLM-assisted<br>
+        给每条 jsonl 行打 TBox 标签<br>
+        → aligned_facts.jsonl<br>
+        (新, 替代 A 的 markdown 步骤)
+      </div>
+    </div>
+    <div class="v4-phase p3">
+      <span class="pn">3</span><span class="ph-title">ABox + Rule 生成</span>
+      <div class="ph-out">
+        ⚙ 机器 + ✍ 人工<br>
+        → abox.ttl + instances.json<br>
+        → fill_rules.ttl<br>
+        + 14 条 AuditRule (人编 formal_expression)
+      </div>
+    </div>
+    <div class="v4-phase p4">
+      <span class="pn">4</span><span class="ph-title">Agent 填稿 + 双轨追溯</span>
+      <div class="ph-out">
+        ⚙ Agent<br>
+        每填一格 = source_kind +<br>
+        ontology_refs + <strong>evidence_ref</strong><br>+ <strong>layer_chain</strong>
+      </div>
+    </div>
+    <div class="v4-phase p5">
+      <span class="pn">5</span><span class="ph-title">L4 经验捕获</span>
+      <div class="ph-out">
+        🔀 双管道<br>
+        ChatPanel 改写事件 + VBA 个性化模式<br>
+        → ProposedRule → 升级 L3
+      </div>
+    </div>
+  </div>
+
+  <h3>7.2 v4 4 个核心创新</h3>
+
+  <div class="innovation-grid">
+    <div class="innovation-card">
+      <h5><span class="badge">创新 1</span>每个产物都带 <code>_layer</code> 字段</h5>
+      <p>解决跨所迁移痛点。<strong>L1+L2 是公司资产</strong>，<strong>L3 是事务所资产</strong>，<strong>L4 是审计师个人资产</strong>。</p>
+<pre><span class="c">// 每个 ObjectType / Rule / Instance 强制带 _layer</span>
+{
+  <span class="s">"code"</span>: <span class="s">"MaterialityLevel"</span>,
+  <span class="s">"_layer"</span>: <span class="s">"L2"</span>,
+  <span class="s">"_layer_basis"</span>: <span class="s">"CSA 1221"</span>,
+  <span class="s">"_source"</span>: <span class="s">"中注协 2023-12"</span>
+}
+{
+  <span class="s">"code"</span>: <span class="s">"AR-RULE-001"</span>,
+  <span class="s">"_layer"</span>: <span class="s">"L3:donglin"</span>,
+  <span class="s">"_layer_basis"</span>: <span class="s">"CAS 22 + 东林 2024-01"</span>
+}</pre>
+    </div>
+
+    <div class="innovation-card">
+      <h5><span class="badge">创新 2</span>每个 ABox + FillRule 强制 <code>_evidence</code></h5>
+      <p>借鉴方法 B 的 evidenceRef。<strong>杜绝臆想</strong>：每条都能指回某条 jsonl 行号。Review 时一键定位。</p>
+<pre><span class="c">// 每个实例都附带证据链</span>
+{
+  <span class="s">"code"</span>: <span class="s">"G-001"</span>, <span class="c">// 关联担保</span>
+  <span class="s">"type"</span>: <span class="s">"RelatedPartyGuarantee"</span>,
+  <span class="s">"_evidence"</span>: [
+    <span class="s">"pdf_facts.jsonl#L42"</span>,
+    <span class="s">"cell_formulas.jsonl#L18972"</span>
+  ],
+  <span class="s">"data"</span>: { <span class="s">"creditor"</span>: <span class="s">"南京银行"</span>, ... }
+}</pre>
+    </div>
+
+    <div class="innovation-card">
+      <h5><span class="badge">创新 3</span>Cell Provenance 加 <code>layer_chain</code></h5>
+      <p>每填一格记录"从哪一层准则到哪一层规则到哪个客户数据"完整链路。审计师 review 时知道<strong>这一格为什么填这个数</strong>。</p>
+<pre>prov.add(
+  cell_key=<span class="s">"customer_detail.rows[0].closing_dr"</span>,
+  value=<span class="n">685088.49</span>,
+  source_kind=<span class="s">"Aux"</span>,
+  ontology_refs=[<span class="s">"📦 OT::SubLedger"</span>],
+  evidence_ref=<span class="s">"tb_facts.jsonl#L1247"</span>,  <span class="c">// 新</span>
+  layer_chain=[                              <span class="c">// 新</span>
+    {<span class="s">"layer"</span>:<span class="s">"L1"</span>, <span class="s">"basis"</span>:<span class="s">"ISA 530"</span>},
+    {<span class="s">"layer"</span>:<span class="s">"L2"</span>, <span class="s">"basis"</span>:<span class="s">"CSA 1101"</span>},
+    {<span class="s">"layer"</span>:<span class="s">"L3"</span>, <span class="s">"basis"</span>:<span class="s">"东林辅助账标准"</span>},
+    {<span class="s">"layer"</span>:<span class="s">"L0"</span>, <span class="s">"basis"</span>:<span class="s">"江苏大王 1122 辅助账"</span>}
+  ],
+  rule_code=<span class="k">None</span>,
+)</pre>
+    </div>
+
+    <div class="innovation-card">
+      <h5><span class="badge">创新 4</span>L4 经验捕获 — 双管道 LearningInbox</h5>
+      <p>把审计师隐性知识沉淀为本体资产。两个入口：<strong>对话改写事件</strong> + <strong>VBA 个性化模式</strong>。</p>
+<pre><span class="c">// 入口 A: 监听 ExcelGridView 上的用户改写</span>
+on_cell_edit({
+  before: <span class="n">685088.49</span>, after: <span class="n">685000</span>,
+  user: <span class="s">"侯佳成"</span>, reason: <span class="s">"四舍五入到整千"</span>,
+  cell: <span class="s">"A6.summary.tb_closing"</span>
+})
+  → chat_change_events.jsonl
+
+<span class="c">// 入口 B: 检测 VBA 里跟标准模式不一致的"个性化"</span>
+detect_personal_vba_patterns(file)
+  → vba_personal_patterns.jsonl
+
+<span class="c">// 累积 → 升级</span>
+propose_rules.py (count ≥ <span class="n">3</span>)
+  → proposed_rules.jsonl
+  → 审计师 sign-off
+  → 写入 AuditRule(_layer=<span class="s">"L4:侯佳成"</span>)
+  → 累积一段时间后可升级为 <span class="s">"L3:donglin"</span> 事务所规则</pre>
+    </div>
+  </div>
+
+  <h3>7.3 v4 文件结构</h3>
+
+<div class="v4-tree"><span class="dir">ontology_build_v4/</span>
+├── <span class="dir">tbox/</span>                                <span class="annot"># L1+L2 跨所复用资产</span>
+│   ├── <span class="from-a">tbox.ttl</span>                        <span class="annot"># 52 OT + 73 LT + 11 AT (借鉴 B 的 Turtle)</span>
+│   ├── <span class="from-a">tbox.json</span>                       <span class="annot"># 同上, JSON 双轨 (借鉴 A)</span>
+│   └── <span class="new">tbox_donglin_ext.ttl</span>            <span class="annot"># 东林 L3 OT 扩展 (新, 显式拆出)</span>
+│
+├── <span class="dir">abox/</span>                                <span class="annot"># 实例数据</span>
+│   ├── <span class="from-a">abox_l0_jsdw.ttl</span>                <span class="annot"># L0 江苏大王客户事实</span>
+│   ├── <span class="from-a">abox_l0_jsdw.json</span>               <span class="annot"># 同上 JSON 双轨</span>
+│   └── <span class="new">abox_l3_donglin.ttl</span>             <span class="annot"># L3 东林 ABox (从 jsonl 自动抽 + 人工 review)</span>
+│
+├── <span class="dir">rules/</span>                               <span class="annot"># 规则分层</span>
+│   ├── <span class="new">rules_l2_csa.ttl</span>                <span class="annot"># L2 中注协/财政部 5 条规则 (含 formal_expression)</span>
+│   ├── <span class="new">rules_l3_donglin.ttl</span>            <span class="annot"># L3 东林 7 条内规</span>
+│   └── <span class="from-b">fill_rules.ttl</span>                  <span class="annot"># L3 公式 FillRule (从 .xlsm 抽, 含 evidenceRef)</span>
+│
+├── <span class="dir">evidence/</span>                            <span class="annot"># 证据库 (B 的输出 + A 的客户数据)</span>
+│   ├── <span class="from-b">cell_formulas.jsonl</span>             <span class="annot"># 106,614 行 (B 抽)</span>
+│   ├── <span class="from-b">vba_account_map.jsonl</span>           <span class="annot"># 369 行 (B 抽)</span>
+│   ├── <span class="from-b">cross_sheet_edges.jsonl</span>         <span class="annot"># 29,503 行 (B 抽)</span>
+│   ├── <span class="new">pdf_facts.jsonl</span>                 <span class="annot"># PDF 报告抽出来的事实 (新, LLM 辅助)</span>
+│   ├── <span class="from-a">tb_facts.jsonl</span>                  <span class="annot"># 客户 TB/Aux/Voucher 结构化 (整理自 A)</span>
+│   └── <span class="new">aligned_facts.jsonl</span>             <span class="annot"># 用 LLM 给每条 jsonl 打 TBox 标签 (新)</span>
+│
+├── <span class="dir">provenance/</span>                          <span class="annot"># 填稿追溯 (A 的输出强化)</span>
+│   ├── <span class="from-a">cell_provenance.json</span>            <span class="annot"># 4,250 单元格追溯 (含 layer_chain)</span>
+│   └── <span class="new">cell_provenance.ttl</span>             <span class="annot"># 同上 Turtle (新, 给审计师 SPARQL 查)</span>
+│
+├── <span class="dir">learning/</span>                            <span class="annot"># L4 经验沉淀 (创新)</span>
+│   ├── <span class="new">chat_change_events.jsonl</span>        <span class="annot"># 入口 A: 用户改写 Agent 填的内容</span>
+│   ├── <span class="new">vba_personal_patterns.jsonl</span>     <span class="annot"># 入口 B: VBA 个性化模式</span>
+│   └── <span class="new">proposed_rules.jsonl</span>            <span class="annot"># 累积 ≥ 3 次的候选规则</span>
+│
+├── <span class="dir">scripts/</span>                             <span class="annot"># 抽取与构建脚本</span>
+│   ├── <span class="from-b">extract_excel.py</span>                <span class="annot"># B 直接复用</span>
+│   ├── <span class="from-b">extract_vba.py</span>                  <span class="annot"># B 直接复用</span>
+│   ├── <span class="new">extract_pdf.py</span>                  <span class="annot"># 新: pdftotext + LLM 抽 PDF 事实</span>
+│   ├── <span class="from-a">extract_tb.py</span>                   <span class="annot"># A 的 build_instances 拆出来的客户数据抽取</span>
+│   ├── <span class="new">align_facts.py</span>                  <span class="annot"># 新: 用 LLM 把 jsonl 行 → TBox 标签</span>
+│   ├── <span class="new">build_abox.py</span>                   <span class="annot"># 新: aligned_facts → abox.ttl + instances.json</span>
+│   ├── <span class="new">build_fill_rules.py</span>             <span class="annot"># 新: cell_formulas → fill_rules.ttl</span>
+│   ├── <span class="from-a">agent_fill.py</span>                   <span class="annot"># A 的 1500 行扩展, 加 layer_chain</span>
+│   ├── <span class="from-b">validate.py</span>                     <span class="annot"># B 的 18 个 check 复用</span>
+│   ├── <span class="new">capture_chat_events.py</span>          <span class="annot"># 新: L4 入口 A 捕获</span>
+│   ├── <span class="new">detect_vba_patterns.py</span>          <span class="annot"># 新: L4 入口 B 检测</span>
+│   └── <span class="new">propose_rules.py</span>                <span class="annot"># 新: L4 升级管道</span>
+│
+└── <span class="new">HANDOFF_FOR_HOU.md</span>                  <span class="annot"># 给侯佳成的交付导读</span>
+
+<span class="annot">图例:</span>
+  <span class="from-a">紫色</span> = 来自方法 A 的复用
+  <span class="from-b">青色</span> = 来自方法 B 的复用
+  <span class="new">绿色</span> = v4 新增</div>
+
+  <h3>7.4 跨所迁移合约 — v4 真正的价值</h3>
+
+  <div class="migration-tbl">
+    <h5>从「东林」迁到「立信」需要做什么？</h5>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 8%">层</th>
+          <th style="width: 28%">资产</th>
+          <th style="width: 24%">迁移动作</th>
+          <th style="width: 18%">改动量</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill L1">L1</span></td>
+          <td>52 OT 跨国通用部分 (18 个) + 73 LT + 11 AT</td>
+          <td>✅ <strong>一字不改</strong></td>
+          <td><span class="pill L1">0%</span></td>
+          <td>ISA / IFRS 准则不变</td>
+        </tr>
+        <tr>
+          <td><span class="pill L2">L2</span></td>
+          <td>中国本地 OT (12 个) + L2 规则 5 条 (中注协/财政部)</td>
+          <td>✅ <strong>一字不改</strong></td>
+          <td><span class="pill L2">0%</span></td>
+          <td>CSA / CAS 国家准则不变</td>
+        </tr>
+        <tr>
+          <td><span class="pill L3">L3</span></td>
+          <td>22 个东林 OT + 7 条事务所内规 + 37 FillRule</td>
+          <td>⚙ 跑 <code>extract_excel.py + extract_vba.py</code> on 立信的 audit Knowledge/</td>
+          <td><span class="pill L3">~100% 重跑</span></td>
+          <td>立信会有立信自己的 7 条内规 + ~M 条 FillRule</td>
+        </tr>
+        <tr>
+          <td><span class="pill L0">L0</span></td>
+          <td>114 江苏大王实例</td>
+          <td>⚙ 跑 <code>extract_tb.py</code> on 新客户的 TB/Aux/Voucher.xlsx</td>
+          <td><span class="pill L0">100% 替换</span></td>
+          <td>每接一个新客户都做一次</td>
+        </tr>
+        <tr>
+          <td><span class="pill L4">L4</span></td>
+          <td>东林审计师经验 (待累积)</td>
+          <td>🔀 立信团队自己重新累积</td>
+          <td><span class="pill L4">独立累积</span></td>
+          <td>L4 不跨所共享 (除非审计师跳槽且授权)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout success">
+    <strong>v4 跨所迁移的价值证明</strong>
+    <p style="margin: 6px 0 0; font-size: 13px">
+      给立信部署时，<strong>L1+L2 (≈ 30 个 OT + 5 条规则) 零修改直接复用</strong>，
+      只需要跑 <code>extract_*.py</code> 重新抽 L3 + L0 + 沉淀 L4。
+      <strong>开发周期从「3 个月」缩短到「1-2 周」</strong> — 这是 v4 跨所部署的关键卖点。
+    </p>
+  </div>
+
+  <h3>7.5 v4 同一条规则的完整溯源 (升级版)</h3>
+
+  <p>用 <code>AR-RULE-001</code> 在 v4 里看下统一管线如何处理：</p>
+
+<pre><span class="c"># 1. TBox 设计阶段 (Phase 0)</span>
+<span class="s">":AuditRule"</span> Class 定义带 <span class="s">"_layer"</span> 字段, 允许 L2/L3 取值
+
+<span class="c"># 2. 证据抽取阶段 (Phase 1)</span>
+extract_excel.py 扫到 A6-2!I8 = <span class="s">"=D8+G8-H8"</span>
+  → cell_formulas.jsonl#L14627
+extract_pdf.py 抽到《CSA 1311 应收账款审计准则》第 X 条
+  → pdf_facts.jsonl#L201
+
+<span class="c"># 3. 知识对齐阶段 (Phase 2) — LLM-assisted</span>
+align_facts.py 把上述两条对齐到 <span class="s">":AuditRule"</span> TBox slot
+  → aligned_facts.jsonl: {<span class="s">"tbox_slot"</span>:<span class="s">"AuditRule"</span>,
+                          <span class="s">"evidence"</span>:[<span class="s">"cell_formulas.jsonl#L14627"</span>,
+                                      <span class="s">"pdf_facts.jsonl#L201"</span>]}
+
+<span class="c"># 4. ABox 生成阶段 (Phase 3) — 自动 + 人工 review formal_expression</span>
+build_abox.py + 人工 review 产出:
+:rule-ar-001 a :AuditRule ;
+    :hasCode <span class="s">"AR-RULE-001"</span> ;
+    :hasName <span class="s">"应收账款贷方余额重分类"</span> ;
+    :_layer <span class="s">"L3:donglin"</span> ;
+    :_layer_basis <span class="s">"L2 CAS 22 + L3 东林 2024-01 阈值"</span> ;
+    :hasFormalExpression <span class="s">"closing_cr &gt; 0"</span> ;
+    :hasNarrative <span class="s">"客户级期末贷方余额 → 重分类至 2203"</span> ;
+    :hasEvidenceRef <span class="s">"cell_formulas.jsonl#L14627"</span> ,
+                    <span class="s">"pdf_facts.jsonl#L201"</span> .
+
+<span class="c"># 5. Agent 填稿 + 双轨追溯 (Phase 4)</span>
+agent_fill.py 跑 A6 时, 153 客户命中:
+prov.add(
+  cell_key=<span class="s">"customer_detail.rows[42].closing_dr"</span>,
+  value=<span class="n">125000</span>, source_kind=<span class="s">"RuleDerived"</span>,
+  rule_code=<span class="s">"AR-RULE-001"</span>,
+  evidence_ref=<span class="s">"cell_formulas.jsonl#L14627"</span>,
+  layer_chain=[
+    {<span class="s">"layer"</span>:<span class="s">"L2"</span>, <span class="s">"basis"</span>:<span class="s">"CAS 22 金融工具列报"</span>},
+    {<span class="s">"layer"</span>:<span class="s">"L3"</span>, <span class="s">"basis"</span>:<span class="s">"AR-RULE-001 (无锡东林 2024-01)"</span>},
+    {<span class="s">"layer"</span>:<span class="s">"L0"</span>, <span class="s">"basis"</span>:<span class="s">"客户 000860 closing_cr=¥125,000"</span>}
+  ],
+)
+
+<span class="c"># 6. L4 经验捕获 (Phase 5) — 假设侯佳成手动改了某个客户的金额</span>
+capture_chat_events.py 监听到 ExcelGridView 改写:
+  on_cell_edit(before=<span class="n">125000</span>, after=<span class="n">120000</span>,
+               user=<span class="s">"侯佳成"</span>, reason=<span class="s">"客户已签认 120,000"</span>)
+  → chat_change_events.jsonl
+
+如果连续 3 个项目侯佳成都做了"忽略小额贷方"修改:
+  propose_rules.py 输出 ProposedRule:
+    <span class="s">"AR-RULE-001 阈值应改为 closing_cr &gt; 5000"</span>
+  → 审计师 sign-off
+  → 写入 :rule-ar-001-v2, _layer=<span class="s">"L4:侯佳成"</span>
+  → 一段时间后晋升为 <span class="s">"L3:donglin"</span></pre>
+
+  <h3>7.6 v4 落地路线图</h3>
+
+  <table class="steps">
+    <thead>
+      <tr>
+        <th style="width: 7%">阶段</th>
+        <th style="width: 22%">动作</th>
+        <th style="width: 18%">依赖</th>
+        <th style="width: 16%">工期</th>
+        <th>产出 / 接收标准</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Sprint 1</td>
+        <td>把现有 A 的 OT/Rule 加 <code>_layer</code> 字段</td>
+        <td>无</td>
+        <td>2-3 天</td>
+        <td>52 OT 全部标 L1/L2/L3; 前端按层过滤胶囊条</td>
+      </tr>
+      <tr>
+        <td>Sprint 2</td>
+        <td>引入 B 的 extract_excel.py + extract_vba.py, 跑东林 WP_FSR.xlsm</td>
+        <td>Sprint 1</td>
+        <td>5-7 天</td>
+        <td>cell_formulas.jsonl + vba_account_map.jsonl 入库; 验证证据数 ≥ 100K</td>
+      </tr>
+      <tr>
+        <td>Sprint 3</td>
+        <td>实现 align_facts.py + build_abox.py + 双轨产物</td>
+        <td>Sprint 2</td>
+        <td>1 周</td>
+        <td>abox.ttl 生成, validate.py 18 个 check 全过</td>
+      </tr>
+      <tr>
+        <td>Sprint 4</td>
+        <td>升级 agent_fill.py 加 layer_chain + evidence_ref; ProvenanceDrawer 显示链路</td>
+        <td>Sprint 3</td>
+        <td>1 周</td>
+        <td>5 张已填底稿的 4250 cell trace 全部有 layer_chain</td>
+      </tr>
+      <tr>
+        <td>Sprint 5</td>
+        <td>L4 双管道: ChatPanel 改写事件 + VBA 模式检测</td>
+        <td>Sprint 4</td>
+        <td>1-2 周</td>
+        <td>LearningInbox 能展示 ProposedRule 候选, 支持 sign-off 流程</td>
+      </tr>
+      <tr>
+        <td>Sprint 6</td>
+        <td>跨所迁移 PoC: 跑一遍立信 / 信永中和的 audit Knowledge/</td>
+        <td>Sprint 5</td>
+        <td>1 周</td>
+        <td>L1+L2 一字不改, L3 自动抽出新所内规, 给新所做 Demo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top: 14px; font-size: 13px">
+    <strong>共计</strong>：Sprint 1-6 ≈ <strong>5-7 周</strong> 完成 v4 全部落地。
+    <strong>关键里程碑</strong>：Sprint 4 结束时可以给侯佳成做 v4 Demo (4 层全打通, layer_chain 可视化)。
+    <strong>商业里程碑</strong>：Sprint 6 结束时可签新所 PoC 合同 (跨所部署可行性证明)。
+  </p>
+
+  <div class="callout">
+    <strong>给侯佳成的 v4 一句话</strong>
+    <p style="margin: 8px 0 0; font-size: 13px">
+      "侯老师，v4 我会把 A 的<strong>业务规则建模</strong>和 v3 的<strong>东林模板证据抽取</strong>合并到一个管线里，
+      再加上<strong>审计师经验沉淀</strong>这个 L4 双管道。
+      每个本体元素都带 <code>_layer</code> 标签 (L1 国际 / L2 中国 / L3 东林 / L4 经验) 和 <code>_evidence</code> 行号，
+      你 review 时既能看到准则依据 (L1/L2), 又能看到东林模板里的真实证据 (L3),
+      还能看到你自己每一次改 Agent 答案累积成新规则 (L4)。
+      跨所部署时 L1+L2 是<strong>免费搬</strong>, L3+L4 才需要重抽 + 重累积。
+      这就是你说的<strong>『审计本体作为事务所长期资产』</strong>的工程方案。"
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<footer>
+  生成于 2026-05-24 · 抽取步骤 × 4 层映射分析<br>
+  方法 A 源: <code>backend/data/donglin/</code> · 方法 B 源: <code>OneDrive/claude output/ontology_build_v3.zip</code>
+</footer>
+
+</main>
+</body>
+</html>

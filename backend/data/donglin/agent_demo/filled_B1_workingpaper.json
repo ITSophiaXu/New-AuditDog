@@ -1,0 +1,163 @@
+{
+  "id": 98,
+  "key": "WorkingPaper::WP-B1-2025",
+  "type_code": "WorkingPaper",
+  "display_name": "B1 短期借款",
+  "data": {
+    "index": "B1",
+    "name": "短期借款",
+    "template_code": "TPL-DL-FY2025",
+    "engagement_code": "ENG-JSDW-2025",
+    "sheet_data": {
+      "summary": {
+        "tb_opening": 14400000.0,
+        "tb_period_dr": 21400000.0,
+        "tb_period_cr": 19400000.0,
+        "tb_closing": 12400000.0,
+        "loan_count": 5,
+        "principal_total": 12400000,
+        "weighted_avg_rate": 2.5371,
+        "book_interest_expense": 350714.32,
+        "recomputed_interest_annual": 314600.0,
+        "interest_diff": 36114.32,
+        "interest_diff_pct": 10.3,
+        "guarantors": [
+          "杨春平",
+          "黄燕红"
+        ],
+        "related_guarantee_ratio": 1.0,
+        "triggers_going_concern": true,
+        "closing_audited": 12400000.0,
+        "preparer": "jsdw_paper_fill (AI)",
+        "prepared_at": "2026-05-26"
+      },
+      "loan_detail": {
+        "rows": [
+          {
+            "loan_no": "L01",
+            "creditor": "江苏银行",
+            "principal": 1000000,
+            "rate": 0.024,
+            "annual_interest": 24000.0,
+            "term_start": "2025-05-27",
+            "term_end": "2026-05-26",
+            "guarantor": "杨春平,黄燕红",
+            "guarantee_type": "连带保证",
+            "confirmation_status": "（待发函）"
+          },
+          {
+            "loan_no": "L02",
+            "creditor": "交通银行",
+            "principal": 2000000,
+            "rate": 0.027,
+            "annual_interest": 54000.0,
+            "term_start": "2025-07-29",
+            "term_end": "2026-07-29",
+            "guarantor": "杨春平,黄燕红",
+            "guarantee_type": "连带保证",
+            "confirmation_status": "（待发函）"
+          },
+          {
+            "loan_no": "L03",
+            "creditor": "南京银行无锡分行",
+            "principal": 4400000,
+            "rate": 0.0265,
+            "annual_interest": 116600.0,
+            "term_start": "2025-11-21",
+            "term_end": "2026-11-20",
+            "guarantor": "杨春平,黄燕红",
+            "guarantee_type": "连带保证",
+            "confirmation_status": "（待发函）"
+          },
+          {
+            "loan_no": "L04",
+            "creditor": "中国农业银行(第1笔)",
+            "principal": 2000000,
+            "rate": 0.024,
+            "annual_interest": 48000.0,
+            "term_start": "2025-12-23",
+            "term_end": "2026-01-23",
+            "guarantor": "杨春平,黄燕红",
+            "guarantee_type": "连带保证",
+            "confirmation_status": "（待发函）"
+          },
+          {
+            "loan_no": "L05",
+            "creditor": "中国农业银行(第2笔)",
+            "principal": 3000000,
+            "rate": 0.024,
+            "annual_interest": 72000.0,
+            "term_start": "2025-12-24",
+            "term_end": "2026-01-24",
+            "guarantor": "杨春平,黄燕红",
+            "guarantee_type": "连带保证",
+            "confirmation_status": "（待发函）"
+          }
+        ]
+      },
+      "interest_recompute": {
+        "rows": [
+          {
+            "loan_no": "L01",
+            "creditor": "江苏银行",
+            "principal": 1000000,
+            "rate": 0.024,
+            "rate_pct": 2.4,
+            "formula": "¥1,000,000 × 2.40%",
+            "recomputed_annual": 24000.0
+          },
+          {
+            "loan_no": "L02",
+            "creditor": "交通银行",
+            "principal": 2000000,
+            "rate": 0.027,
+            "rate_pct": 2.7,
+            "formula": "¥2,000,000 × 2.70%",
+            "recomputed_annual": 54000.0
+          },
+          {
+            "loan_no": "L03",
+            "creditor": "南京银行无锡分行",
+            "principal": 4400000,
+            "rate": 0.0265,
+            "rate_pct": 2.65,
+            "formula": "¥4,400,000 × 2.65%",
+            "recomputed_annual": 116600.0
+          },
+          {
+            "loan_no": "L04",
+            "creditor": "中国农业银行(第1笔)",
+            "principal": 2000000,
+            "rate": 0.024,
+            "rate_pct": 2.4,
+            "formula": "¥2,000,000 × 2.40%",
+            "recomputed_annual": 48000.0
+          },
+          {
+            "loan_no": "L05",
+            "creditor": "中国农业银行(第2笔)",
+            "principal": 3000000,
+            "rate": 0.024,
+            "rate_pct": 2.4,
+            "formula": "¥3,000,000 × 2.40%",
+            "recomputed_annual": 72000.0
+          }
+        ],
+        "total_recomputed": 314600.0,
+        "book": 350714.32,
+        "diff": 36114.32,
+        "diff_pct": 10.3
+      }
+    },
+    "cross_references": [
+      "TB:2001",
+      "TB:6603.560305",
+      "RelatedPartyGuarantee×5",
+      "RiskFlag:高资产负债率"
+    ],
+    "audit_conclusion": "B1 短期借款期末 ¥12,400,000.00（5 笔贷款），与本体 5 笔关联担保实例一致。加权平均利率 2.5371%。重算年利息 ¥314,600.00（简化假设全年活跃）vs 账面 ¥350,714.32，差异 ¥36,114.32 (+10.30%)，主要源自各贷款实际起止日不同 + 上年余额产生的利息（需获取按月利息计提表精算）。100% 贷款由关联方 杨春平, 黄燕红 连带保证 → 已触发 GC-INDICATOR-001 持续经营关注，建议在 ZK5 关联担保段补充披露 + 评估 12 个月偿债能力。5 笔贷款函证未发，待项目组对每笔贷款向开户行发出银行询证函。",
+    "review_status": "AI 初稿",
+    "filled_by": "jsdw_paper_fill",
+    "filled_at": "2026-05-26T10:05:52"
+  }
+}

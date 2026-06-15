@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东林审计本体 · 可展开思维导图</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --tbox: #4f46e5;
+    --abox: #059669;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 50%, #6d28d9 100%);
+    color: white; padding: 14px 24px;
+    flex-shrink: 0;
+  }
+  header h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  header .sub {
+    font-size: 12px; opacity: 0.9; margin-top: 4px;
+  }
+
+  .toolbar {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 8px 24px; display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0; flex-wrap: wrap;
+  }
+  .toolbar .label {
+    font-size: 11.5px; color: var(--muted); font-weight: 500;
+  }
+  .toolbar button {
+    background: white; border: 1px solid var(--border);
+    padding: 5px 12px; border-radius: 6px;
+    font-size: 12px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .toolbar button:hover { background: #f1f5f9; border-color: #cbd5e1; }
+  .toolbar button.primary {
+    background: var(--tbox); color: white; border-color: var(--tbox);
+  }
+  .toolbar button.primary:hover { background: #3730a3; }
+  .toolbar .divider {
+    width: 1px; height: 20px; background: var(--border);
+  }
+  .toolbar .hint {
+    font-size: 11.5px; color: var(--muted); margin-left: auto;
+  }
+
+  .map-container {
+    flex: 1; min-height: 0; position: relative;
+    background: linear-gradient(135deg, #fafbff 0%, #f0f9ff 50%, #fef3f9 100%);
+  }
+  svg.markmap {
+    width: 100%; height: 100%; display: block;
+  }
+
+  /* Markmap node 样式微调（通过 CSS variables 影响 SVG line colors） */
+  .markmap-foreign {
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", sans-serif;
+  }
+  .markmap-foreign p { margin: 0; line-height: 1.4; }
+
+  .badge {
+    display: inline-block; padding: 1px 5px; border-radius: 3px;
+    font-size: 9px; font-weight: 700; margin-left: 3px;
+    vertical-align: middle;
+  }
+  .badge-L0 { background: #f1f5f9; color: #64748b; }
+  .badge-L1 { background: #dbeafe; color: #2563eb; }
+  .badge-L2 { background: #ccfbf1; color: #0d9488; }
+  .badge-L3 { background: #fed7aa; color: #d97706; }
+  .badge-tbox { background: #eef2ff; color: #4f46e5; }
+  .badge-abox { background: #d1fae5; color: #059669; }
+
+  .loading {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.9);
+    font-size: 14px; color: var(--muted);
+  }
+  .loading.hidden { display: none; }
+
+  .fallback {
+    padding: 40px;
+    max-width: 800px; margin: 0 auto;
+    font-size: 14px;
+  }
+  .fallback h3 { color: #be185d; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>东林审计本体 · 可展开思维导图</h1>
+  <div class="sub">
+    点击节点旁的 ⊕ / ⊖ 圆圈展开 / 折叠子节点 · 鼠标拖拽平移 · 滚轮缩放
+    · 颜色编码：<strong>L0</strong> 客户事实 / <strong>L1</strong> 国际通用 / <strong>L2</strong> 中国本地 / <strong>L3</strong> 东林专有
+  </div>
+</header>
+
+<div class="toolbar">
+  <span class="label">视图：</span>
+  <button onclick="mm && mm.fit()">🔍 自适应缩放</button>
+  <button onclick="expandAll()">📂 全部展开</button>
+  <button onclick="collapseToLevel(1)">📁 折叠到第 1 层</button>
+  <button onclick="collapseToLevel(2)">📁 折叠到第 2 层</button>
+  <button onclick="collapseToLevel(3)">📁 折叠到第 3 层</button>
+  <span class="divider"></span>
+  <span class="label">缩放：</span>
+  <button onclick="mm && mm.rescale(1.5)">🔎 放大</button>
+  <button onclick="mm && mm.rescale(0.75)">🔍 缩小</button>
+  <span class="hint">💡 提示：拖动可平移，滚轮可缩放，双击节点可居中</span>
+</div>
+
+<div class="map-container">
+  <div class="loading" id="loading">⏳ 正在加载思维导图…（首次加载需要从 CDN 拉取库文件）</div>
+  <svg id="mindmap"></svg>
+</div>
+
+<!-- 思维导图数据 (Markdown) -->
+<script type="text/markmap" id="md-source">
+---
+markmap:
+  colorFreezeLevel: 2
+  initialExpandLevel: 2
+  maxWidth: 320
+  duration: 400
+  spacingVertical: 8
+  spacingHorizontal: 100
+---
+
+# 东林审计本体<br>(江苏大王 2025 案例)
+
+## 📐 TBox 类型骨架<br>(跨所通用)
+
+### 📦 ObjectType (52 类)
+
+#### 客户类 (5)
+- AuditedEntity `L1` 被审计单位
+- ClientGroup `L1` 集团
+- RelatedParty `L1` 关联方
+- Contact `L1` 联系人
+- ⭐ RelatedPartyGuarantee `L3` 关联担保 (东林专有)
+
+#### 项目类 (7)
+- Engagement `L1` 审计项目
+- AuditType `L1` 业务类型
+- AuditPeriod `L1` 审计期间
+- Engager `L1` 委托方
+- ProjectTeam `L1` 项目组
+- Auditor `L1` 审计师
+- ⭐ ProjectTimeline `L3` 项目里程碑
+
+#### 数据类 (9)
+- TrialBalance `L1` 试算平衡表
+- Account `L1` 会计科目
+- SubLedger `L1` 辅助账
+- Voucher `L1` 凭证
+- BankStatement `L1` 银行对账单
+- AccountingPolicy `L1` 会计政策
+- Sampling `L1` 样本
+- CrossReference `L1` 交叉引用
+- DataMap `L1` 数据映射
+
+#### 审计区域 (1)
+- ⭐ AuditArea `L3` 9 大审计区域 (东林按字母分组)
+
+#### 认定类 (1)
+- Assertion `L1` 审计认定 (含 6 子认定实例)
+
+#### 风险类 (5)
+- RiskOfMaterialMisstatement `L2` 重大错报风险
+- MaterialityLevel `L2` 重要性水平 (PM/TE/SUM)
+- RelatedPartyRisk `L2` 关联方风险
+- ⭐ SpecialRiskFlag `L3` 特别风险标记
+- RiskAssessment `L1` 风险评估
+
+#### 程序/证据/规则 (6)
+- AuditProcedure `L1` 审计程序
+- AuditEvidence `L1` 审计证据
+- AuditRule `L1` 审计规则
+- RuleHit `L1` 规则命中
+- AnomalyTrigger `L1` 异常触发
+- ⭐ FillRule `L3` 填表规则 (v3 引入)
+
+#### 底稿类 (7)
+- WorkingPaper `L1` 底稿实例
+- PaperTemplate `L1` 底稿模板
+- Sheet `L1` 子表
+- SheetField `L1` 字段
+- Anomaly `L1` 异常
+- CorrectionLog `L1` 校正日志
+- ⭐ PaperPhase `L3` 底稿阶段
+
+#### 报告类 (7)
+- AuditReport `L1` 审计报告
+- AuditOpinion `L2` 审计意见 (中国 4 种)
+- ReviewLevel `L2` 复核级别 (中注协三级)
+- AuditAdjustment `L1` 审计调整
+- ⭐ Z6AdjustmentEntry `L3` Z6 调整分录
+- DisclosureItem `L1` 披露事项
+- ManagementRep `L2` 管理层声明书
+
+#### 辅助类 (2)
+- SpecialAuditCase `L1` 专项案例
+- ToolUsage `L1` 工具使用
+
+### 🔗 LinkType (73 关系)
+
+#### 客户 ↔ 关联方 (~5)
+- EntityHasRelatedParty `L1`
+- EntityHasContact `L1`
+- ⭐ GuaranteeByParty `L3`
+- EntityHasAccountingPolicy `L1`
+
+#### 项目维度 (~12)
+- EngagementForEntity `L1`
+- EngagementForPeriod `L1`
+- EngagementHasTeam `L1`
+- EngagementHasPaper `L1`
+- EngagementHasMateriality `L1`
+- EngagementHasReport `L1`
+- TeamHasAuditor `L1`
+- TeamHasReviewLevel `L2`
+- EngagementHasTimeline `L1`
+
+#### 底稿 ↔ 模板/区域/科目 (~15)
+- PaperUsesTemplate `L1`
+- ⭐ PaperForArea `L3`
+- PaperConcernsAccount `L1`
+- PaperAddressesAssertion `L1`
+- PaperAppliesRule `L1`
+- PaperHasAnomaly `L1`
+- PaperHasEvidence `L1`
+
+#### 规则 ↔ 程序/调整/风险 (~10)
+- RuleTriggersAdjustment `L1`
+- RuleAddressesAssertion `L1`
+- ProcedureRunsForArea `L1`
+- ProcedureProducesEvidence `L1`
+- RiskAddressedByProcedure `L1`
+
+#### 数据维度 (~15)
+- EntityHasTrialBalance `L1`
+- EntityHasVoucher `L1`
+- AccountInArea `L1`
+- SubLedgerForAccount `L1`
+- VoucherTouchesAccount `L1`
+- BankStatementForAccount `L1`
+
+#### 认定/复核/报告 (~16)
+- SamplingTargetsArea `L1`
+- EvidenceSupportsAssertion `L1`
+- ReviewLevelReviews `L2`
+- ReportContainsOpinion `L1`
+- AdjustmentInPeriod `L1`
+- DisclosureForRelatedParty `L2`
+
+### ⚡ ActionType (11 动作)
+
+#### 数据准备 (4)
+- Read `L1` 读取 TB/Aux/Voucher
+- Map `L1` 字段映射
+- Standardize `L1` 数据标准化
+- Sample `L1` 抽样
+
+#### 实质性测试 (2)
+- Reconcile `L1` 核对账务
+- Recompute `L1` 重算
+
+#### 推理 / 输出 (2)
+- Explain `L1` 解释推理
+- Generate `L1` 生成输出
+
+#### 复核 / 治理 (3)
+- Review `L1` 复核
+- SignOff `L1` 签字
+- Archive `L1` 归档
+
+## 📋 ABox 具体实例<br>(跨客户差异化)
+
+### L0 江苏大王专有 (~90 实例)
+
+#### 客户与人物 (5)
+- 江苏大王通风机械有限公司
+- 杨春平 `54% 直接持股 / 80% 穿透`
+- 黄燕红 `财务负责人 + 担保人`
+- 朱洋红 `关联自然人`
+- 柒米叁(无锡)企业管理咨询合伙企业 `46%`
+
+#### 关联担保 (5 笔, 共 ¥12.4M)
+- G-001 南京银行无锡分行 ¥440 万 `2025-11-21 ~ 2026-11-20`
+- G-002 江苏银行 ¥100 万 `2025-05-27 ~ 2026-05-26`
+- G-003 交通银行 ¥200 万 `2025-07-29 ~ 2026-07-29`
+- G-004 中国农业银行 ¥200 万 `2025-12-23 ~ 2026-01-23`
+- G-005 中国农业银行 ¥300 万 `2025-12-24 ~ 2026-01-24`
+
+#### 项目治理 (16)
+- ENG-JSDW-2025 锡东林内审〔2026〕号
+- 江苏大王项目组 (东林五部)
+- 童中国 `签字合伙人`
+- 侯佳成 `项目经理 + 二级复核`
+- 王叙超 `审核经理 + 编制`
+- 洪潇 `高级审计师 + 一级复核`
+- 一级复核-洪潇 `2026-02-28 通过`
+- 二级复核-侯佳成 `2026-03-02 通过`
+- 三级复核-童中国 `2026-03-02 通过`
+- 签发-童中国 `2026-03-03 通过`
+- 里程碑: 承接 2026-02-15
+- 里程碑: 外勤开始 2026-02-28
+- 里程碑: 外勤结束 2026-03-02
+- 里程碑: 三级复核 2026-03-02
+- 里程碑: 出报告 2026-03-03
+
+#### 重要性 (1)
+- MaterialityLevel-ENG-JSDW
+  - benchmark `总资产法 1%`
+  - benchmark_value `¥15,454,470.23`
+  - **PM** `¥154,544.7023`
+  - **TE** `¥115,908.5267`
+  - **SUM** `¥7,727.2351`
+
+#### 财务数据 (~60)
+- TrialBalance 2025-12-31
+- 50+ Account 一级科目 (1001 / 1122 / 1601 / 2001 / 6001 等)
+- 808 客户辅助账 (SubLedger)
+- 12,620 笔 Voucher 序时账凭证
+
+#### 9 大审计区域
+- AREA-A1 货币资金 `high · Existence/RightsObligations`
+- AREA-A6B6 应收应付 `high · Completeness/Valuation/Cutoff`
+- AREA-A10 存货 `medium · Existence/Valuation/Cutoff`
+- AREA-A24 固定资产 `medium · Existence/Accuracy`
+- AREA-B1 短期借款 `high · Completeness/Rights`
+- AREA-B10 应交税费 `medium · Completeness/Accuracy`
+- AREA-D1 收入 `high · Occurrence/Completeness/Cutoff`
+- AREA-D2 成本 `medium · Accuracy/Cutoff`
+- AREA-C 权益 `low · Existence/Rights`
+
+#### 9 张底稿
+- A1 货币资金 `✅ AI 已填` `4,250 cell 中 110+ 条追溯`
+- A6 应收账款 `✅ AI 已填` `3,978 cell 追溯` `153 客户触发 AR-RULE-001`
+- A9 其他应收款 `✅ AI 已填` `1,133 客户中 ¥430K 反向余额触发 TAX-RECLASS-001`
+- A10 存货 `⏳ 未开始`
+- A24 固定资产 `✅ AI 已填` `折旧差异 ¥125K ≥ TE → CSA 1221 判定`
+- B1 短期借款 `✅ AI 已填` `5 贷款 100% 关联担保 → GC-INDICATOR-001`
+- B6 应付账款 `⏳ 未开始`
+- B9 应付职工薪酬 `⏳ 未开始`
+- D1 营业收入 `⏳ 未开始`
+
+#### 12 条会计政策 (X5/ZS4 披露)
+- 适用会计制度 `企业会计制度 (老准则)`
+- 会计期间 `1月1日 - 12月31日`
+- 记账本位币 `人民币元`
+- 外币业务 `CAS 19 当日基准汇率`
+- 应收款项坏账 `备抵法 + 个别认定`
+- 存货 `永续盘存 + 加权平均 (CAS 1)`
+- 固定资产折旧 `直线法 残值 5% (CAS 4)`
+- 长期待摊费用 `按受益期分期摊销`
+- 职工薪酬 `CAS 9 设定提存`
+- 政府补助 `总额法 CAS 16`
+- 收入确认 `风险报酬转移 / 完工百分比`
+- 所得税 `应付税款法 (不计递延)`
+
+#### 风险与报告 (4)
+- RMM R-001 应收账款大量贷方 → 资产虚增 `high`
+- RMM R-002 资产负债率 98.98% + 全关联担保 → 持续经营 `high · 报表层次`
+- RPR-001 黄燕红其他应收 ¥811,739.84 占 PM 5.25 倍
+- AuditReport 锡东林内审〔2026〕号 `无保留意见 · 2026-03-03`
+
+### L1 国际通用 ABox (17 实例)
+
+#### 6 种审计认定
+- Existence `存在`
+- Completeness `完整性`
+- Accuracy `准确性`
+- Cutoff `截止`
+- RightsAndObligations `权利义务`
+- Presentation `列报`
+
+#### 11 个 ActionType 实例
+- Read / Map / Standardize / Sample
+- Reconcile / Recompute
+- Explain / Generate
+- Review / SignOff / Archive
+
+### L2 中国通用 ABox · AuditRule (5 条)
+
+#### 中注协规则 (4)
+- CASH-RULE-001 银行账面 vs 询证函一致性
+  - source `中注协 2023-12`
+  - severity `high`
+  - formal `abs(book - confirmation) < 0.01`
+- CASH-RULE-002 大额现金审批
+  - source `中注协 2023-12`
+  - formal `amount >= 500000`
+- REV-RULE-001 收入截止性核查
+  - source `中注协 2023-12`
+  - formal `abs(voucher_date - period_end) <= 5 days`
+- FA-RULE-001 固定资产折旧重算 (CSA 1221 四级梯度)
+  - source `中注协 2023-12`
+  - formal `|book_dep - recomputed_dep| split by [SUM, TE, PM]`
+
+#### 财政部规则 (1)
+- TAX-RULE-001 业务招待费 5‰/60% 孰低
+  - source `财政部 2008-01`
+  - formal `deductible = min(revenue * 0.005, actual * 0.6)`
+
+### L3 东林专有 ABox · AuditRule (7 条)
+
+#### 应收应付 (3)
+- ⭐ AR-RULE-001 应收账款贷方余额重分类
+  - source `无锡东林 2024-01`
+  - formal `closing_cr > 0`
+  - 本案命中 `153 客户 ¥7.11M`
+  - 触发 Z6-AI-A6-01 重分类至 2203
+- ⭐ AP-RULE-001 应付账款借方余额重分类
+  - source `无锡东林 2024-01`
+  - formal `closing_dr > 0`
+  - 重分类至 1123 预付款项
+- ⭐ RP-RULE-001 关联方资金占用披露
+  - source `无锡东林 2025-01`
+  - formal `is_related_party AND |balance| > PM`
+  - 触发 ZK5 单独披露段
+
+#### 存货 (1)
+- ⭐ INV-RULE-001 存货归零异常检测
+  - source `无锡东林 2024-01`
+  - formal `(year_dr + year_cr > 5M) AND abs(closing) < 100`
+
+#### 税务 (1)
+- ⭐ TAX-RECLASS-001 出口退税反向余额重分类
+  - source `无锡东林 2025-01`
+  - formal `code == '1133' AND closing < 0 AND abs(closing) > TE`
+  - 本案命中 `1133 期末 ¥-430K → 触发 Z6-AI-A9-01`
+
+#### 持续经营 (1)
+- ⭐ GC-INDICATOR-001 关联担保集中度 → 持续经营
+  - source `无锡东林 2025-01`
+  - formal `(loan_closing > 0) AND (sum(guarantee) / sum(loan) >= 1.0)`
+  - 本案命中 `5 笔贷款 100% 担保 → 标记 RiskFlag`
+
+#### 复核 (1)
+- ⭐ DL-RULE-001 三级复核签字完整性
+  - source `无锡东林 2025-01`
+  - formal `all(['编制人','部门负责人','签字合伙人'] in signatures)`
+
+## 🔗 LinkInstance (139 链接)
+
+### 客户关联方 (4)
+- 江苏大王 ─[EntityHasRelatedParty]→ 杨春平
+- 江苏大王 ─[EntityHasRelatedParty]→ 黄燕红
+- 江苏大王 ─[EntityHasRelatedParty]→ 朱洋红
+- 江苏大王 ─[EntityHasRelatedParty]→ 柒米叁
+
+### 担保链路 (10)
+- G-001 ─[GuaranteeByParty]→ 杨春平
+- G-001 ─[GuaranteeByParty]→ 黄燕红
+- G-002 ─[GuaranteeByParty]→ 杨春平/黄燕红
+- G-003 ─[GuaranteeByParty]→ 杨春平/黄燕红
+- G-004 ─[GuaranteeByParty]→ 杨春平/黄燕红
+- G-005 ─[GuaranteeByParty]→ 杨春平/黄燕红
+
+### 项目-团队-成员 (13)
+- ENG-JSDW-2025 ─[EngagementForEntity]→ 江苏大王
+- ENG-JSDW-2025 ─[EngagementForPeriod]→ 2025FY
+- ENG-JSDW-2025 ─[EngagementHasTeam]→ 江苏大王项目组
+- ENG-JSDW-2025 ─[EngagementHasMateriality]→ PM/TE/SUM
+- 江苏大王项目组 ─[TeamHasAuditor]→ 童中国/侯佳成/王叙超/洪潇
+- 江苏大王项目组 ─[TeamHasReviewLevel]→ 一/二/三级复核+签发
+
+### 底稿-科目-区域 (~30)
+- A1 ─[PaperConcernsAccount]→ Account-1001
+- A6 ─[PaperConcernsAccount]→ Account-1122
+- A6 ─[PaperForArea]→ AREA-A6B6 应收应付
+- A6 ─[PaperUsesTemplate]→ TPL-DL-FY2025
+- A6 ─[PaperAppliesRule]→ AR-RULE-001
+- 9 张底稿全部 ─[PaperUsesTemplate]→ 同一模板
+
+### 会计政策 (12)
+- 江苏大王 ─[EntityHasAccountingPolicy]→ 12 条政策
+
+### 其他 (~70)
+- EngagementHasTimeline × 5
+- EngagementHasPaper × 9
+- EngagementHasReport × 1
+- TeamHasReviewLevel × 4
+- RPRiskInvolvesParty × 1
+- 等等
+
+## 🎯 4,250 单元格追溯
+
+### 按底稿分布
+- A6 应收账款 `3,978 cell` (含 153 RuleDerived)
+- A1 货币资金 `~110 cell`
+- A24 固定资产 `~80 cell` (含折旧重算)
+- A9 其他应收款 `~50 cell` (含 TAX-RECLASS-001)
+- B1 短期借款 `~40 cell` (含 GC-INDICATOR-001)
+
+### 按 source_kind 分布
+- **TB** 试算平衡 → 蓝色
+- **Aux** 辅助账 → 绿色
+- **Voucher** 凭证 → 琥珀色
+- **Computed** 计算导出 → 灰色
+- **RuleDerived** 规则触发 → 粉色 (含 📜 角标)
+- **Knowledge** 本体知识 → 紫色
+- **TemplateConst** 模板常量 → 橙色
+
+### 一条 trace 示例
+- cell_key `customer_detail.rows[0].closing_dr`
+- value `685,088.49`
+- source_kind `Aux`
+- ontology_refs `📦 OT::SubLedger`, `🔗 LT::SubLedgerForAccount`
+- source_detail `辅助账 1122 客户 000860 期末借方`
+- rule_code `None`
+</script>
+
+<!-- Markmap CDN -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18"></script>
+
+<script>
+let mm = null;
+let root = null;
+
+// 加载并渲染思维导图
+(function init() {
+  const loading = document.getElementById('loading');
+  const sourceEl = document.getElementById('md-source');
+  const svg = document.getElementById('mindmap');
+
+  // 等 markmap 加载完
+  function waitForMarkmap() {
+    if (typeof markmap === 'undefined' || !markmap.Markmap || !window.markmap?.Transformer) {
+      setTimeout(waitForMarkmap, 100);
+      return;
+    }
+
+    try {
+      const { Transformer } = window.markmap;
+      const { Markmap } = markmap;
+
+      const transformer = new Transformer();
+      const md = sourceEl.textContent;
+      const { root: rootData, features } = transformer.transform(md);
+      root = rootData;
+
+      mm = Markmap.create(svg, {
+        colorFreezeLevel: 2,
+        initialExpandLevel: 2,
+        maxWidth: 280,
+        duration: 350,
+        spacingHorizontal: 90,
+        spacingVertical: 6,
+        paddingX: 8,
+      }, rootData);
+
+      loading.classList.add('hidden');
+    } catch (e) {
+      console.error(e);
+      loading.innerHTML = '⚠️ 加载失败: ' + e.message;
+    }
+  }
+
+  waitForMarkmap();
+})();
+
+// 全部展开
+function expandAll() {
+  if (!mm || !root) return;
+  function walk(node) {
+    if (node.payload) node.payload.fold = 0;
+    if (node.children) node.children.forEach(walk);
+  }
+  walk(root);
+  mm.setData(root);
+  mm.fit();
+}
+
+// 折叠到指定层级
+function collapseToLevel(level) {
+  if (!mm || !root) return;
+  function walk(node, depth) {
+    if (node.payload) {
+      node.payload.fold = depth >= level ? 1 : 0;
+    }
+    if (node.children) {
+      node.children.forEach((c) => walk(c, depth + 1));
+    }
+  }
+  walk(root, 0);
+  mm.setData(root);
+  mm.fit();
+}
+</script>
+
+</body>
+</html>

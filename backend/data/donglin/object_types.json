@@ -1,0 +1,3007 @@
+[
+  {
+    "_cluster": "客户类",
+    "code": "AuditedEntity",
+    "display_name": "被审计单位",
+    "icon": "Building2",
+    "color": "#0ea5e9",
+    "description": "本次审计的对象主体（被审计单位）",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "unified_social_credit_code",
+        "label": "统一社会信用代码",
+        "type": "string"
+      },
+      {
+        "code": "legal_representative",
+        "label": "法定代表人",
+        "type": "string"
+      },
+      {
+        "code": "registered_address",
+        "label": "注册地址",
+        "type": "string"
+      },
+      {
+        "code": "establishment_date",
+        "label": "成立日期",
+        "type": "date"
+      },
+      {
+        "code": "industry",
+        "label": "行业",
+        "type": "string"
+      },
+      {
+        "code": "industry_code",
+        "label": "行业代码",
+        "type": "string"
+      },
+      {
+        "code": "scale",
+        "label": "规模",
+        "type": "enum",
+        "enum": [
+          "大型",
+          "中型",
+          "小微"
+        ]
+      },
+      {
+        "code": "registered_capital",
+        "label": "注册资本(元)",
+        "type": "money"
+      },
+      {
+        "code": "paid_in_capital",
+        "label": "实收资本(元)",
+        "type": "money"
+      },
+      {
+        "code": "employee_count",
+        "label": "从业人数",
+        "type": "number"
+      },
+      {
+        "code": "operating_scope",
+        "label": "经营范围",
+        "type": "text"
+      },
+      {
+        "code": "tax_authority",
+        "label": "主管税务机关",
+        "type": "string"
+      },
+      {
+        "code": "is_small_micro",
+        "label": "小型微利",
+        "type": "boolean"
+      },
+      {
+        "code": "is_public_company",
+        "label": "上市公司",
+        "type": "boolean"
+      },
+      {
+        "code": "is_high_tech",
+        "label": "高新技术企业",
+        "type": "boolean"
+      },
+      {
+        "code": "high_tech_cert_no",
+        "label": "高新证书号",
+        "type": "string"
+      },
+      {
+        "code": "fiscal_year",
+        "label": "会计年度",
+        "type": "string"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "客户类",
+    "code": "ClientGroup",
+    "display_name": "集团",
+    "icon": "Layers",
+    "color": "#0369a1",
+    "description": "被审计单位所属集团（如有）",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "集团名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "ultimate_controller",
+        "label": "最终控制人",
+        "type": "string"
+      },
+      {
+        "code": "industry",
+        "label": "行业",
+        "type": "string"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "客户类",
+    "code": "Subsidiary",
+    "display_name": "子公司",
+    "icon": "GitBranch",
+    "color": "#0284c7",
+    "description": "被审计单位下属子公司 / 分支机构",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "shareholding_ratio",
+        "label": "持股比例",
+        "type": "number"
+      },
+      {
+        "code": "consolidation_method",
+        "label": "合并方式",
+        "type": "enum",
+        "enum": [
+          "全资",
+          "控股",
+          "权益法核算",
+          "成本法核算",
+          "不纳入合并"
+        ]
+      },
+      {
+        "code": "address",
+        "label": "地址",
+        "type": "string"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "客户类",
+    "code": "RelatedParty",
+    "display_name": "关联方",
+    "icon": "Users",
+    "color": "#db2777",
+    "description": "CAS 36 定义的关联方",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "party_type",
+        "label": "类型",
+        "type": "enum",
+        "enum": [
+          "控股股东",
+          "其他股东",
+          "关联自然人",
+          "关联法人",
+          "实际控制人",
+          "近亲属",
+          "联营企业",
+          "合营企业"
+        ]
+      },
+      {
+        "code": "relation_to_client",
+        "label": "与本公司关系",
+        "type": "string"
+      },
+      {
+        "code": "unified_social_credit_code",
+        "label": "统一社会信用代码",
+        "type": "string"
+      },
+      {
+        "code": "id_type",
+        "label": "证件种类",
+        "type": "string"
+      },
+      {
+        "code": "shareholding_direct",
+        "label": "直接持股比例",
+        "type": "number"
+      },
+      {
+        "code": "shareholding_lookthrough",
+        "label": "穿透持股比例",
+        "type": "number"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "客户类",
+    "code": "Contact",
+    "display_name": "联系人",
+    "icon": "User",
+    "color": "#7dd3fc",
+    "description": "客户方对接人（财务负责人、出纳等）",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "姓名",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "title",
+        "label": "职务",
+        "type": "string"
+      },
+      {
+        "code": "phone",
+        "label": "电话",
+        "type": "string"
+      },
+      {
+        "code": "email",
+        "label": "邮箱",
+        "type": "string"
+      },
+      {
+        "code": "role_in_audit",
+        "label": "审计中角色",
+        "type": "enum",
+        "enum": [
+          "对接人",
+          "财务负责人",
+          "出纳",
+          "总经理",
+          "其他"
+        ]
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "Engagement",
+    "display_name": "审计项目",
+    "icon": "Briefcase",
+    "color": "#6366f1",
+    "description": "一次审计业务约定",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "项目编号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "report_no",
+        "label": "报告文号",
+        "type": "string"
+      },
+      {
+        "code": "status",
+        "label": "状态",
+        "type": "enum",
+        "enum": [
+          "规划中",
+          "外勤中",
+          "复核中",
+          "已完成",
+          "已归档"
+        ]
+      },
+      {
+        "code": "planned_fee",
+        "label": "预计收费",
+        "type": "money"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "AuditType",
+    "display_name": "审计类型",
+    "icon": "Tag",
+    "color": "#8b5cf6",
+    "description": "审计业务类型",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "代码",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "name",
+        "label": "名称",
+        "type": "enum",
+        "enum": [
+          "财务报表审计",
+          "经济责任审计",
+          "高新技术企业认定审计",
+          "研发费用加计扣除审计",
+          "税务合规审计",
+          "专项资金审计",
+          "清产核资",
+          "破产清算审计",
+          "其他"
+        ]
+      },
+      {
+        "code": "is_statutory",
+        "label": "法定审计",
+        "type": "boolean"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "AuditPeriod",
+    "display_name": "审计期间",
+    "icon": "CalendarRange",
+    "color": "#a78bfa",
+    "description": "审计覆盖的会计期间",
+    "properties_schema": [
+      {
+        "code": "period_start",
+        "label": "期间起",
+        "type": "date",
+        "required": true
+      },
+      {
+        "code": "period_end",
+        "label": "期间止",
+        "type": "date",
+        "required": true
+      },
+      {
+        "code": "period_label",
+        "label": "中文标签",
+        "type": "string"
+      },
+      {
+        "code": "is_full_year",
+        "label": "整会计年度",
+        "type": "boolean"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "Engager",
+    "display_name": "委托方",
+    "icon": "Handshake",
+    "color": "#4c1d95",
+    "description": "委托审计的法人/机构 (通常同被审计单位，但可能为母公司/监管/法院)",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "委托方名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "type",
+        "label": "委托方类型",
+        "type": "enum",
+        "enum": [
+          "被审计单位本身",
+          "母公司",
+          "监管机构",
+          "法院",
+          "投资人",
+          "其他"
+        ]
+      },
+      {
+        "code": "contract_no",
+        "label": "约定书编号",
+        "type": "string"
+      },
+      {
+        "code": "contract_date",
+        "label": "约定日期",
+        "type": "date"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "ProjectTeam",
+    "display_name": "项目团队",
+    "icon": "Users2",
+    "color": "#5b21b6",
+    "description": "项目组",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "团队名称",
+        "type": "string"
+      },
+      {
+        "code": "firm_name",
+        "label": "事务所",
+        "type": "string"
+      },
+      {
+        "code": "department",
+        "label": "部门",
+        "type": "string"
+      },
+      {
+        "code": "size",
+        "label": "人数",
+        "type": "number"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "Auditor",
+    "display_name": "审计师",
+    "icon": "User",
+    "color": "#4f46e5",
+    "description": "项目组个人",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "姓名",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "role",
+        "label": "角色",
+        "type": "enum",
+        "enum": [
+          "签字合伙人",
+          "项目合伙人",
+          "项目经理",
+          "审核经理",
+          "高级审计师",
+          "助理审计师",
+          "编制人"
+        ]
+      },
+      {
+        "code": "cpa_no",
+        "label": "注师编号",
+        "type": "string"
+      },
+      {
+        "code": "is_signing",
+        "label": "签字注师",
+        "type": "boolean"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "ReviewLevel",
+    "display_name": "复核层级",
+    "icon": "ListChecks",
+    "color": "#7c3aed",
+    "description": "底稿/报告的复核层级（一级/二级/三级/质控）",
+    "properties_schema": [
+      {
+        "code": "level",
+        "label": "层级",
+        "type": "enum",
+        "enum": [
+          "编制",
+          "一级复核",
+          "二级复核",
+          "三级复核",
+          "项目合伙人",
+          "质控复核",
+          "签发"
+        ]
+      },
+      {
+        "code": "reviewer_name",
+        "label": "复核人",
+        "type": "string"
+      },
+      {
+        "code": "reviewed_at",
+        "label": "复核日期",
+        "type": "date"
+      },
+      {
+        "code": "opinion",
+        "label": "复核意见",
+        "type": "text"
+      },
+      {
+        "code": "status",
+        "label": "状态",
+        "type": "enum",
+        "enum": [
+          "待复核",
+          "通过",
+          "需修改",
+          "退回"
+        ]
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "项目类",
+    "code": "ProjectTimeline",
+    "display_name": "项目时间线",
+    "icon": "Clock",
+    "color": "#6d28d9",
+    "description": "关键时间节点",
+    "properties_schema": [
+      {
+        "code": "milestone",
+        "label": "里程碑",
+        "type": "enum",
+        "enum": [
+          "承接",
+          "进点",
+          "外勤开始",
+          "外勤结束",
+          "起草报告",
+          "三级复核",
+          "出报告",
+          "归档"
+        ]
+      },
+      {
+        "code": "planned_date",
+        "label": "计划日期",
+        "type": "date"
+      },
+      {
+        "code": "actual_date",
+        "label": "实际日期",
+        "type": "date"
+      },
+      {
+        "code": "owner",
+        "label": "责任人",
+        "type": "string"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "GeneralLedger",
+    "display_name": "总账",
+    "icon": "BookText",
+    "color": "#15803d",
+    "description": "总账（按一级科目汇总）",
+    "properties_schema": [
+      {
+        "code": "period_label",
+        "label": "期间",
+        "type": "string"
+      },
+      {
+        "code": "rows",
+        "label": "总账行",
+        "type": "json",
+        "help": "[{account_code, name, opening, period_dr, period_cr, closing}]"
+      },
+      {
+        "code": "source_file",
+        "label": "数据来源文件",
+        "type": "string"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "SubLedger",
+    "display_name": "明细账",
+    "icon": "List",
+    "color": "#16a34a",
+    "description": "明细账 / 辅助核算余额",
+    "properties_schema": [
+      {
+        "code": "account_code",
+        "label": "科目代码",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "account_name",
+        "label": "科目名称",
+        "type": "string"
+      },
+      {
+        "code": "aux_type",
+        "label": "辅助核算类型",
+        "type": "enum",
+        "enum": [
+          "客户",
+          "供应商",
+          "项目",
+          "部门",
+          "员工",
+          "其他"
+        ]
+      },
+      {
+        "code": "rows",
+        "label": "客户/供应商级行",
+        "type": "json"
+      },
+      {
+        "code": "row_count",
+        "label": "明细行数",
+        "type": "number"
+      },
+      {
+        "code": "source_file",
+        "label": "数据来源文件",
+        "type": "string"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "TrialBalance",
+    "display_name": "科目余额表",
+    "icon": "Table2",
+    "color": "#0d9488",
+    "description": "试算平衡表",
+    "properties_schema": [
+      {
+        "code": "period",
+        "label": "期间",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "currency",
+        "label": "币种",
+        "type": "string"
+      },
+      {
+        "code": "framework",
+        "label": "准则",
+        "type": "enum",
+        "enum": [
+          "企业会计准则",
+          "企业会计制度",
+          "小企业会计准则"
+        ]
+      },
+      {
+        "code": "rows",
+        "label": "科目行",
+        "type": "json"
+      },
+      {
+        "code": "total_assets",
+        "label": "资产合计",
+        "type": "money"
+      },
+      {
+        "code": "total_liabilities",
+        "label": "负债合计",
+        "type": "money"
+      },
+      {
+        "code": "total_equity",
+        "label": "权益合计",
+        "type": "money"
+      },
+      {
+        "code": "balance_check",
+        "label": "借贷平衡校验",
+        "type": "boolean"
+      },
+      {
+        "code": "source_file",
+        "label": "数据来源文件",
+        "type": "string"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "FinancialStatement",
+    "display_name": "财务报表",
+    "icon": "FileSpreadsheet",
+    "color": "#0891b2",
+    "description": "资产负债表 / 利润表 / 现金流量表 / 所有者权益变动表",
+    "properties_schema": [
+      {
+        "code": "statement_type",
+        "label": "报表类型",
+        "type": "enum",
+        "enum": [
+          "资产负债表",
+          "利润表",
+          "现金流量表",
+          "所有者权益变动表",
+          "附注"
+        ]
+      },
+      {
+        "code": "period",
+        "label": "期间",
+        "type": "string"
+      },
+      {
+        "code": "currency",
+        "label": "币种",
+        "type": "string"
+      },
+      {
+        "code": "rows",
+        "label": "项目行",
+        "type": "json"
+      },
+      {
+        "code": "is_consolidated",
+        "label": "合并报表",
+        "type": "boolean"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "BankStatement",
+    "display_name": "银行流水",
+    "icon": "Banknote",
+    "color": "#0369a1",
+    "description": "银行账户对账单/流水",
+    "properties_schema": [
+      {
+        "code": "bank_name",
+        "label": "银行",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "account_no",
+        "label": "账号",
+        "type": "string"
+      },
+      {
+        "code": "currency",
+        "label": "币种",
+        "type": "string"
+      },
+      {
+        "code": "period",
+        "label": "期间",
+        "type": "string"
+      },
+      {
+        "code": "opening_balance",
+        "label": "期初余额",
+        "type": "money"
+      },
+      {
+        "code": "closing_balance",
+        "label": "期末余额",
+        "type": "money"
+      },
+      {
+        "code": "transaction_count",
+        "label": "交易笔数",
+        "type": "number"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "Contract",
+    "display_name": "合同",
+    "icon": "FileSignature",
+    "color": "#7c2d12",
+    "description": "购销/借款/担保等合同",
+    "properties_schema": [
+      {
+        "code": "contract_no",
+        "label": "合同号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "contract_type",
+        "label": "合同类型",
+        "type": "enum",
+        "enum": [
+          "销售",
+          "采购",
+          "借款",
+          "担保",
+          "租赁",
+          "劳务",
+          "其他"
+        ]
+      },
+      {
+        "code": "counterparty",
+        "label": "对方名称",
+        "type": "string"
+      },
+      {
+        "code": "amount",
+        "label": "金额",
+        "type": "money"
+      },
+      {
+        "code": "sign_date",
+        "label": "签订日期",
+        "type": "date"
+      },
+      {
+        "code": "term_start",
+        "label": "执行起",
+        "type": "date"
+      },
+      {
+        "code": "term_end",
+        "label": "执行止",
+        "type": "date"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "Invoice",
+    "display_name": "发票",
+    "icon": "Receipt",
+    "color": "#a16207",
+    "description": "销项/进项发票",
+    "properties_schema": [
+      {
+        "code": "invoice_no",
+        "label": "发票号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "invoice_type",
+        "label": "类型",
+        "type": "enum",
+        "enum": [
+          "销项专票",
+          "销项普票",
+          "进项专票",
+          "进项普票"
+        ]
+      },
+      {
+        "code": "invoice_date",
+        "label": "开票日期",
+        "type": "date"
+      },
+      {
+        "code": "counterparty",
+        "label": "对方",
+        "type": "string"
+      },
+      {
+        "code": "amount_excl_tax",
+        "label": "不含税金额",
+        "type": "money"
+      },
+      {
+        "code": "tax_amount",
+        "label": "税额",
+        "type": "money"
+      },
+      {
+        "code": "amount_incl_tax",
+        "label": "价税合计",
+        "type": "money"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "Voucher",
+    "display_name": "凭证",
+    "icon": "FileText",
+    "color": "#ca8a04",
+    "description": "会计凭证",
+    "properties_schema": [
+      {
+        "code": "no",
+        "label": "凭证号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "date",
+        "label": "日期",
+        "type": "date"
+      },
+      {
+        "code": "summary",
+        "label": "摘要",
+        "type": "string"
+      },
+      {
+        "code": "entries",
+        "label": "分录",
+        "type": "json"
+      },
+      {
+        "code": "is_anomaly",
+        "label": "异常标记",
+        "type": "boolean"
+      },
+      {
+        "code": "anomaly_reason",
+        "label": "异常原因",
+        "type": "string"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "ConfirmationLetter",
+    "display_name": "函证",
+    "icon": "Mail",
+    "color": "#b45309",
+    "description": "询证函（银行/客户/供应商/律师/关联方）",
+    "properties_schema": [
+      {
+        "code": "confirmation_no",
+        "label": "函证编号",
+        "type": "string"
+      },
+      {
+        "code": "type",
+        "label": "类型",
+        "type": "enum",
+        "enum": [
+          "银行函证",
+          "应收函证",
+          "应付函证",
+          "律师函证",
+          "关联方函证",
+          "存货函证"
+        ]
+      },
+      {
+        "code": "counterparty",
+        "label": "被询证方",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "sent_date",
+        "label": "发函日期",
+        "type": "date"
+      },
+      {
+        "code": "reply_date",
+        "label": "回函日期",
+        "type": "date"
+      },
+      {
+        "code": "book_balance",
+        "label": "账面金额",
+        "type": "money"
+      },
+      {
+        "code": "confirmed_balance",
+        "label": "回函金额",
+        "type": "money"
+      },
+      {
+        "code": "difference",
+        "label": "差异",
+        "type": "money"
+      },
+      {
+        "code": "status",
+        "label": "状态",
+        "type": "enum",
+        "enum": [
+          "未发函",
+          "已发函",
+          "已回函-无异",
+          "已回函-有差异",
+          "未回函-替代测试"
+        ]
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "数据类",
+    "code": "CountSheet",
+    "display_name": "盘点表",
+    "icon": "Boxes",
+    "color": "#854d0e",
+    "description": "存货/现金/固定资产盘点表",
+    "properties_schema": [
+      {
+        "code": "type",
+        "label": "类型",
+        "type": "enum",
+        "enum": [
+          "存货盘点",
+          "现金盘点",
+          "固定资产盘点",
+          "其他"
+        ]
+      },
+      {
+        "code": "count_date",
+        "label": "盘点日",
+        "type": "date"
+      },
+      {
+        "code": "location",
+        "label": "地点",
+        "type": "string"
+      },
+      {
+        "code": "counter",
+        "label": "盘点人",
+        "type": "string"
+      },
+      {
+        "code": "supervisor",
+        "label": "监盘人",
+        "type": "string"
+      },
+      {
+        "code": "rows",
+        "label": "盘点行",
+        "type": "json"
+      },
+      {
+        "code": "book_total",
+        "label": "账面合计",
+        "type": "money"
+      },
+      {
+        "code": "physical_total",
+        "label": "实物合计",
+        "type": "money"
+      },
+      {
+        "code": "difference",
+        "label": "差异",
+        "type": "money"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "审计区域",
+    "code": "AuditArea",
+    "display_name": "审计区域",
+    "icon": "LayoutGrid",
+    "color": "#475569",
+    "description": "审计领域分组（货币资金/收入/成本/...）",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "区域代码",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "name",
+        "label": "区域名称",
+        "type": "enum",
+        "enum": [
+          "货币资金",
+          "应收应付",
+          "存货",
+          "固定资产",
+          "无形资产",
+          "投资",
+          "短期借款",
+          "长期借款",
+          "应交税费",
+          "收入",
+          "成本",
+          "费用",
+          "权益",
+          "或有事项",
+          "其他"
+        ]
+      },
+      {
+        "code": "risk_baseline",
+        "label": "基础风险等级",
+        "type": "enum",
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
+      },
+      {
+        "code": "primary_assertions",
+        "label": "主要应对认定",
+        "type": "json"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "审计区域",
+    "code": "Account",
+    "display_name": "会计科目",
+    "icon": "Hash",
+    "color": "#64748b",
+    "description": "具体科目（挂在 AuditArea 下）",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "科目代码",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "name",
+        "label": "科目名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "type",
+        "label": "科目类别",
+        "type": "enum",
+        "enum": [
+          "资产",
+          "负债",
+          "权益",
+          "收入",
+          "费用",
+          "成本"
+        ]
+      },
+      {
+        "code": "opening_balance",
+        "label": "期初余额",
+        "type": "money"
+      },
+      {
+        "code": "closing_balance_unaudited",
+        "label": "期末未审",
+        "type": "money"
+      },
+      {
+        "code": "closing_balance_audited",
+        "label": "期末审定",
+        "type": "money"
+      },
+      {
+        "code": "new_framework_mapping",
+        "label": "新准则映射",
+        "type": "string"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "认定",
+    "code": "Assertion",
+    "display_name": "财务报表认定",
+    "icon": "BadgeCheck",
+    "color": "#0e7490",
+    "description": "财务报表认定 (CSA 1141)",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "认定代码",
+        "type": "enum",
+        "enum": [
+          "Existence",
+          "Completeness",
+          "Accuracy",
+          "Cutoff",
+          "RightsAndObligations",
+          "Presentation"
+        ]
+      },
+      {
+        "code": "name",
+        "label": "中文名",
+        "type": "enum",
+        "enum": [
+          "存在",
+          "完整性",
+          "准确性",
+          "截止",
+          "权利义务",
+          "列报"
+        ]
+      },
+      {
+        "code": "applies_to",
+        "label": "适用方向",
+        "type": "enum",
+        "enum": [
+          "所有科目",
+          "资产负债表科目",
+          "交易类科目",
+          "披露"
+        ]
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "风险",
+    "code": "RiskOfMaterialMisstatement",
+    "display_name": "重大错报风险",
+    "icon": "ShieldAlert",
+    "color": "#dc2626",
+    "description": "CSA 1141 识别的重大错报风险",
+    "properties_schema": [
+      {
+        "code": "risk_name",
+        "label": "风险描述",
+        "type": "text",
+        "required": true
+      },
+      {
+        "code": "risk_level",
+        "label": "层次",
+        "type": "enum",
+        "enum": [
+          "报表层次",
+          "认定层次"
+        ]
+      },
+      {
+        "code": "is_special",
+        "label": "特别风险",
+        "type": "boolean"
+      },
+      {
+        "code": "addressable_by_substantive",
+        "label": "可仅通过实质性程序应对",
+        "type": "boolean"
+      },
+      {
+        "code": "affected_areas",
+        "label": "受影响审计区域",
+        "type": "json"
+      },
+      {
+        "code": "affected_assertions",
+        "label": "受影响认定",
+        "type": "json"
+      },
+      {
+        "code": "severity",
+        "label": "严重程度",
+        "type": "enum",
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "风险",
+    "code": "FraudRisk",
+    "display_name": "舞弊风险",
+    "icon": "AlertOctagon",
+    "color": "#991b1b",
+    "description": "CSA 1141 识别的舞弊风险",
+    "properties_schema": [
+      {
+        "code": "risk_name",
+        "label": "风险描述",
+        "type": "text",
+        "required": true
+      },
+      {
+        "code": "fraud_type",
+        "label": "舞弊类型",
+        "type": "enum",
+        "enum": [
+          "收入虚增",
+          "费用少计",
+          "资产侵占",
+          "管理层凌驾",
+          "关联方利益输送",
+          "其他"
+        ]
+      },
+      {
+        "code": "indicators",
+        "label": "舞弊征兆",
+        "type": "json"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "风险",
+    "code": "InternalControlDeficiency",
+    "display_name": "内控缺陷",
+    "icon": "ShieldOff",
+    "color": "#b91c1c",
+    "description": "识别出的内控缺陷",
+    "properties_schema": [
+      {
+        "code": "deficiency",
+        "label": "缺陷描述",
+        "type": "text"
+      },
+      {
+        "code": "control_area",
+        "label": "控制领域",
+        "type": "string"
+      },
+      {
+        "code": "severity",
+        "label": "严重程度",
+        "type": "enum",
+        "enum": [
+          "重大缺陷",
+          "重要缺陷",
+          "一般缺陷"
+        ]
+      },
+      {
+        "code": "remediation",
+        "label": "整改建议",
+        "type": "text"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "风险",
+    "code": "AbnormalTransaction",
+    "display_name": "异常交易",
+    "icon": "AlertTriangle",
+    "color": "#f97316",
+    "description": "凭证级或交易级异常",
+    "properties_schema": [
+      {
+        "code": "anomaly_type",
+        "label": "异常类型",
+        "type": "enum",
+        "enum": [
+          "库存归零",
+          "整数交易",
+          "月末突击",
+          "对冲分录",
+          "周末凭证",
+          "大额无单据",
+          "集中度异常",
+          "应收回旋",
+          "重复凭证号",
+          "其他"
+        ]
+      },
+      {
+        "code": "detail",
+        "label": "描述",
+        "type": "text"
+      },
+      {
+        "code": "voucher_refs",
+        "label": "涉及凭证",
+        "type": "json"
+      },
+      {
+        "code": "amount_involved",
+        "label": "涉及金额",
+        "type": "money"
+      },
+      {
+        "code": "severity",
+        "label": "严重程度",
+        "type": "enum",
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
+      },
+      {
+        "code": "status",
+        "label": "状态",
+        "type": "enum",
+        "enum": [
+          "open",
+          "resolved",
+          "ignored"
+        ]
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "风险",
+    "code": "RelatedPartyRisk",
+    "display_name": "关联方风险",
+    "icon": "GitBranchPlus",
+    "color": "#9d174d",
+    "description": "CAS 36 关联方相关风险（资金占用/价格不公允/未披露 等）",
+    "properties_schema": [
+      {
+        "code": "related_party_name",
+        "label": "关联方",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "risk_type",
+        "label": "风险类型",
+        "type": "enum",
+        "enum": [
+          "资金占用",
+          "价格不公允",
+          "未披露关联关系",
+          "披露不完整",
+          "担保链条复杂",
+          "其他"
+        ]
+      },
+      {
+        "code": "amount_involved",
+        "label": "涉及金额",
+        "type": "money"
+      },
+      {
+        "code": "description",
+        "label": "描述",
+        "type": "text"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "程序",
+    "code": "Sampling",
+    "display_name": "抽样",
+    "icon": "Sigma",
+    "color": "#14b8a6",
+    "description": "抽样程序（统计抽样/非统计抽样）",
+    "properties_schema": [
+      {
+        "code": "population_size",
+        "label": "总体规模",
+        "type": "number"
+      },
+      {
+        "code": "population_value",
+        "label": "总体金额",
+        "type": "money"
+      },
+      {
+        "code": "sample_size",
+        "label": "样本量",
+        "type": "number"
+      },
+      {
+        "code": "method",
+        "label": "抽样方法",
+        "type": "enum",
+        "enum": [
+          "统计抽样PPS",
+          "随机抽样",
+          "系统抽样",
+          "整群抽样",
+          "判断抽样",
+          "全部检查"
+        ]
+      },
+      {
+        "code": "confidence_level",
+        "label": "置信水平",
+        "type": "number"
+      },
+      {
+        "code": "tolerable_error",
+        "label": "可容忍误差",
+        "type": "money"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "程序",
+    "code": "Confirmation",
+    "display_name": "函证",
+    "icon": "MailCheck",
+    "color": "#0d9488",
+    "description": "函证程序",
+    "properties_schema": [
+      {
+        "code": "target_account",
+        "label": "目标科目",
+        "type": "string"
+      },
+      {
+        "code": "confirmation_type",
+        "label": "函证方式",
+        "type": "enum",
+        "enum": [
+          "积极式",
+          "消极式"
+        ]
+      },
+      {
+        "code": "sample_count",
+        "label": "发函数",
+        "type": "number"
+      },
+      {
+        "code": "reply_count",
+        "label": "回函数",
+        "type": "number"
+      },
+      {
+        "code": "reply_rate",
+        "label": "回函率",
+        "type": "number"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "程序",
+    "code": "AnalyticalProcedure",
+    "display_name": "分析程序",
+    "icon": "TrendingUp",
+    "color": "#0f766e",
+    "description": "比率分析、趋势分析、回归分析等",
+    "properties_schema": [
+      {
+        "code": "method",
+        "label": "方法",
+        "type": "enum",
+        "enum": [
+          "比率分析",
+          "趋势分析",
+          "结构分析",
+          "合理性测试",
+          "回归分析"
+        ]
+      },
+      {
+        "code": "metric",
+        "label": "指标",
+        "type": "string"
+      },
+      {
+        "code": "expected_value",
+        "label": "预期值",
+        "type": "number"
+      },
+      {
+        "code": "actual_value",
+        "label": "实际值",
+        "type": "number"
+      },
+      {
+        "code": "variance_pct",
+        "label": "差异率",
+        "type": "number"
+      },
+      {
+        "code": "threshold_breached",
+        "label": "超阈值",
+        "type": "boolean"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "程序",
+    "code": "DetailTest",
+    "display_name": "细节测试",
+    "icon": "MicroscopeIcon",
+    "color": "#115e59",
+    "description": "对样本逐笔检查",
+    "properties_schema": [
+      {
+        "code": "target_account",
+        "label": "目标科目",
+        "type": "string"
+      },
+      {
+        "code": "tested_items_count",
+        "label": "测试笔数",
+        "type": "number"
+      },
+      {
+        "code": "tested_amount",
+        "label": "测试金额",
+        "type": "money"
+      },
+      {
+        "code": "exceptions_count",
+        "label": "例外笔数",
+        "type": "number"
+      },
+      {
+        "code": "test_attributes",
+        "label": "测试属性",
+        "type": "json"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "程序",
+    "code": "CutoffTest",
+    "display_name": "截止测试",
+    "icon": "ScissorsLineDashed",
+    "color": "#134e4a",
+    "description": "期末前后 N 工作日凭证扫描",
+    "properties_schema": [
+      {
+        "code": "target_account",
+        "label": "目标科目",
+        "type": "string"
+      },
+      {
+        "code": "cutoff_date",
+        "label": "截止日",
+        "type": "date"
+      },
+      {
+        "code": "window_days_before",
+        "label": "向前天数",
+        "type": "number"
+      },
+      {
+        "code": "window_days_after",
+        "label": "向后天数",
+        "type": "number"
+      },
+      {
+        "code": "items_scanned",
+        "label": "扫描笔数",
+        "type": "number"
+      },
+      {
+        "code": "cross_period_items",
+        "label": "跨期笔数",
+        "type": "number"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "程序",
+    "code": "Recomputation",
+    "display_name": "重新计算",
+    "icon": "Calculator",
+    "color": "#155e75",
+    "description": "对客户账面金额重新计算 (折旧/摊销/利息/税费)",
+    "properties_schema": [
+      {
+        "code": "target",
+        "label": "目标",
+        "type": "string"
+      },
+      {
+        "code": "formula",
+        "label": "重算公式",
+        "type": "string"
+      },
+      {
+        "code": "book_value",
+        "label": "账面值",
+        "type": "money"
+      },
+      {
+        "code": "recomputed_value",
+        "label": "重算值",
+        "type": "money"
+      },
+      {
+        "code": "difference",
+        "label": "差异",
+        "type": "money"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "证据",
+    "code": "Evidence",
+    "display_name": "审计证据",
+    "icon": "Paperclip",
+    "color": "#475569",
+    "description": "支持底稿结论的证据",
+    "properties_schema": [
+      {
+        "code": "evidence_type",
+        "label": "证据类型",
+        "type": "enum",
+        "enum": [
+          "外部书面",
+          "内部书面",
+          "口头",
+          "观察记录",
+          "重新执行",
+          "电子记录",
+          "截图"
+        ]
+      },
+      {
+        "code": "source",
+        "label": "来源",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "file_ref",
+        "label": "文件引用",
+        "type": "string"
+      },
+      {
+        "code": "page_or_cell",
+        "label": "页码/单元格",
+        "type": "string",
+        "help": "如 'p.23' 或 '科目余额表!A6'"
+      },
+      {
+        "code": "screenshot",
+        "label": "截图链接",
+        "type": "string"
+      },
+      {
+        "code": "validation_result",
+        "label": "校验结果",
+        "type": "enum",
+        "enum": [
+          "通过",
+          "失败",
+          "部分",
+          "待补"
+        ]
+      },
+      {
+        "code": "responsible_person",
+        "label": "责任人",
+        "type": "string"
+      },
+      {
+        "code": "captured_at",
+        "label": "采集时间",
+        "type": "date"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "底稿",
+    "code": "WorkingPaper",
+    "display_name": "审计底稿",
+    "icon": "ClipboardList",
+    "color": "#9333ea",
+    "description": "审计底稿（单张）",
+    "properties_schema": [
+      {
+        "code": "index",
+        "label": "索引号",
+        "type": "string",
+        "required": true,
+        "help": "如 A1 / A6 / B6"
+      },
+      {
+        "code": "name",
+        "label": "底稿名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "template_code",
+        "label": "所用模板",
+        "type": "string"
+      },
+      {
+        "code": "engagement_code",
+        "label": "所属项目",
+        "type": "string"
+      },
+      {
+        "code": "sheet_data",
+        "label": "工作表数据",
+        "type": "json",
+        "help": "{summary, detail, ..., 按 PaperTemplate.sheets 结构填入}"
+      },
+      {
+        "code": "cross_references",
+        "label": "交叉引用",
+        "type": "json",
+        "help": "['Z6-AI-A6-01', 'B7-summary', ...]"
+      },
+      {
+        "code": "audit_conclusion",
+        "label": "审计结论",
+        "type": "text"
+      },
+      {
+        "code": "review_status",
+        "label": "复核状态",
+        "type": "enum",
+        "enum": [
+          "未开始",
+          "AI 初稿",
+          "一级复核中",
+          "二级复核中",
+          "三级复核中",
+          "已完成"
+        ]
+      },
+      {
+        "code": "filled_by",
+        "label": "编制人",
+        "type": "string"
+      },
+      {
+        "code": "filled_at",
+        "label": "编制时间",
+        "type": "date"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "底稿",
+    "code": "PaperTemplate",
+    "display_name": "底稿模板",
+    "icon": "LayoutTemplate",
+    "color": "#a855f7",
+    "description": "可重用底稿模板（含 sheet 结构与默认规则）",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "模板编号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "name",
+        "label": "模板名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "scenario",
+        "label": "适用场景",
+        "type": "enum",
+        "enum": [
+          "底稿填写",
+          "方案生成",
+          "异常分析",
+          "专项审计"
+        ]
+      },
+      {
+        "code": "version",
+        "label": "版本",
+        "type": "string"
+      },
+      {
+        "code": "sheets",
+        "label": "子表清单",
+        "type": "json"
+      },
+      {
+        "code": "default_rules",
+        "label": "默认规则",
+        "type": "json"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "报告",
+    "code": "AuditReport",
+    "display_name": "审计报告",
+    "icon": "FileCheck",
+    "color": "#16a34a",
+    "description": "审计报告（顶层）",
+    "properties_schema": [
+      {
+        "code": "report_no",
+        "label": "报告文号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "report_date",
+        "label": "报告日",
+        "type": "date"
+      },
+      {
+        "code": "opinion_type",
+        "label": "意见类型",
+        "type": "enum",
+        "enum": [
+          "无保留意见",
+          "带强调事项段的无保留意见",
+          "保留意见",
+          "否定意见",
+          "无法表示意见"
+        ]
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "报告",
+    "code": "OpinionParagraph",
+    "display_name": "意见段",
+    "icon": "Quote",
+    "color": "#15803d",
+    "description": "审计报告的意见段",
+    "properties_schema": [
+      {
+        "code": "paragraph_type",
+        "label": "段落类型",
+        "type": "enum",
+        "enum": [
+          "审计意见",
+          "形成意见基础",
+          "管理层责任",
+          "注师责任"
+        ]
+      },
+      {
+        "code": "content",
+        "label": "正文",
+        "type": "text"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "报告",
+    "code": "ExplanatoryParagraph",
+    "display_name": "说明段",
+    "icon": "MessageSquare",
+    "color": "#22c55e",
+    "description": "强调事项段 / 其他事项段",
+    "properties_schema": [
+      {
+        "code": "paragraph_type",
+        "label": "类型",
+        "type": "enum",
+        "enum": [
+          "强调事项段",
+          "其他事项段"
+        ]
+      },
+      {
+        "code": "topic",
+        "label": "主题",
+        "type": "string"
+      },
+      {
+        "code": "content",
+        "label": "正文",
+        "type": "text"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "报告",
+    "code": "DisclosureNote",
+    "display_name": "附注披露",
+    "icon": "BookOpen",
+    "color": "#65a30d",
+    "description": "财务报表附注的一条披露",
+    "properties_schema": [
+      {
+        "code": "note_no",
+        "label": "附注序号",
+        "type": "string"
+      },
+      {
+        "code": "topic",
+        "label": "披露主题",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "framework_ref",
+        "label": "准则依据",
+        "type": "string"
+      },
+      {
+        "code": "content",
+        "label": "披露内容",
+        "type": "text"
+      },
+      {
+        "code": "is_complete",
+        "label": "披露完整",
+        "type": "boolean"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "报告",
+    "code": "SpecialFinding",
+    "display_name": "专项发现",
+    "icon": "Telescope",
+    "color": "#84cc16",
+    "description": "审计中识别的专项发现",
+    "properties_schema": [
+      {
+        "code": "finding_no",
+        "label": "发现序号",
+        "type": "string"
+      },
+      {
+        "code": "topic",
+        "label": "主题",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "severity",
+        "label": "严重程度",
+        "type": "enum",
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
+      },
+      {
+        "code": "description",
+        "label": "描述",
+        "type": "text"
+      },
+      {
+        "code": "amount_involved",
+        "label": "涉及金额",
+        "type": "money"
+      },
+      {
+        "code": "evidence_refs",
+        "label": "证据引用",
+        "type": "json"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "报告",
+    "code": "Recommendation",
+    "display_name": "建议",
+    "icon": "Lightbulb",
+    "color": "#a3e635",
+    "description": "对客户的建议",
+    "properties_schema": [
+      {
+        "code": "topic",
+        "label": "主题",
+        "type": "string"
+      },
+      {
+        "code": "content",
+        "label": "建议内容",
+        "type": "text"
+      },
+      {
+        "code": "priority",
+        "label": "优先级",
+        "type": "enum",
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ]
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "报告",
+    "code": "RemediationRequirement",
+    "display_name": "整改要求",
+    "icon": "Wrench",
+    "color": "#bef264",
+    "description": "需要客户整改的事项",
+    "properties_schema": [
+      {
+        "code": "topic",
+        "label": "整改事项",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "deadline",
+        "label": "整改期限",
+        "type": "date"
+      },
+      {
+        "code": "responsible_person",
+        "label": "客户责任人",
+        "type": "string"
+      },
+      {
+        "code": "status",
+        "label": "状态",
+        "type": "enum",
+        "enum": [
+          "待整改",
+          "整改中",
+          "已完成",
+          "未整改"
+        ]
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "辅助",
+    "code": "MaterialityLevel",
+    "display_name": "重要性水平",
+    "icon": "Target",
+    "color": "#b45309",
+    "description": "PM / TE / SUM (CSA 1221)",
+    "properties_schema": [
+      {
+        "code": "benchmark",
+        "label": "基准",
+        "type": "enum",
+        "enum": [
+          "总资产法",
+          "净资产法",
+          "营业收入法",
+          "费用总额法",
+          "经常性税前利润"
+        ]
+      },
+      {
+        "code": "benchmark_value",
+        "label": "基准值",
+        "type": "money"
+      },
+      {
+        "code": "benchmark_ratio",
+        "label": "比率",
+        "type": "number"
+      },
+      {
+        "code": "overall_materiality_pm",
+        "label": "整体重要性 PM",
+        "type": "money"
+      },
+      {
+        "code": "performance_materiality_te",
+        "label": "执行重要性 TE",
+        "type": "money"
+      },
+      {
+        "code": "clearly_trivial_sum",
+        "label": "明显微小 SUM",
+        "type": "money"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "_cluster": "辅助",
+    "code": "AuditAdjustment",
+    "display_name": "审计调整分录",
+    "icon": "ArrowRightLeft",
+    "color": "#7c3aed",
+    "description": "Z6 调整及重分类分录",
+    "properties_schema": [
+      {
+        "code": "no",
+        "label": "调整序号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "reason",
+        "label": "调整说明",
+        "type": "text"
+      },
+      {
+        "code": "kind",
+        "label": "调整类型",
+        "type": "enum",
+        "enum": [
+          "折旧订正",
+          "往来核销",
+          "重分类",
+          "跨期补录",
+          "前期差错更正",
+          "其他"
+        ]
+      },
+      {
+        "code": "entries",
+        "label": "分录",
+        "type": "json"
+      },
+      {
+        "code": "total_amount",
+        "label": "金额",
+        "type": "money"
+      },
+      {
+        "code": "profit_impact",
+        "label": "对利润影响",
+        "type": "money"
+      },
+      {
+        "code": "triggered_by_rule",
+        "label": "触发规则",
+        "type": "string"
+      },
+      {
+        "code": "approved_by_client",
+        "label": "客户已同意",
+        "type": "boolean"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "辅助",
+    "code": "AuditRule",
+    "display_name": "审计规则",
+    "icon": "Scale",
+    "color": "#dc2626",
+    "description": "可执行的审计校验规则（公共/事务所/项目级）",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "规则编号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "name",
+        "label": "规则名称",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "category",
+        "label": "类别",
+        "type": "string"
+      },
+      {
+        "code": "expression",
+        "label": "表达式/说明",
+        "type": "text"
+      },
+      {
+        "code": "severity",
+        "label": "严重程度",
+        "type": "enum",
+        "enum": [
+          "low",
+          "medium",
+          "high"
+        ]
+      },
+      {
+        "code": "source",
+        "label": "来源",
+        "type": "enum",
+        "enum": [
+          "公共",
+          "事务所",
+          "项目"
+        ]
+      },
+      {
+        "code": "issuer",
+        "label": "发布方",
+        "type": "string"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "code": "AccountingPolicy",
+    "display_name": "会计政策",
+    "icon": "BookOpen",
+    "color": "#a78bfa",
+    "description": "被审单位采用的会计政策（折旧/计提/收入确认等）",
+    "_cluster": "数据类",
+    "properties_schema": [
+      {
+        "code": "name",
+        "label": "政策名",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "category",
+        "label": "类别",
+        "type": "string"
+      },
+      {
+        "code": "detail",
+        "label": "政策内容",
+        "type": "string"
+      }
+    ],
+    "_layer": "L1"
+  },
+  {
+    "code": "RelatedPartyGuarantee",
+    "display_name": "关联担保",
+    "icon": "ShieldAlert",
+    "color": "#f43f5e",
+    "description": "关联方为公司提供的担保（连带保证 / 抵押等）",
+    "_cluster": "风险",
+    "properties_schema": [
+      {
+        "code": "code",
+        "label": "担保编号",
+        "type": "string",
+        "required": true
+      },
+      {
+        "code": "guarantor",
+        "label": "担保人",
+        "type": "string"
+      },
+      {
+        "code": "amount",
+        "label": "担保金额",
+        "type": "number"
+      },
+      {
+        "code": "guarantee_type",
+        "label": "担保方式",
+        "type": "string"
+      }
+    ],
+    "_layer": "L2:donglin"
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "AggregationSheet",
+    "display_name": "汇总表",
+    "icon": "FileSpreadsheet",
+    "color": "#d97706",
+    "description": "v5 引入 · Aggregation Sheet",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "Anomaly",
+    "display_name": "异常项",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Anomaly",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "AuditAdjustingEntry",
+    "display_name": "审定调整分录",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Audit Adjusting Entry",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "AuditProcedure",
+    "display_name": "审计程序",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Audit Procedure",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "客户类",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "Client",
+    "display_name": "客户",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Audit Client",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "CounterpartyUnit",
+    "display_name": "往来单位",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Counterparty Unit",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "DetailSheet",
+    "display_name": "明细表",
+    "icon": "FileSpreadsheet",
+    "color": "#d97706",
+    "description": "v5 引入 · Detail Sheet",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "FillRule",
+    "display_name": "填表规则",
+    "icon": "Scale",
+    "color": "#d97706",
+    "description": "v5 引入 · Fill Rule",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "ReportLineItem",
+    "display_name": "报表行项",
+    "icon": "FileText",
+    "color": "#2563eb",
+    "description": "v5 引入 · Report Line Item",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "SpecialAuditCase",
+    "display_name": "专项审计案例",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Special Audit Case",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "SummarySheet",
+    "display_name": "审定表",
+    "icon": "FileSpreadsheet",
+    "color": "#d97706",
+    "description": "v5 引入 · Summary Sheet",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "WorkpaperField",
+    "display_name": "底稿字段",
+    "icon": "FileSpreadsheet",
+    "color": "#d97706",
+    "description": "v5 引入 · Workpaper Field",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "JournalEntry",
+    "display_name": "会计分录",
+    "icon": "Receipt",
+    "color": "#2563eb",
+    "description": "v5 引入 · Journal Entry",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "AuxiliaryLedger",
+    "display_name": "辅助账",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Auxiliary Ledger",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "证据",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "ConfirmationReconciliation",
+    "display_name": "函证调节",
+    "icon": "Mail",
+    "color": "#0d9488",
+    "description": "v5 引入 · Confirmation Reconciliation",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "AnalyticalProcedureResult",
+    "display_name": "分析程序结果",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Analytical Procedure Result",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "SubstantiveTest",
+    "display_name": "实质性测试",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Substantive Test",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "ControlActivity",
+    "display_name": "控制活动",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Control Activity",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "ControlDeficiency",
+    "display_name": "内控缺陷",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Control Deficiency",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "风险",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "RiskAssessment",
+    "display_name": "风险评估",
+    "icon": "AlertTriangle",
+    "color": "#0d9488",
+    "description": "v5 引入 · Risk Assessment",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "AuditOpinion",
+    "display_name": "审计意见",
+    "icon": "FileText",
+    "color": "#2563eb",
+    "description": "v5 引入 · Audit Opinion",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "ReviewRecord",
+    "display_name": "复核记录",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Review Record",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "认定",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "AuditAssertion",
+    "display_name": "审计认定",
+    "icon": "Scale",
+    "color": "#2563eb",
+    "description": "v5 引入 · Audit Assertion",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "客户类",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "Group",
+    "display_name": "客户集团",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Client Group",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "客户类",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "Person",
+    "display_name": "人员",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Person",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "项目类",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "AuditorRole",
+    "display_name": "审计师角色",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Auditor Role",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "EmphasisOfMatterParagraph",
+    "display_name": "强调事项段",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Emphasis-of-Matter Paragraph",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "NoteSection",
+    "display_name": "附注章节",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Note Section",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "项目类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "Milestone",
+    "display_name": "里程碑",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Milestone",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "InventorySheet",
+    "display_name": "盘点表",
+    "icon": "FileSpreadsheet",
+    "color": "#d97706",
+    "description": "v5 引入 · Inventory Sheet",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "InventoryItem",
+    "display_name": "盘点项目",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Inventory Item",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "BankAccount",
+    "display_name": "银行账户",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Bank Account",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "TaxItem",
+    "display_name": "税项",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Tax Item",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "VoucherSamplingWorkpaper",
+    "display_name": "凭证抽样底稿",
+    "icon": "FileSpreadsheet",
+    "color": "#d97706",
+    "description": "v5 引入 · Voucher Sampling Workpaper",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "证据",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "DocumentRequestList",
+    "display_name": "客户资料清单",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Document Request List",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "证据",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "SuppliedDocument",
+    "display_name": "客户提供资料",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Supplied Document",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "风险",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "MaterialityBenchmark",
+    "display_name": "重要性基准",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Materiality Benchmark",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "风险",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "GoingConcernAssessment",
+    "display_name": "持续经营评估",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Going Concern Assessment",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "LoanContract",
+    "display_name": "借款合同",
+    "icon": "Coins",
+    "color": "#d97706",
+    "description": "v5 引入 · Loan Contract",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "FixedAssetItem",
+    "display_name": "固定资产项",
+    "icon": "Coins",
+    "color": "#d97706",
+    "description": "v5 引入 · Fixed Asset Item",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "客户类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "IndustryProfile",
+    "display_name": "行业概况",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Industry Profile",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "客户类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "BusinessRegistration",
+    "display_name": "工商登记",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Business Registration",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "Z6AdjustmentEntry",
+    "display_name": "Z6 调整分录",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Z6 Adjustment Entry",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "MergeAdjustment",
+    "display_name": "并户调整",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Merge Adjustment",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "ReclassificationEntry",
+    "display_name": "重分类调整",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Reclassification Entry",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "数据类",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "AccountingFramework",
+    "display_name": "会计准则",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Accounting Framework",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "项目类",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "AuditCycle",
+    "display_name": "审计循环",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Audit Cycle",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "PaperPhase",
+    "display_name": "底稿阶段",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Workpaper Phase",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "ToolUsage",
+    "display_name": "工具使用记录",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Tool Usage",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "底稿",
+    "_layer": "L2:donglin",
+    "_source": "v5_import",
+    "code": "CorrectionLog",
+    "display_name": "修正日志",
+    "icon": "Box",
+    "color": "#d97706",
+    "description": "v5 引入 · Correction Log",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "ManagementLetter",
+    "display_name": "管理建议书",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Management Letter",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "ManagementRep",
+    "display_name": "管理层声明",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Management Representation Letter",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "SubsequentEvent",
+    "display_name": "期后事项",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Subsequent Event",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "报告",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "UnadjustedMisstatement",
+    "display_name": "未调整错报",
+    "icon": "Box",
+    "color": "#0d9488",
+    "description": "v5 引入 · Unadjusted Misstatement",
+    "properties_schema": []
+  },
+  {
+    "_cluster": "程序",
+    "_layer": "L1",
+    "_source": "v5_import",
+    "code": "Walkthrough",
+    "display_name": "穿行测试",
+    "icon": "Box",
+    "color": "#2563eb",
+    "description": "v5 引入 · Walkthrough",
+    "properties_schema": []
+  }
+]

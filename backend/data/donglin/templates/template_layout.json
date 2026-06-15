@@ -1,0 +1,3574 @@
+{
+  "A1": {
+    "sheet_name": "A1",
+    "title": "货币资金",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 26,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "上期审定数"
+      },
+      {
+        "letter": "D",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "E",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "F",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "G",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "H",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "G",
+            "value": "编  制："
+          },
+          {
+            "col": "H",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "G",
+            "value": "复  核："
+          },
+          {
+            "col": "H",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：货币资金"
+          },
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "G",
+            "value": "索  引："
+          },
+          {
+            "col": "H",
+            "value": "A1"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "货币资金"
+          },
+          {
+            "col": "H",
+            "value": "[添加行]"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "上期审定数"
+          },
+          {
+            "col": "D",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "E",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "F",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "G",
+            "value": "审核确认额"
+          },
+          {
+            "col": "H",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "报表数"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "明细账"
+          },
+          {
+            "col": "C",
+            "value": "0"
+          },
+          {
+            "col": "D",
+            "value": "667895.58"
+          },
+          {
+            "col": "E",
+            "value": "8629912.16"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "9297807.74"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "其中："
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "现金"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "E",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "现金"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "银行存款"
+          },
+          {
+            "col": "D",
+            "value": "667895.58"
+          },
+          {
+            "col": "E",
+            "value": "42060.08"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "709955.66"
+          },
+          {
+            "col": "H",
+            "value": "银行存款"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A1",
+    "sub_label": "审定表",
+    "kind": "summary"
+  },
+  "A1-2": {
+    "sheet_name": "A1-2",
+    "title": "货币资金明细表",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 17,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "期初金额"
+      },
+      {
+        "letter": "D",
+        "label": "借方累计"
+      },
+      {
+        "letter": "E",
+        "label": "贷方累计"
+      },
+      {
+        "letter": "F",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "G",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "H",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "I",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "J",
+        "label": "二级分类"
+      },
+      {
+        "letter": "K",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "J",
+            "value": "编  制："
+          },
+          {
+            "col": "K",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "J",
+            "value": "日  期："
+          },
+          {
+            "col": "K",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "J",
+            "value": "复  核："
+          },
+          {
+            "col": "K",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：货币资金明细表"
+          },
+          {
+            "col": "J",
+            "value": "日  期："
+          },
+          {
+            "col": "K",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "J",
+            "value": "索  引："
+          },
+          {
+            "col": "K",
+            "value": "A1-2"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "货币资金明细表"
+          },
+          {
+            "col": "K",
+            "value": "[添加行]"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "期初金额"
+          },
+          {
+            "col": "D",
+            "value": "借方累计"
+          },
+          {
+            "col": "E",
+            "value": "贷方累计"
+          },
+          {
+            "col": "F",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "G",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "H",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "I",
+            "value": "审核确认额"
+          },
+          {
+            "col": "J",
+            "value": "二级分类"
+          },
+          {
+            "col": "K",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "库存现金"
+          },
+          {
+            "col": "C",
+            "value": "121236.21"
+          },
+          {
+            "col": "D",
+            "value": "693000"
+          },
+          {
+            "col": "E",
+            "value": "814236.21"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "0"
+          },
+          {
+            "col": "J",
+            "value": "现金"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "农行惠山支行"
+          },
+          {
+            "col": "C",
+            "value": "439289.24"
+          },
+          {
+            "col": "D",
+            "value": "58534611.23"
+          },
+          {
+            "col": "E",
+            "value": "58434040.37"
+          },
+          {
+            "col": "F",
+            "value": "539860.1"
+          },
+          {
+            "col": "I",
+            "value": "539860.1"
+          },
+          {
+            "col": "J",
+            "value": "银行存款"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "浙商银行"
+          },
+          {
+            "col": "C",
+            "value": "1444.85"
+          },
+          {
+            "col": "D",
+            "value": "4713.06"
+          },
+          {
+            "col": "E",
+            "value": "6157.91"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "0"
+          },
+          {
+            "col": "J",
+            "value": "银行存款"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "农行美元-8954"
+          },
+          {
+            "col": "C",
+            "value": "0"
+          },
+          {
+            "col": "D",
+            "value": "36184106.34"
+          },
+          {
+            "col": "E",
+            "value": "36184106.34"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "0"
+          },
+          {
+            "col": "J",
+            "value": "银行存款"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "交通银行4482"
+          },
+          {
+            "col": "C",
+            "value": "4081.43"
+          },
+          {
+            "col": "D",
+            "value": "11074226.94"
+          },
+          {
+            "col": "E",
+            "value": "10982348.94"
+          },
+          {
+            "col": "F",
+            "value": "95959.43"
+          },
+          {
+            "col": "I",
+            "value": "95959.43"
+          },
+          {
+            "col": "J",
+            "value": "银行存款"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A1",
+    "sub_label": "明细表",
+    "kind": "detail"
+  },
+  "A6": {
+    "sheet_name": "A6",
+    "title": "应收账款",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 14,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "上期审定数"
+      },
+      {
+        "letter": "D",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "E",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "F",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "G",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "H",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "G",
+            "value": "编  制："
+          },
+          {
+            "col": "H",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "G",
+            "value": "复  核："
+          },
+          {
+            "col": "H",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：应收账款"
+          },
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "G",
+            "value": "索  引："
+          },
+          {
+            "col": "H",
+            "value": "A6"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "应收账款"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "上期审定数"
+          },
+          {
+            "col": "D",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "E",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "F",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "G",
+            "value": "审核确认额"
+          },
+          {
+            "col": "H",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "报表数"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "明细账"
+          },
+          {
+            "col": "C",
+            "value": "11625654.91"
+          },
+          {
+            "col": "D",
+            "value": "3312782.17"
+          },
+          {
+            "col": "E",
+            "value": "7399598.7"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "10712380.87"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "其中："
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "账面余额"
+          },
+          {
+            "col": "C",
+            "value": "11625654.91"
+          },
+          {
+            "col": "D",
+            "value": "3312782.17"
+          },
+          {
+            "col": "E",
+            "value": "7399598.7"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "10712380.87"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "坏账准备"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A6",
+    "sub_label": "审定表",
+    "kind": "summary"
+  },
+  "A6-2": {
+    "sheet_name": "A6-2",
+    "title": "应收账款明细表",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 807,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "客户代码"
+      },
+      {
+        "letter": "C",
+        "label": "客户名称"
+      },
+      {
+        "letter": "D",
+        "label": "期初余额未审数"
+      },
+      {
+        "letter": "E",
+        "label": "期初调整金额"
+      },
+      {
+        "letter": "F",
+        "label": "期初余额审定数"
+      },
+      {
+        "letter": "G",
+        "label": "借方累计"
+      },
+      {
+        "letter": "H",
+        "label": "贷方累计"
+      },
+      {
+        "letter": "I",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "J",
+        "label": "审定名称/二级明细"
+      },
+      {
+        "letter": "K",
+        "label": "分类"
+      },
+      {
+        "letter": "L",
+        "label": "函证"
+      },
+      {
+        "letter": "M",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "N",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "O",
+        "label": "审核确认额"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": []
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：应收账款明细表"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "应收账款明细表"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "客户代码"
+          },
+          {
+            "col": "C",
+            "value": "客户名称"
+          },
+          {
+            "col": "D",
+            "value": "期初余额未审数"
+          },
+          {
+            "col": "E",
+            "value": "期初调整金额"
+          },
+          {
+            "col": "F",
+            "value": "期初余额审定数"
+          },
+          {
+            "col": "G",
+            "value": "借方累计"
+          },
+          {
+            "col": "H",
+            "value": "贷方累计"
+          },
+          {
+            "col": "I",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "J",
+            "value": "审定名称/二级明细"
+          },
+          {
+            "col": "K",
+            "value": "分类"
+          },
+          {
+            "col": "L",
+            "value": "函证"
+          },
+          {
+            "col": "M",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "N",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "O",
+            "value": "审核确认额"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "000001"
+          },
+          {
+            "col": "C",
+            "value": "ALIBABA.COM HONG KONG LIMITED(BRANDON ALL-STARS JA"
+          },
+          {
+            "col": "D",
+            "value": "-388206.67"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "-388206.67"
+          },
+          {
+            "col": "J",
+            "value": "账面：ALIBABA.COM HONG KONG LIMITED(BRANDON ALL-STARS JA"
+          },
+          {
+            "col": "M",
+            "value": "388206.67"
+          },
+          {
+            "col": "N",
+            "value": "0"
+          },
+          {
+            "col": "O",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "000006"
+          },
+          {
+            "col": "C",
+            "value": "BOULDER LAB BRUNSWICK PTY LTD"
+          },
+          {
+            "col": "D",
+            "value": "65820.43"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "65820.43"
+          },
+          {
+            "col": "J",
+            "value": "账面：BOULDER LAB BRUNSWICK PTY LTD"
+          },
+          {
+            "col": "M",
+            "value": "0"
+          },
+          {
+            "col": "N",
+            "value": "0"
+          },
+          {
+            "col": "O",
+            "value": "65820.43"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "000011"
+          },
+          {
+            "col": "C",
+            "value": "INDUSTRIAS MAN DE MEXICO SA CV"
+          },
+          {
+            "col": "D",
+            "value": "187608.2"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "187608.2"
+          },
+          {
+            "col": "J",
+            "value": "账面：INDUSTRIAS MAN DE MEXICO SA CV"
+          },
+          {
+            "col": "M",
+            "value": "0"
+          },
+          {
+            "col": "N",
+            "value": "0"
+          },
+          {
+            "col": "O",
+            "value": "187608.2"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "000014"
+          },
+          {
+            "col": "C",
+            "value": "安鼎睿科技（北京）有限公司"
+          },
+          {
+            "col": "D",
+            "value": "-3604"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "-3604"
+          },
+          {
+            "col": "J",
+            "value": "安鼎睿科技（北京）有限公司"
+          },
+          {
+            "col": "M",
+            "value": "3604"
+          },
+          {
+            "col": "N",
+            "value": "0"
+          },
+          {
+            "col": "O",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "000020"
+          },
+          {
+            "col": "C",
+            "value": "无锡万斯家居科技股份有限公司"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "77000"
+          },
+          {
+            "col": "H",
+            "value": "77000"
+          },
+          {
+            "col": "I",
+            "value": "0"
+          },
+          {
+            "col": "J",
+            "value": "无锡万斯家居科技股份有限公司"
+          },
+          {
+            "col": "M",
+            "value": "0"
+          },
+          {
+            "col": "N",
+            "value": "0"
+          },
+          {
+            "col": "O",
+            "value": "0"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A6",
+    "sub_label": "客户明细",
+    "kind": "detail"
+  },
+  "A6-3": {
+    "sheet_name": "A6-3",
+    "title": "应收账款函证情况汇总表",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 2,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "被询证单位名称"
+      },
+      {
+        "letter": "C",
+        "label": "样本选取依据"
+      },
+      {
+        "letter": "D",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "E",
+        "label": "函证日期"
+      },
+      {
+        "letter": "F",
+        "label": "回函日期"
+      },
+      {
+        "letter": "G",
+        "label": "回函金额"
+      },
+      {
+        "letter": "H",
+        "label": "函证索引"
+      },
+      {
+        "letter": "I",
+        "label": "差异金额"
+      },
+      {
+        "letter": "J",
+        "label": "调节表索引"
+      },
+      {
+        "letter": "K",
+        "label": "替代测试索引"
+      },
+      {
+        "letter": "L",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "M",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "N",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "O",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "N",
+            "value": "编  制："
+          },
+          {
+            "col": "O",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "N",
+            "value": "日  期："
+          },
+          {
+            "col": "O",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "N",
+            "value": "复  核："
+          },
+          {
+            "col": "O",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：应收账款函证情况汇总表"
+          },
+          {
+            "col": "N",
+            "value": "日  期："
+          },
+          {
+            "col": "O",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "N",
+            "value": "索  引："
+          },
+          {
+            "col": "O",
+            "value": "A6-3"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "应收账款函证情况汇总表"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "被询证单位名称"
+          },
+          {
+            "col": "C",
+            "value": "样本选取依据"
+          },
+          {
+            "col": "D",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "E",
+            "value": "函证日期"
+          },
+          {
+            "col": "F",
+            "value": "回函日期"
+          },
+          {
+            "col": "G",
+            "value": "回函金额"
+          },
+          {
+            "col": "H",
+            "value": "函证索引"
+          },
+          {
+            "col": "I",
+            "value": "差异金额"
+          },
+          {
+            "col": "J",
+            "value": "调节表索引"
+          },
+          {
+            "col": "K",
+            "value": "替代测试索引"
+          },
+          {
+            "col": "L",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "M",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "N",
+            "value": "审核确认额"
+          },
+          {
+            "col": "O",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "J",
+            "value": "A6-4-1"
+          },
+          {
+            "col": "K",
+            "value": "A6-5-1"
+          },
+          {
+            "col": "N",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "N",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "N",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "N",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "N",
+            "value": "0"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A6",
+    "sub_label": "函证明细",
+    "kind": "detail"
+  },
+  "A9": {
+    "sheet_name": "A9",
+    "title": "其他应收款",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 14,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "上期审定数"
+      },
+      {
+        "letter": "D",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "E",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "F",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "G",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "H",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "G",
+            "value": "编  制："
+          },
+          {
+            "col": "H",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "G",
+            "value": "复  核："
+          },
+          {
+            "col": "H",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：其他应收款"
+          },
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "G",
+            "value": "索  引："
+          },
+          {
+            "col": "H",
+            "value": "A9"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "其他应收款"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "上期审定数"
+          },
+          {
+            "col": "D",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "E",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "F",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "G",
+            "value": "审核确认额"
+          },
+          {
+            "col": "H",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "报表数"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "明细账"
+          },
+          {
+            "col": "C",
+            "value": "0"
+          },
+          {
+            "col": "D",
+            "value": "-350610.14"
+          },
+          {
+            "col": "E",
+            "value": "430610.14"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "80000"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "其中："
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "应收利息"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "E",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "应收股利"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "E",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A9",
+    "sub_label": "审定表",
+    "kind": "summary"
+  },
+  "A9-2": {
+    "sheet_name": "A9-2",
+    "title": "其他应收款明细表",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 4,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "期初金额"
+      },
+      {
+        "letter": "D",
+        "label": "借方累计"
+      },
+      {
+        "letter": "E",
+        "label": "贷方累计"
+      },
+      {
+        "letter": "F",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "G",
+        "label": "审定名称/二级明细"
+      },
+      {
+        "letter": "H",
+        "label": "分类"
+      },
+      {
+        "letter": "I",
+        "label": "函证"
+      },
+      {
+        "letter": "J",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "K",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "L",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "M",
+        "label": "报表列示"
+      },
+      {
+        "letter": "N",
+        "label": "坏账"
+      },
+      {
+        "letter": "O",
+        "label": "1年以内"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": []
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：其他应收款明细表"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "其他应收款明细表"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "期初金额"
+          },
+          {
+            "col": "D",
+            "value": "借方累计"
+          },
+          {
+            "col": "E",
+            "value": "贷方累计"
+          },
+          {
+            "col": "F",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "G",
+            "value": "审定名称/二级明细"
+          },
+          {
+            "col": "H",
+            "value": "分类"
+          },
+          {
+            "col": "I",
+            "value": "函证"
+          },
+          {
+            "col": "J",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "K",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "L",
+            "value": "审核确认额"
+          },
+          {
+            "col": "M",
+            "value": "报表列示"
+          },
+          {
+            "col": "N",
+            "value": "坏账"
+          },
+          {
+            "col": "O",
+            "value": "1年以内"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "应收出口退税款"
+          },
+          {
+            "col": "C",
+            "value": "0"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "E",
+            "value": "430610.14"
+          },
+          {
+            "col": "F",
+            "value": "-430610.14"
+          },
+          {
+            "col": "J",
+            "value": "430610.14"
+          },
+          {
+            "col": "L",
+            "value": "0"
+          },
+          {
+            "col": "M",
+            "value": "其他应收款"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "稳岗补贴"
+          },
+          {
+            "col": "D",
+            "value": "1500"
+          },
+          {
+            "col": "E",
+            "value": "1500"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "M",
+            "value": "其他应收款"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "王立燕"
+          },
+          {
+            "col": "D",
+            "value": "5250"
+          },
+          {
+            "col": "E",
+            "value": "5250"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "L",
+            "value": "0"
+          },
+          {
+            "col": "M",
+            "value": "其他应收款"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "无锡谱诺玛科技有限公司"
+          },
+          {
+            "col": "D",
+            "value": "80000"
+          },
+          {
+            "col": "E",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "80000"
+          },
+          {
+            "col": "G",
+            "value": "谱诺玛环境科技（无锡）有限公司"
+          },
+          {
+            "col": "L",
+            "value": "80000"
+          },
+          {
+            "col": "M",
+            "value": "其他应收款"
+          },
+          {
+            "col": "O",
+            "value": "80000"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "L",
+            "value": "0"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A9",
+    "sub_label": "明细表",
+    "kind": "detail"
+  },
+  "A24": {
+    "sheet_name": "A24",
+    "title": "固定资产",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 39,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "上期审定数"
+      },
+      {
+        "letter": "D",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "E",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "F",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "G",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "H",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "G",
+            "value": "编  制："
+          },
+          {
+            "col": "H",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "G",
+            "value": "复  核："
+          },
+          {
+            "col": "H",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：固定资产"
+          },
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "G",
+            "value": "索  引："
+          },
+          {
+            "col": "H",
+            "value": "A24"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "固定资产"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "上期审定数"
+          },
+          {
+            "col": "D",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "E",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "F",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "G",
+            "value": "审核确认额"
+          },
+          {
+            "col": "H",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "报表数"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "明细账"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "其中："
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "一、原值合计"
+          },
+          {
+            "col": "C",
+            "value": "3798888.61"
+          },
+          {
+            "col": "D",
+            "value": "3777740.02"
+          },
+          {
+            "col": "E",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "3777740.02"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "房屋建筑物"
+          },
+          {
+            "col": "C",
+            "value": "0"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "E",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A24",
+    "sub_label": "审定表",
+    "kind": "summary"
+  },
+  "A24-2": {
+    "sheet_name": "A24-2",
+    "title": "固定资产明细表",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 12,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "期初金额"
+      },
+      {
+        "letter": "D",
+        "label": "借方累计"
+      },
+      {
+        "letter": "E",
+        "label": "贷方累计"
+      },
+      {
+        "letter": "F",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "G",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "H",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "I",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "J",
+        "label": "KJ分类"
+      },
+      {
+        "letter": "K",
+        "label": "SW分类（可选）"
+      },
+      {
+        "letter": "L",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "K",
+            "value": "编  制："
+          },
+          {
+            "col": "L",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "K",
+            "value": "日  期："
+          },
+          {
+            "col": "L",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "K",
+            "value": "复  核："
+          },
+          {
+            "col": "L",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：固定资产明细表"
+          },
+          {
+            "col": "K",
+            "value": "日  期："
+          },
+          {
+            "col": "L",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "K",
+            "value": "索  引："
+          },
+          {
+            "col": "L",
+            "value": "A24-2"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "固定资产明细表"
+          },
+          {
+            "col": "K",
+            "value": "[添加行]"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "期初金额"
+          },
+          {
+            "col": "D",
+            "value": "借方累计"
+          },
+          {
+            "col": "E",
+            "value": "贷方累计"
+          },
+          {
+            "col": "F",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "G",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "H",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "I",
+            "value": "审核确认额"
+          },
+          {
+            "col": "J",
+            "value": "KJ分类"
+          },
+          {
+            "col": "K",
+            "value": "SW分类（可选）"
+          },
+          {
+            "col": "L",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "房屋、建筑物"
+          },
+          {
+            "col": "C",
+            "value": "0"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "0"
+          },
+          {
+            "col": "K",
+            "value": "房屋、建筑物原值"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "飞机、火车、轮船、机器、机械和其他生产设备"
+          },
+          {
+            "col": "C",
+            "value": "2767426.68"
+          },
+          {
+            "col": "D",
+            "value": "91150.44"
+          },
+          {
+            "col": "E",
+            "value": "921396.38"
+          },
+          {
+            "col": "F",
+            "value": "1937180.74"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "1937180.74"
+          },
+          {
+            "col": "K",
+            "value": "飞机、火车、轮船、机器、机械和其他生产设备原值"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "与生产经营活动有关的器具、工具、家具等"
+          },
+          {
+            "col": "C",
+            "value": "34887.1"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "34887.1"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "34887.1"
+          },
+          {
+            "col": "K",
+            "value": "与生产经营活动有关的器具、工具、家具等原值"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "飞机、火车、轮船以外的运输工具"
+          },
+          {
+            "col": "C",
+            "value": "884853.99"
+          },
+          {
+            "col": "D",
+            "value": "809097.35"
+          },
+          {
+            "col": "F",
+            "value": "1693951.34"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "1693951.34"
+          },
+          {
+            "col": "K",
+            "value": "飞机、火车、轮船以外的运输工具原值"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "电子设备"
+          },
+          {
+            "col": "C",
+            "value": "111720.84"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "111720.84"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          },
+          {
+            "col": "H",
+            "value": "0"
+          },
+          {
+            "col": "I",
+            "value": "111720.84"
+          },
+          {
+            "col": "K",
+            "value": "电子设备原值"
+          }
+        ]
+      }
+    ],
+    "paper_code": "A24",
+    "sub_label": "明细表",
+    "kind": "detail"
+  },
+  "B1": {
+    "sheet_name": "B1",
+    "title": "短期借款",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 6,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "上期审定数"
+      },
+      {
+        "letter": "D",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "E",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "F",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "G",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "H",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "G",
+            "value": "编  制："
+          },
+          {
+            "col": "H",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "G",
+            "value": "复  核："
+          },
+          {
+            "col": "H",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：短期借款"
+          },
+          {
+            "col": "G",
+            "value": "日  期："
+          },
+          {
+            "col": "H",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "G",
+            "value": "索  引："
+          },
+          {
+            "col": "H",
+            "value": "B1"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "短期借款"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "上期审定数"
+          },
+          {
+            "col": "D",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "E",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "F",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "G",
+            "value": "审核确认额"
+          },
+          {
+            "col": "H",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "B",
+            "value": "报表数"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "B",
+            "value": "明细账"
+          },
+          {
+            "col": "C",
+            "value": "0"
+          },
+          {
+            "col": "D",
+            "value": "0"
+          },
+          {
+            "col": "E",
+            "value": "0"
+          },
+          {
+            "col": "F",
+            "value": "0"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "B",
+            "value": "其中："
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "B",
+            "value": "抵押借款"
+          },
+          {
+            "col": "G",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "B",
+            "value": "质押借款"
+          }
+        ]
+      }
+    ],
+    "paper_code": "B1",
+    "sub_label": "审定表",
+    "kind": "summary"
+  },
+  "B1-2": {
+    "sheet_name": "B1-2",
+    "title": "短期借款",
+    "meta_rows": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "title_row": 6,
+    "header_row": 7,
+    "data_start_row": 8,
+    "data_row_count_estimate": 5,
+    "columns": [
+      {
+        "letter": "A",
+        "label": "索引号"
+      },
+      {
+        "letter": "B",
+        "label": "项    目"
+      },
+      {
+        "letter": "C",
+        "label": "期初金额"
+      },
+      {
+        "letter": "D",
+        "label": "借方累计"
+      },
+      {
+        "letter": "E",
+        "label": "贷方累计"
+      },
+      {
+        "letter": "F",
+        "label": "期末未审金额"
+      },
+      {
+        "letter": "G",
+        "label": "审计借方调整"
+      },
+      {
+        "letter": "H",
+        "label": "审计贷方调整"
+      },
+      {
+        "letter": "I",
+        "label": "审核确认额"
+      },
+      {
+        "letter": "J",
+        "label": "备注"
+      }
+    ],
+    "raw_meta_preview": [
+      {
+        "row": 1,
+        "cells": [
+          {
+            "col": "A",
+            "value": "无锡东林会计师事务所有限公司"
+          },
+          {
+            "col": "I",
+            "value": "编  制："
+          },
+          {
+            "col": "J",
+            "value": "王叙超"
+          }
+        ]
+      },
+      {
+        "row": 2,
+        "cells": [
+          {
+            "col": "I",
+            "value": "日  期："
+          },
+          {
+            "col": "J",
+            "value": "2026-02-28 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 3,
+        "cells": [
+          {
+            "col": "A",
+            "value": "被审计单位：江苏大王通风机械有限公司"
+          },
+          {
+            "col": "I",
+            "value": "复  核："
+          },
+          {
+            "col": "J",
+            "value": "侯佳成"
+          }
+        ]
+      },
+      {
+        "row": 4,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项    目：短期借款"
+          },
+          {
+            "col": "I",
+            "value": "日  期："
+          },
+          {
+            "col": "J",
+            "value": "2026-03-02 00:00:00"
+          }
+        ]
+      },
+      {
+        "row": 5,
+        "cells": [
+          {
+            "col": "A",
+            "value": "项目基准日：2025-12-31"
+          },
+          {
+            "col": "I",
+            "value": "索  引："
+          },
+          {
+            "col": "J",
+            "value": "B1-2"
+          }
+        ]
+      },
+      {
+        "row": 6,
+        "cells": [
+          {
+            "col": "A",
+            "value": "短期借款"
+          },
+          {
+            "col": "J",
+            "value": "[添加行]"
+          }
+        ]
+      },
+      {
+        "row": 7,
+        "cells": [
+          {
+            "col": "A",
+            "value": "索引号"
+          },
+          {
+            "col": "B",
+            "value": "项    目"
+          },
+          {
+            "col": "C",
+            "value": "期初金额"
+          },
+          {
+            "col": "D",
+            "value": "借方累计"
+          },
+          {
+            "col": "E",
+            "value": "贷方累计"
+          },
+          {
+            "col": "F",
+            "value": "期末未审金额"
+          },
+          {
+            "col": "G",
+            "value": "审计借方调整"
+          },
+          {
+            "col": "H",
+            "value": "审计贷方调整"
+          },
+          {
+            "col": "I",
+            "value": "审核确认额"
+          },
+          {
+            "col": "J",
+            "value": "备注"
+          }
+        ]
+      },
+      {
+        "row": 8,
+        "cells": [
+          {
+            "col": "A",
+            "value": "1"
+          },
+          {
+            "col": "B",
+            "value": "农行惠山支行"
+          },
+          {
+            "col": "C",
+            "value": "2000000"
+          },
+          {
+            "col": "D",
+            "value": "6000000"
+          },
+          {
+            "col": "E",
+            "value": "6000000"
+          },
+          {
+            "col": "F",
+            "value": "2000000"
+          },
+          {
+            "col": "I",
+            "value": "2000000"
+          }
+        ]
+      },
+      {
+        "row": 9,
+        "cells": [
+          {
+            "col": "A",
+            "value": "2"
+          },
+          {
+            "col": "B",
+            "value": "农行惠山支行"
+          },
+          {
+            "col": "C",
+            "value": "3000000"
+          },
+          {
+            "col": "D",
+            "value": "6000000"
+          },
+          {
+            "col": "E",
+            "value": "6000000"
+          },
+          {
+            "col": "F",
+            "value": "3000000"
+          },
+          {
+            "col": "I",
+            "value": "3000000"
+          }
+        ]
+      },
+      {
+        "row": 10,
+        "cells": [
+          {
+            "col": "A",
+            "value": "3"
+          },
+          {
+            "col": "B",
+            "value": "南京银行"
+          },
+          {
+            "col": "C",
+            "value": "4400000"
+          },
+          {
+            "col": "D",
+            "value": "4400000"
+          },
+          {
+            "col": "E",
+            "value": "4400000"
+          },
+          {
+            "col": "F",
+            "value": "4400000"
+          },
+          {
+            "col": "I",
+            "value": "4400000"
+          }
+        ]
+      },
+      {
+        "row": 11,
+        "cells": [
+          {
+            "col": "A",
+            "value": "4"
+          },
+          {
+            "col": "B",
+            "value": "交通银行"
+          },
+          {
+            "col": "C",
+            "value": "5000000"
+          },
+          {
+            "col": "D",
+            "value": "5000000"
+          },
+          {
+            "col": "E",
+            "value": "2000000"
+          },
+          {
+            "col": "F",
+            "value": "2000000"
+          },
+          {
+            "col": "I",
+            "value": "2000000"
+          }
+        ]
+      },
+      {
+        "row": 12,
+        "cells": [
+          {
+            "col": "A",
+            "value": "5"
+          },
+          {
+            "col": "B",
+            "value": "江苏银行"
+          },
+          {
+            "col": "E",
+            "value": "1000000"
+          },
+          {
+            "col": "F",
+            "value": "1000000"
+          },
+          {
+            "col": "I",
+            "value": "1000000"
+          }
+        ]
+      }
+    ],
+    "paper_code": "B1",
+    "sub_label": "借款明细",
+    "kind": "detail"
+  }
+}

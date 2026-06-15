@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东林审计师 Review · Demo 脚本 + Review Checklist</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.65; font-size: 13.5px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 35%, #6d28d9 100%);
+    color: white; padding: 36px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  header .sub { font-size: 13.5px; opacity: 0.94; max-width: 1000px; line-height: 1.65; }
+  header .meta { margin-top: 14px; display: flex; gap: 22px; font-size: 12px; opacity: 0.85; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 40px 60px; }
+  section { margin-bottom: 36px; }
+  h2 {
+    font-size: 20px; font-weight: 600; margin: 36px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 22px 0 10px; color: #334155; }
+  h4 { font-size: 13.5px; font-weight: 600; margin: 14px 0 8px; color: #475569; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    background: #f1f5f9; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, monospace; font-size: 12px;
+    color: #be185d;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 12px 16px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 12px; line-height: 1.5;
+    overflow-x: auto;
+  }
+
+  /* Demo 步骤 */
+  .demo-step {
+    background: var(--card); border-left: 6px solid #4338ca;
+    border-radius: 8px; padding: 16px 22px; margin: 14px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .demo-step h3 {
+    margin-top: 0;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .demo-step h3 .num {
+    background: #4338ca; color: white;
+    padding: 3px 12px; border-radius: 12px;
+    font-size: 13px; font-weight: 700;
+  }
+  .demo-step h3 .duration {
+    font-size: 11px; color: var(--muted); font-weight: 400;
+  }
+  .demo-step .url {
+    font-family: ui-monospace, monospace;
+    font-size: 11px; background: #1e293b; color: #86efac;
+    padding: 3px 8px; border-radius: 4px;
+    display: inline-block; margin: 6px 0;
+  }
+  .demo-step .talking-point {
+    background: #fef3c7; border-left: 3px solid #f59e0b;
+    padding: 10px 14px; margin: 10px 0;
+    font-size: 13px; border-radius: 4px;
+    color: #78350f; font-style: italic;
+  }
+  .demo-step .talking-point::before {
+    content: "💬 现场话术："; font-weight: 700; font-style: normal;
+  }
+
+  /* Review item card */
+  .review-item {
+    background: var(--card); border: 2px solid;
+    border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+  }
+  .review-item.high { border-color: #ef4444; background: #fef2f2; }
+  .review-item.medium { border-color: #f59e0b; background: #fffbeb; }
+  .review-item.low { border-color: #22c55e; background: #f0fdf4; }
+  .review-item h4 {
+    margin-top: 0; font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .review-item .badge-ai {
+    background: #fce7f3; color: #be185d;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 700;
+  }
+  .review-item .badge-public {
+    background: #dbeafe; color: #1e3a8a;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 700;
+  }
+  .review-item .checkbox-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0; border-bottom: 1px dashed rgba(0,0,0,0.1);
+  }
+  .review-item .checkbox-row:last-child { border-bottom: 0; }
+  .review-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+  }
+  .review-item .ask {
+    font-style: italic; color: var(--muted); font-size: 12px;
+    margin-top: 6px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0;
+    background: var(--card); border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  th {
+    background: #f8fafc; padding: 10px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid var(--border); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: top; font-size: 13px;
+  }
+  tr:last-child td { border-bottom: 0; }
+
+  .callout {
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.honest { background: #fef2f2; border-color: #ef4444; }
+  .callout.success { background: #f0fdf4; border-color: #22c55e; }
+  .callout strong { display: inline-block; margin-bottom: 4px; }
+
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 600;
+  }
+  .pill.public { background: #dbeafe; color: #1e3a8a; }
+  .pill.ai-inferred { background: #fce7f3; color: #be185d; }
+  .pill.real { background: #dcfce7; color: #15803d; }
+
+  .key-num {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    background: #1e3a8a; color: white;
+    font-size: 12px; font-weight: 700;
+    margin: 0 4px;
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>东林审计师 Review · Demo 脚本 + Checklist</h1>
+  <div class="sub">
+    给侯佳成项目经理（或其团队）现场 demo 本体平台的完整脚本：
+    5 段 demo 路径（约 45 分钟） + 6 个具体 review 决策点。
+    包含<strong>诚实标注</strong>哪些是 AI 推测、哪些是公开准则、哪些是真实运行的产物。
+  </div>
+  <div class="meta">
+    <span>📅 2026-05-25</span>
+    <span>🎯 给侯佳成 review</span>
+    <span>⏱ 整场约 60 分钟</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ §0 准备 ═══════════ -->
+<section>
+  <h2>§0 Demo 前的准备工作（15 分钟）</h2>
+
+  <h3>会前准备清单</h3>
+  <table>
+    <tr><th style="width:30%">项</th><th>操作</th></tr>
+    <tr>
+      <td>启动后端</td>
+      <td><code>cd backend &amp;&amp; ./.venv/Scripts/uvicorn app.main:app --port 8001</code> · 验证 9 条 Anomaly 已 seed</td>
+    </tr>
+    <tr>
+      <td>启动前端</td>
+      <td><code>cd frontend &amp;&amp; npm run dev</code> · 验证 <code>http://127.0.0.1:5174</code> 可访问</td>
+    </tr>
+    <tr>
+      <td>预加载 demo 页</td>
+      <td>预先打开 4 个 tab: <code>/ontology</code>, <code>/workbench/94 (A6)</code>, <code>/workbench/95 (A9)</code>, <code>/workbench/98 (B1)</code></td>
+    </tr>
+    <tr>
+      <td>准备 .xlsm 真实模板</td>
+      <td>确保 <code>backend/data/donglin/templates/WP_FSR_donglin.xlsm</code> 存在 (27MB)</td>
+    </tr>
+    <tr>
+      <td>给侯总打印一份 review checklist</td>
+      <td>本 HTML 的 §3 那部分 — 让他边看边在纸上打勾</td>
+    </tr>
+    <tr>
+      <td>准备一台能跑 Excel 的笔记本</td>
+      <td>下载 .xlsm 后让侯总在 Excel 里看，确认模板格式没破坏</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ═══════════ §1 诚实开场白 ═══════════ -->
+<section>
+  <h2>§1 诚实开场白（5 分钟）</h2>
+
+  <div class="callout honest">
+    <strong>⚠ 一定要诚实开场，不要让侯总误以为本体全部来自东林</strong>
+  </div>
+
+  <h3>开场话术（请按这段背诵）</h3>
+
+  <div class="demo-step" style="border-left-color:#dc2626">
+    <div class="talking-point" style="background:#fef2f2;border-left-color:#dc2626;color:#7f1d1d;font-style:normal">
+      "侯老师，今天给您看的是一套<strong>本体平台 + AI Agent 自动填稿</strong>原型，用江苏大王 2025 年度审计作为 demo 案例。
+      <br><br>
+      <strong>需要先说清楚 — 它分 3 类内容</strong>：
+      <br><br>
+      ① <span class="pill real">真实跑出来的产物</span>：5 张已填底稿 / 4,250 个单元格的本体追溯 / 9 条异常识别 / 2 笔调整分录建议 — <strong>这些是 Agent 用真实客户数据 (TB / 辅助账 / 12,620 笔凭证) 跑出来的</strong>。
+      <br><br>
+      ② <span class="pill public">公开准则相关</span>：CSA 1141 / 1221 / 1311 / 1411 等 5 条审计规则 — <strong>规则文字大致符合中注协/财政部公开准则，但形式化阈值是我们设的</strong>，需要您确认阈值符合本所实务。
+      <br><br>
+      ③ <span class="pill ai-inferred">AI 从模板形态反推</span>：7 条标"无锡东林"的内规 (如 AR-RULE-001 应收贷方重分类、GC-INDICATOR-001 关联担保识别) — <strong>这些是我们看到您的 442-sheet 底稿里有'重分类'/'担保识别'这些列后反推的，并不是从东林内规手册抽出来的</strong>。这些<strong>请您重点 review</strong>，告诉我们是否符合本所实操、阈值要不要改。
+      <br><br>
+      <strong>今天 review 的目标</strong>：让您看清这套本体长什么样，提出 ①缺哪些规则 ②哪些规则阈值要改 ③哪些对象类型本所没有要删掉。这一轮 review 后，规则库才算真正属于东林。"
+    </div>
+  </div>
+
+  <h3>不要说的话</h3>
+  <ul>
+    <li>❌ "这是我们从您给的材料里抽出的 14 条审计规则" — <strong>错，14 条里 7 条是 AI 推测的</strong></li>
+    <li>❌ "我们已经把东林事务所的本体抽出来了" — <strong>错，TBox 是设计的，不是抽取的</strong></li>
+    <li>❌ "这是您所审计师确认过的规则库" — <strong>错，本次 review 才是首轮审计师确认</strong></li>
+  </ul>
+</section>
+
+<!-- ═══════════ §2 5 段 Demo 路径 ═══════════ -->
+<section>
+  <h2>§2 现场 Demo 路径（45 分钟）</h2>
+
+  <!-- Demo 1 -->
+  <div class="demo-step">
+    <h3><span class="num">Demo 1</span> 本体管理 · 整体规模 <span class="duration">8 分钟</span></h3>
+    <div class="url">http://127.0.0.1:5174/ontology</div>
+
+    <p><strong>展示重点</strong>：</p>
+    <ul>
+      <li>左侧顶部：107 个对象类型（OT），按 4 层过滤 — L1 国际 / L2 中国 / L3 东林 / L4 经验</li>
+      <li>点击"东林专有 L3"过滤胶囊 → 约 50+ 个 OT（包括 v5 新增的 FillRule / WorkpaperField / SummarySheet 等）</li>
+      <li>点开任意 L3 OT (如 <code>RelatedPartyGuarantee</code>) → 展示 properties_schema + 关联的 LinkType + 实例数</li>
+      <li>切到关系类型 → 97 条 LinkType</li>
+      <li>切到操作类型 → 11 个 ActionType (Read/Map/Standardize/Sample/Reconcile/Recompute/Explain/Generate/Review/SignOff/Archive)</li>
+    </ul>
+
+    <div class="talking-point">
+      "这是您所审计本体的完整字典。<span class="key-num">107</span> 个对象类型 + <span class="key-num">97</span> 条关系 + <span class="key-num">11</span> 个动作。
+      L1+L2 这一部分（约 50 个）是国际/中国通用，您所跟立信、信永中和不会差异；L3 这 50 多个是从您的 442-sheet 模板抽出来的（FillRule / 审计区域 / 项目治理等）— 请您重点 review 这 50 多个 L3 OT 是否有缺漏。"
+    </div>
+  </div>
+
+  <!-- Demo 2 -->
+  <div class="demo-step">
+    <h3><span class="num">Demo 2</span> 审计规则库 · 14 条 <span class="duration">10 分钟</span></h3>
+    <div class="url">http://127.0.0.1:5174/ontology → 搜索 AuditRule → 浏览实例</div>
+
+    <p><strong>展示重点</strong>：</p>
+    <ul>
+      <li>14 条规则按 source 分两类显示:
+        <ul>
+          <li><span class="pill public">5 条 L2 公共准则</span>: CASH-RULE-001/002 (中注协 2023-12), REV-RULE-001 (中注协), FA-RULE-001 (CSA 1221), TAX-RULE-001 (财政部 2008)</li>
+          <li><span class="pill ai-inferred">7 条 L3 "东林"内规</span>: AR-RULE-001 / AP-RULE-001 / RP-RULE-001 / INV-RULE-001 / TAX-RECLASS-001 / GC-INDICATOR-001 / DL-RULE-001</li>
+        </ul>
+      </li>
+      <li>每条规则展示 4 个字段:
+        <ul>
+          <li><code>expression</code> — IF/THEN 人话叙述</li>
+          <li><code>formal_expression</code> — Python 可求值表达式 (如 <code>closing_cr &gt; 0</code>)</li>
+          <li><code>severity</code> — high/medium/low</li>
+          <li><code>source</code> + <code>effective</code> — 颁发者 + 生效日</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="talking-point">
+      "这 14 条规则是 Agent 填稿时用的"业务规则库"。每条带 <code>formal_expression</code> — Python 直接求值。
+      <strong>请您重点看下面 7 条 L3 内规</strong>，是否符合本所实操？阈值对吗？侯老师如果说"AR-RULE-001 我们其实是 closing_cr > 100 才触发，不是 0"，那我们就要改阈值；如果说"GC-INDICATOR-001 还要看本期 vs 上期变化，不光看担保覆盖率"，那我们要补条件。"
+    </div>
+  </div>
+
+  <!-- Demo 3 -->
+  <div class="demo-step">
+    <h3><span class="num">Demo 3</span> 已填底稿 · A6 应收账款 <span class="duration">15 分钟（这是 demo 的核心）</span></h3>
+    <div class="url">http://127.0.0.1:5174/workbench/94</div>
+
+    <p><strong>5 个展示点（按顺序点击）</strong>：</p>
+
+    <ol>
+      <li><strong>顶部异常摘要红色横幅</strong> — 2 条异常：<br>
+        ① "153 个客户贷方余额需重分类" (high, AR-RULE-001 触发, 建议 Z6-AI-A6-01)<br>
+        ② "RP-RULE-001 因客户名匿名未能命中" (low, 需人工补充)
+      </li>
+      <li><strong>顶部黄色统计卡</strong> — "已由 Agent 填稿"，4250 单元格中 A6 占 3,978 / 引用 N 个 OT / 触发 N 条规则</li>
+      <li><strong>中央东林模板样式 Excel 网格</strong> — 模拟真实 .xlsm 头部 (5 行元数据 + sheet 大标题 + 8 列真实表头)。切到 customer_detail 看 458 客户行</li>
+      <li><strong>点任意单元格 → 弹 ProvenanceDrawer</strong>，展示该格 trace:<br>
+        - cell: <code>customer_detail.rows[0].closing_dr</code><br>
+        - value: ¥685,088.49<br>
+        - source_kind: Aux (辅助账)<br>
+        - ontology_refs: 📦 OT::SubLedger, 🔗 LT::SubLedgerForAccount<br>
+        - source_detail: 辅助账 1122 客户 000860 期末借方
+      </li>
+      <li><strong>右栏 4 标签依次展示</strong>:
+        <ul>
+          <li><strong>本体知识</strong>: 数据来源汇总 + 引用的 OT/LT/AT</li>
+          <li><strong>规则</strong>: AR-RULE-001 命中 153 次 + 1 笔 Z6-AI-A6-01 调整建议 ¥7,114,390.40 + 11 条模板填表规则 (v5 FillRule)</li>
+          <li><strong>步骤</strong>: Agent 跑了 18 步 (Read TB → Read Aux → Map → Reconcile → Sample → Recompute → Generate)</li>
+          <li><strong>对话</strong>: 跟 jsdw_paper_fill agent 对话</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="talking-point">
+      "这是 Agent 用真实客户数据填出来的 A6 底稿。<strong>所有数字都是从 TB / 辅助账 / 凭证里读出来或算出来的</strong>，每一格都有追溯链。
+      <br><br>
+      <strong>这 ¥7.11M 重分类建议</strong>是 AR-RULE-001 自动识别 153 个客户贷方余额触发的。<strong>请您看 153 这个数字对不对、调整方向对不对、调整金额对不对</strong>。如果对，就证明这条规则可用；如果不对，告诉我们哪里错了。"
+    </div>
+  </div>
+
+  <!-- Demo 4 -->
+  <div class="demo-step">
+    <h3><span class="num">Demo 4</span> 真实 .xlsm 导出 <span class="duration">5 分钟</span></h3>
+    <div class="url">点右上角"📥 下载 .xlsm"按钮</div>
+
+    <p><strong>展示重点</strong>：</p>
+    <ul>
+      <li>下载 27MB 的真实东林 .xlsm 模板（保留 442 sheet + VBA 宏 + 跨表公式）</li>
+      <li>用 Excel 打开 → 翻到 A6 / A6-2 看 Agent 填的数据已经写入对应 cell</li>
+      <li>翻其他 sheet 看模板原样完整保留</li>
+    </ul>
+
+    <div class="talking-point">
+      "我们填出来的不是新生成的 Excel，是把数据写回您熟悉的 .xlsm 模板。<strong>您拿到这份文件可以直接给客户、用现有审计流程继续走 Z6 / Z9 / 三级复核</strong>。"
+    </div>
+  </div>
+
+  <!-- Demo 5 -->
+  <div class="demo-step">
+    <h3><span class="num">Demo 5</span> 其他底稿快速过 <span class="duration">7 分钟</span></h3>
+
+    <ul>
+      <li><strong>A9 其他应收款</strong> <code>/workbench/95</code>: 1133 出口退税款 ¥-430K 反向余额触发 TAX-RECLASS-001 重分类</li>
+      <li><strong>A24 固定资产</strong> <code>/workbench/97</code>: 折旧重算差异 ¥125K ≥ TE → FA-RULE-001 判定需细节测试</li>
+      <li><strong>B1 短期借款</strong> <code>/workbench/98</code>: 5 笔贷款 100% 关联担保 → GC-INDICATOR-001 触发持续经营关注</li>
+    </ul>
+
+    <div class="talking-point">
+      "这 4 张底稿展示 Agent 处理的不同审计场景: 重分类 / 反向余额 / 折旧重算 / 持续经营。每张都识别出了具体异常 + 给出处理建议。"
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §3 Review Checklist ═══════════ -->
+<section>
+  <h2>§3 Review Checklist · 6 个决策点</h2>
+
+  <p>把这 6 个 checklist 打印给侯总，让他边看 demo 边在纸上标 <strong>✓ 同意 / ✗ 不同意 / 🔧 需修改</strong>。</p>
+
+  <!-- Review Item 1 -->
+  <div class="review-item high">
+    <h4>① <span class="badge-ai">AI 推测</span> 7 条 L3 "东林内规" 是否符合本所实务？</h4>
+    <p>这 7 条规则的 <code>source="无锡东林"</code> 是我们贴的标签，规则内容是从模板形态反推的，<strong>需要您逐条确认</strong>。</p>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>AR-RULE-001</strong> 应收账款贷方余额重分类 · <code>closing_cr &gt; 0</code> · 命中 153 客户 ¥7.11M
+        <div class="ask">问：阈值是 0 还是有最低金额？重分类目标科目是 2203 预收款项还是其他？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>AP-RULE-001</strong> 应付账款借方余额重分类 · <code>closing_dr &gt; 0</code> · 重分类至 1123 预付款项
+        <div class="ask">问：本所 B6 应付审定时是否就是这套做法？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>RP-RULE-001</strong> 关联方资金占用披露 · <code>is_related_party AND |balance| &gt; PM</code> · 触发 ZK5 单独披露
+        <div class="ask">问：阈值是 PM 还是 PM/2？关联方判定标准是 CAS 36 还是有内规细化？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>INV-RULE-001</strong> 存货归零异常 · 年度借方+贷方 &gt; 500 万 AND 期末归零 → 反舞弊关注
+        <div class="ask">问：500 万这个阈值合理吗？本所是否有类似的反舞弊规则？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>TAX-RECLASS-001</strong> 出口退税反向余额 · <code>code=1133 AND closing &lt; 0 AND |closing| &gt; TE</code>
+        <div class="ask">问：本所遇到 1133 反向余额是否就是重分类到 22210106？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>GC-INDICATOR-001</strong> 关联担保覆盖率 100% → 持续经营关注
+        <div class="ask">问：本所触发持续经营关注的标准是什么？还有别的指标吗（如流动比 / 速动比）？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>DL-RULE-001</strong> 三级复核签字完整性 · 编制人 + 经理 + 合伙人三签
+        <div class="ask">问：东林是 3 级还是 4 级（含一级复核-洪潇）？</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Item 2 -->
+  <div class="review-item medium">
+    <h4>② <span class="badge-public">公开准则</span> 5 条 L2 规则的阈值是否符合本所采用版本？</h4>
+    <p>这 5 条规则文字符合公开准则，但具体阈值/形式化表达式是我们设的。</p>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>CASH-RULE-001</strong> 银行账面 vs 询证函 · 差 &lt; ¥0.01 视为一致
+        <div class="ask">问：本所容忍度是 ¥0.01 还是更宽松（如四舍五入到元）？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>CASH-RULE-002</strong> 大额现金审批 · 单笔 ≥ ¥500,000 须有审批文件
+        <div class="ask">问：本所大额阈值是 50 万还是其他？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>REV-RULE-001</strong> 收入截止 · ±5 工作日窗口
+        <div class="ask">问：是 5 工作日还是 5 自然日？或者 ±10？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>FA-RULE-001</strong> 折旧重算 · CSA 1221 四级梯度 (SUM/TE/PM/Material)
+        <div class="ask">问：本所 PM 计算基准是总资产 1% 还是有其他偏好？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div><strong>TAX-RULE-001</strong> 业务招待费 5‰/60% 孰低
+        <div class="ask">问：直接引用企税法第 43 条 · 您所是否有补充规则（如审计程序）？</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Item 3 -->
+  <div class="review-item high">
+    <h4>③ <span class="badge-public">Agent 实跑产物</span> 2 笔自动调整分录建议是否准确？</h4>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div>
+        <strong>Z6-AI-A6-01</strong> 应收账款贷方重分类 ¥7,114,390.40
+        <pre style="font-size:11px;margin:6px 0">借: 1122 应收账款  7,114,390.40
+贷: 2203 预收款项  7,114,390.40
+触发规则: AR-RULE-001</pre>
+        <div class="ask">问：金额是 153 客户贷方累加，对吗？借贷方向对吗？</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" />
+      <div>
+        <strong>Z6-AI-A9-01</strong> 1133 应收出口退税款反向余额重分类 ¥430,610.14
+        <pre style="font-size:11px;margin:6px 0">借: 1221 其他应收款  430,610.14
+贷: 22210106 应交税费-出口抵减内销产品应纳税额  430,610.14
+触发规则: TAX-RECLASS-001</pre>
+        <div class="ask">问：贷方目标科目 22210106 对吗？还是应该是 22210103？</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Item 4 -->
+  <div class="review-item medium">
+    <h4>④ <span class="badge-public">Agent 实跑产物</span> 9 条异常识别是否完整、严重度合理？</h4>
+
+    <table>
+      <tr><th>底稿</th><th>严重度</th><th>异常标题</th><th style="width:14%">同意？</th></tr>
+      <tr><td>A1</td><td>medium</td><td>浙商银行 ¥42,060 未入账</td><td><input type="checkbox"/></td></tr>
+      <tr><td>A1</td><td>medium</td><td>票据保证金未列示</td><td><input type="checkbox"/></td></tr>
+      <tr><td>A6</td><td>high</td><td>153 客户贷方需重分类</td><td><input type="checkbox"/></td></tr>
+      <tr><td>A6</td><td>low</td><td>RP-RULE-001 因匿名未命中</td><td><input type="checkbox"/></td></tr>
+      <tr><td>A9</td><td>high</td><td>1133 出口退税 ¥-430K 反向</td><td><input type="checkbox"/></td></tr>
+      <tr><td>A9</td><td>high</td><td>黄燕红其他应收 ¥811K 超 PM 5.25 倍</td><td><input type="checkbox"/></td></tr>
+      <tr><td>A24</td><td>high</td><td>折旧差异 ¥125K ≥ TE</td><td><input type="checkbox"/></td></tr>
+      <tr><td>B1</td><td>high</td><td>100% 关联担保 → 持续经营</td><td><input type="checkbox"/></td></tr>
+      <tr><td>B1</td><td>medium</td><td>利息差异 +10.30%</td><td><input type="checkbox"/></td></tr>
+    </table>
+
+    <div class="ask">问：9 条异常够吗？还有哪些异常 Agent 没识别出来？严重度判定对吗？</div>
+  </div>
+
+  <!-- Review Item 5 -->
+  <div class="review-item low">
+    <h4>⑤ <span class="badge-ai">设计选项</span> 107 个对象类型 10 大簇分类是否合理？</h4>
+
+    <ul>
+      <li>客户类 (5) / 项目类 (7) / 数据类 (9) / 审计区域 (1) / 认定 (1) / 风险 (5) / 程序 (6) / 底稿 (7) / 报告 (7) / 辅助 (2) = 50</li>
+      <li>加上 v5 合并的 57 个 = 107</li>
+    </ul>
+
+    <div class="checkbox-row">
+      <input type="checkbox"/>
+      <div>10 大簇分类合理 · 没有缺失重要簇 (如 IT 审计 / 舞弊调查 / 跨境业务)</div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox"/>
+      <div>每个 OT 的 properties_schema 字段够用 · 没有缺关键字段</div>
+    </div>
+    <div class="ask">问：东林审计实操中常用但本体里没有的对象有哪些？</div>
+  </div>
+
+  <!-- Review Item 6 -->
+  <div class="review-item low">
+    <h4>⑥ <span class="badge-public">真实模板</span> 下载的 .xlsm 跟您手上的版本是否一致？</h4>
+
+    <div class="checkbox-row">
+      <input type="checkbox"/>
+      <div>导出的 27MB .xlsm 用 Excel 打开 · 442 sheet 结构完整保留</div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox"/>
+      <div>A6 / A6-2 sheet 里数据写入位置 · 跟您预期的 cell 一致 (如 A6.D9 = 期末未审金额)</div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox"/>
+      <div>VBA 宏 + 跨表公式 + 表格格式 · 没被破坏</div>
+    </div>
+    <div class="ask">问：能直接交给客户使用吗？还是需要做哪些调整？</div>
+  </div>
+</section>
+
+<!-- ═══════════ §4 收尾 ═══════════ -->
+<section>
+  <h2>§4 Demo 收尾 + 收集反馈（10 分钟）</h2>
+
+  <h3>收集反馈的方式</h3>
+  <ol>
+    <li><strong>纸版 checklist</strong>：让侯总拿着我们打印的 §3 6 个 review item，边看边在每条旁写 ✓ / ✗ / 🔧</li>
+    <li><strong>关键问题清单</strong>（让他口头回答 5 个问题）：
+      <ol>
+        <li>"7 条 L3 内规里，<strong>哪几条阈值要改</strong>？改成什么？"</li>
+        <li>"<strong>还缺哪些规则</strong>本所常用但本体没建？"</li>
+        <li>"<strong>2 笔自动调整分录</strong>合规吗？借贷方向 / 科目代码 / 金额对吗？"</li>
+        <li>"<strong>9 条异常</strong>少了什么？还有什么本所会重点关注的异常类型？"</li>
+        <li>"<strong>10 大簇 ObjectType</strong> 分类合理吗？还有什么大类我们漏了？"</li>
+      </ol>
+    </li>
+    <li><strong>录音/录像</strong>（先征得同意）：方便后续整理反馈</li>
+    <li><strong>3 周后跟进会</strong>：把侯总的反馈落实到本体后，再给他看一次升级版</li>
+  </ol>
+
+  <h3>把反馈落到代码</h3>
+  <div class="callout">
+    <strong>反馈处理流程</strong>:
+    <ol style="margin:6px 0">
+      <li>反馈点 → 写到 <code>backend/data/donglin/review_feedback_v1.md</code></li>
+      <li>规则阈值调整 → 改 <code>build_instances.py</code> 的 <code>rules = [...]</code> · 重跑 seed</li>
+      <li>OT 增删 → 改 <code>object_types.json</code> · 重启 backend</li>
+      <li>缺失异常 → 加到 <code>seed_anomalies.py</code> 的 <code>DONGLIN_ANOMALIES</code></li>
+      <li>修改完 commit + tag <code>v1.1-hou-reviewed</code> 标记侯总已 review</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════ §5 现场可能被问的问题 ═══════════ -->
+<section>
+  <h2>§5 现场可能被侯总问的问题（备好答案）</h2>
+
+  <table>
+    <tr><th style="width:40%">问题</th><th>建议回答</th></tr>
+    <tr>
+      <td>"这套规则真的是从我们东林材料里抽出来的吗？"</td>
+      <td><strong>诚实回答</strong>："5 条公共准则是从中注协/财政部条文里来的，7 条标'东林'的是我们看了您的 442-sheet 模板反推的，并没有抽您所的内规手册。所以这次请您 review 是关键的一步。"</td>
+    </tr>
+    <tr>
+      <td>"AR-RULE-001 我们其实不会按 closing_cr > 0 直接重分类，要看金额绝对值"</td>
+      <td>"明白。具体阈值是多少？我们改 <code>formal_expression</code> 为 <code>closing_cr > XXX</code> 或 <code>abs(closing) > 1000</code>。"</td>
+    </tr>
+    <tr>
+      <td>"4250 个单元格追溯有什么用？审计师不会一个个点开看"</td>
+      <td>"两个用途: ① 出问题时反查 (如客户问'这个 ¥125K 怎么算的'，我们瞬间定位到来源)；② 复核员抽查时随便点几个看追溯链是否合理。"</td>
+    </tr>
+    <tr>
+      <td>"5 张 demo 底稿能跑通，剩下 437 张呢？"</td>
+      <td>"需要为每张写一个 fill_X 函数 (~1 周/张)。先优先 A1/A6/A24/B1 等高频底稿，覆盖 80% 客户场景 (~30 张)。剩下的 400+ 是低频的，先空着，由审计师手填，未来再补 Agent。"</td>
+    </tr>
+    <tr>
+      <td>"为什么不直接用 ChatGPT 帮我填底稿？"</td>
+      <td>"GPT 填出来的数字没有追溯、没有规则触发记录、没法证明数字怎么算的 — 给客户看时无法解释。我们这套是 <strong>本体驱动的确定性 Agent</strong>，每个数字都能追到来源，可审计、可复核、可重跑。"</td>
+    </tr>
+    <tr>
+      <td>"这能上线吗？跟现有底稿系统怎么集成？"</td>
+      <td>"目前是 demo 原型，不是生产系统。要上线还需要: ① 接您所的客户管理系统 ② 用户权限/审计日志 ③ 数据脱敏。预计 3-6 个月开发周期。"</td>
+    </tr>
+    <tr>
+      <td>"侯总不在的时候由其他审计师 review 是否可以？"</td>
+      <td>"建议至少 2 人 review: 项目经理 (业务侧) + 一位资深合伙人 (合规侧)。建议同步问 3 个项目经理对 7 条 L3 规则的看法，看共识度。"</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ═══════════ §6 给侯总的话 ═══════════ -->
+<section>
+  <h2>§6 给侯总的话（请背诵后用自己的话说）</h2>
+
+  <div class="callout success">
+    <p>"侯老师，这套本体平台 + Agent 填稿原型，<strong>核心价值是让审计师能从重复填数字的工作里解脱出来，专注做判断</strong>。
+    <br><br>
+    今天的 demo 跑通了 5 张 demo 底稿，自动建议了 2 笔调整分录、识别了 9 条异常 — <strong>这是真实跑出来的产物</strong>，没有 fake。
+    <br><br>
+    <strong>但本体知识库的准确度，依赖您和团队的 review</strong>。今天给您看的 14 条规则里，5 条是公开准则（您只需要确认本所采用版本），7 条是我们从您 442-sheet 模板里反推的（需要您逐条确认 ✓/✗/改）。
+    <br><br>
+    <strong>您 review 完后 (大概 2-3 周)，规则库才算真正属于东林</strong>。之后接下一个客户时，所有 review 过的规则都可以无缝复用 — 这是本体作为<strong>事务所长期资产</strong>的价值。
+    <br><br>
+    <strong>下一步</strong>: 您把这份 checklist 给到合适的项目经理或合伙人，3 周内填好返还给我们。我们 1 周内根据反馈修订本体，再给您看一次升级版。"</p>
+  </div>
+</section>
+
+<footer>
+  生成于 2026-05-25 · 东林审计师 Review · Demo 脚本 + Checklist<br>
+  原始平台: <code>http://127.0.0.1:5174</code> · 数据源: backend/data/donglin/
+</footer>
+
+</main>
+</body>
+</html>

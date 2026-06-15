@@ -1,0 +1,72 @@
+{
+  "id": 95,
+  "key": "WorkingPaper::WP-A9-2025",
+  "type_code": "WorkingPaper",
+  "display_name": "A9 其他应收款",
+  "data": {
+    "index": "A9",
+    "name": "其他应收款",
+    "template_code": "TPL-DL-FY2025",
+    "engagement_code": "ENG-JSDW-2025",
+    "sheet_data": {
+      "summary": {
+        "tb_1221_total": -350610.14,
+        "tb_1133_export_refund": -430610.14,
+        "tb_1221_other_only": 80000.0,
+        "aux_customers": 3,
+        "aux_dr_total": 80000.0,
+        "aux_cr_total": 0.0,
+        "aux_net": 80000.0,
+        "tb_vs_aux_diff": -430610.14,
+        "reclass_to_tax_payable": 430610.14,
+        "matched_related_parties": 0,
+        "rp_balance_total": 0,
+        "rp_rule_triggered": false,
+        "rp_threshold_pm": 154544.7,
+        "closing_audited": 80000.0,
+        "preparer": "jsdw_paper_fill (AI)",
+        "prepared_at": "2026-05-26"
+      },
+      "customer_detail": {
+        "rows": [
+          {
+            "customer_code": "000049",
+            "customer_name": "000049公司",
+            "closing_dr": 0.0,
+            "closing_cr": 0.0,
+            "is_related_party": false,
+            "exceeds_pm": false,
+            "classification": "正常其他应收款"
+          },
+          {
+            "customer_code": "001146",
+            "customer_name": "001146公司",
+            "closing_dr": 0.0,
+            "closing_cr": 0.0,
+            "is_related_party": false,
+            "exceeds_pm": false,
+            "classification": "正常其他应收款"
+          },
+          {
+            "customer_code": "001356",
+            "customer_name": "001356公司",
+            "closing_dr": 80000.0,
+            "closing_cr": 0.0,
+            "is_related_party": false,
+            "exceeds_pm": false,
+            "classification": "正常其他应收款"
+          }
+        ]
+      }
+    },
+    "cross_references": [
+      "TB:1221",
+      "Z6-AI-A9-01",
+      "B10:22210106"
+    ],
+    "audit_conclusion": "A9 其他应收款 TB 父级期末 ¥-350,610.14（含 1133 出口退税款 ¥-430,610.14 + 1221 其他 ¥80,000.00）。辅助账 3 客户净额 ¥80,000.00，与 TB 差 ¥-430,610.14 即为 1133 子目余额（一致）。1133 期末反向（已退税未冲），按 TAX-RECLASS-001 提议 Z6-AI-A9-01 重分类 ¥430,610.14 至 22210106。RP-RULE-001 应用：客户名匿名化导致机器无命中 (0/3)；金额最大客户 ¥80,000 < PM ¥154,544.70，规则不触发强制披露，但需人工依据合同核查 001356 是否为关联方。调整后审定数 ¥80,000.00。",
+    "review_status": "AI 初稿",
+    "filled_by": "jsdw_paper_fill",
+    "filled_at": "2026-05-26T10:05:52"
+  }
+}

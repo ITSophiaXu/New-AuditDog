@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>v4 本体知识抽取引擎 · 设计文档</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+    --L0: #64748b; --L0-bg: #f1f5f9; --L0-soft: #f8fafc;
+    --L1: #2563eb; --L1-bg: #dbeafe; --L1-soft: #eff6ff;
+    --L2: #0d9488; --L2-bg: #ccfbf1; --L2-soft: #f0fdfa;
+    --L3: #d97706; --L3-bg: #fed7aa; --L3-soft: #fffbeb;
+    --L4: #7c3aed; --L4-bg: #ede9fe; --L4-soft: #faf5ff;
+    --p0: #2563eb;
+    --p1: #0d9488;
+    --p2: #d946ef;
+    --p3: #7c3aed;
+    --p4: #f59e0b;
+    --p5: #ec4899;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; font-size: 13.5px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 35%, #be185d 100%);
+    color: white; padding: 36px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  header .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 16px;
+    background: rgba(255,255,255,0.22); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.05em; margin-bottom: 10px;
+  }
+  header .sub { font-size: 13.5px; opacity: 0.94; max-width: 1000px; line-height: 1.6; }
+  header .meta { margin-top: 14px; display: flex; gap: 22px; font-size: 12px; opacity: 0.85; }
+  main { max-width: 1320px; margin: 0 auto; padding: 28px 40px 60px; }
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 36px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 22px 0 10px; color: #334155; }
+  h4 { font-size: 13.5px; font-weight: 600; margin: 14px 0 8px; color: #475569; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    background: #f1f5f9; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, monospace; font-size: 12px;
+    color: #be185d;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 14px 18px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 11.5px; line-height: 1.55;
+    overflow-x: auto; margin: 8px 0;
+  }
+  pre .k { color: #c084fc; }
+  pre .s { color: #86efac; }
+  pre .n { color: #fde68a; }
+  pre .c { color: #94a3b8; }
+  pre .y { color: #fbbf24; }
+
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 600;
+  }
+  .pill.L0 { background: var(--L0-bg); color: var(--L0); }
+  .pill.L1 { background: var(--L1-bg); color: var(--L1); }
+  .pill.L2 { background: var(--L2-bg); color: var(--L2); }
+  .pill.L3 { background: var(--L3-bg); color: var(--L3); }
+  .pill.L4 { background: var(--L4-bg); color: var(--L4); }
+  .pill.tbox { background: #eef2ff; color: #4f46e5; }
+  .pill.abox { background: #d1fae5; color: #059669; }
+  .pill.machine { background: #ecfeff; color: #0e7490; border: 1px solid #67e8f9; }
+  .pill.llm { background: #f3e8ff; color: #7c3aed; border: 1px solid #d8b4fe; }
+  .pill.human { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+  .pill.hybrid { background: #fce7f3; color: #be185d; border: 1px solid #f9a8d4; }
+
+  /* —— TL;DR 卡 —— */
+  .tldr {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%);
+    padding: 20px 24px; border-radius: 12px; margin: 20px 0;
+    border: 2px solid #f59e0b; box-shadow: 0 4px 12px rgba(245,158,11,0.15);
+  }
+  .tldr h3 { color: #78350f; margin: 0 0 8px; font-size: 16px; }
+  .tldr p { color: #78350f; font-size: 13.5px; margin: 6px 0; line-height: 1.7; }
+
+  /* —— 流水线节点 —— */
+  .pipeline {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+    margin: 16px 0;
+  }
+  .phase {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; position: relative;
+    border-top: 5px solid;
+  }
+  .phase::after {
+    content: "→"; position: absolute; right: -12px; top: 50%;
+    transform: translateY(-50%); color: var(--muted); font-size: 20px;
+    font-weight: 700; z-index: 2;
+  }
+  .phase:last-child::after { content: ""; }
+  .phase.p0 { border-top-color: var(--p0); }
+  .phase.p1 { border-top-color: var(--p1); }
+  .phase.p2 { border-top-color: var(--p2); }
+  .phase.p3 { border-top-color: var(--p3); }
+  .phase.p4 { border-top-color: var(--p4); }
+  .phase.p5 { border-top-color: var(--p5); }
+  .phase .pn {
+    display: inline-block; width: 22px; height: 22px;
+    color: white; border-radius: 50%;
+    text-align: center; line-height: 22px;
+    font-size: 11px; font-weight: 700;
+    margin-right: 6px;
+  }
+  .phase.p0 .pn { background: var(--p0); }
+  .phase.p1 .pn { background: var(--p1); }
+  .phase.p2 .pn { background: var(--p2); }
+  .phase.p3 .pn { background: var(--p3); }
+  .phase.p4 .pn { background: var(--p4); }
+  .phase.p5 .pn { background: var(--p5); }
+  .phase .title { font-weight: 600; font-size: 13px; display: inline-block; }
+  .phase .out { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+  /* —— Phase 详卡 —— */
+  .phase-card {
+    background: var(--card); border-left: 6px solid;
+    border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .phase-card.p0 { border-left-color: var(--p0); }
+  .phase-card.p1 { border-left-color: var(--p1); }
+  .phase-card.p2 { border-left-color: var(--p2); }
+  .phase-card.p3 { border-left-color: var(--p3); }
+  .phase-card.p4 { border-left-color: var(--p4); }
+  .phase-card.p5 { border-left-color: var(--p5); }
+  .phase-card h3 {
+    margin-top: 0; display: flex; align-items: center; gap: 8px;
+  }
+  .phase-card .num-badge {
+    color: white; padding: 2px 10px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+  }
+  .phase-card.p0 .num-badge { background: var(--p0); }
+  .phase-card.p1 .num-badge { background: var(--p1); }
+  .phase-card.p2 .num-badge { background: var(--p2); }
+  .phase-card.p3 .num-badge { background: var(--p3); }
+  .phase-card.p4 .num-badge { background: var(--p4); }
+  .phase-card.p5 .num-badge { background: var(--p5); }
+
+  .io-grid {
+    display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 12px;
+    margin: 12px 0;
+  }
+  .io-box {
+    background: #fafbfc; border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 14px; font-size: 12.5px;
+  }
+  .io-box h5 {
+    margin: 0 0 6px; font-size: 11px; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .io-box ul { padding-left: 18px; margin: 4px 0; }
+
+  /* —— 表格 —— */
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0;
+    background: var(--card); border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  th {
+    background: #f8fafc; padding: 10px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid var(--border); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: top; font-size: 13px;
+  }
+  tr:last-child td { border-bottom: 0; }
+  td.code { font-family: ui-monospace, monospace; font-size: 11.5px; color: #be185d; }
+  td.center { text-align: center; }
+
+  /* —— 文件树 —— */
+  .filetree {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 14px 18px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 11.5px; line-height: 1.6;
+    margin: 8px 0; overflow-x: auto;
+  }
+  .filetree .dir { color: #93c5fd; font-weight: 600; }
+  .filetree .new { color: #86efac; }
+  .filetree .reused-a { color: #c084fc; }
+  .filetree .reused-b { color: #5eead4; }
+  .filetree .annot { color: #94a3b8; }
+
+  /* —— 数据流图 —— */
+  .dataflow {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; margin: 16px 0;
+  }
+
+  .callout {
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.danger { background: #fef2f2; border-color: #ef4444; }
+  .callout.info { background: #eff6ff; border-color: #2563eb; }
+  .callout.success { background: #f0fdf4; border-color: #22c55e; }
+  .callout strong { display: inline-block; margin-bottom: 4px; }
+
+  .twocol {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin: 14px 0;
+  }
+
+  .innovation-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px;
+    border-left: 5px solid #be185d;
+  }
+  .innovation-card h5 {
+    margin: 0 0 8px; font-size: 13.5px; color: #be185d;
+  }
+
+  .acceptance {
+    background: #f0fdf4; border: 1px solid #6ee7b7;
+    border-radius: 6px; padding: 10px 14px; margin: 8px 0;
+  }
+  .acceptance h5 {
+    margin: 0 0 6px; font-size: 11.5px; color: #166534;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .acceptance ul { margin: 4px 0; }
+  .acceptance li { font-size: 12.5px; color: #14532d; }
+  .acceptance li::marker { content: "✓ "; }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="tag">DESIGN DOCUMENT · v4</span>
+  <h1>v4 本体知识抽取引擎</h1>
+  <div class="sub">
+    把方法 A 的<strong>业务驱动 TBox 设计 + L1+L2 准则建模 + L0 客户数据 + AuditRule 形式化</strong> 与
+    方法 B 的<strong>底稿模板自动抽取 + Turtle/OWL 双轨产物 + evidenceRef 证据链</strong> 合并，
+    再加<strong>L4 审计师经验沉淀</strong>双管道，
+    做成统一的、可重跑的、跨所部署的本体知识抽取引擎。
+  </div>
+  <div class="meta">
+    <span>📅 2026-05-24</span>
+    <span>📂 backend/data/donglin/v4_engine_design.html</span>
+    <span>🎯 设计阶段（pre-implementation）</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ TL;DR ═══════════ -->
+<section>
+  <div class="tldr">
+    <h3>📋 TL;DR — 一句话说清 v4 干啥</h3>
+    <p>
+      v4 是一个 <strong>6 Phase 自动化管线</strong>：
+      <strong>Phase 0</strong> 人工 + LLM 设计跨所通用 TBox →
+      <strong>Phase 1</strong> 机器自动扫客户/事务所所有 Excel/VBA/PDF/客户数据出证据 →
+      <strong>Phase 2</strong> LLM 给证据打 TBox 标签 →
+      <strong>Phase 3</strong> 程序生成 ABox + Rule (Turtle + JSON 双轨) →
+      <strong>Phase 4</strong> Agent 跑稿带 layer_chain 追溯 →
+      <strong>Phase 5</strong> ChatPanel 改写事件 + VBA 模式两路捕获 L4 经验。
+      每个产物强制带 <code>_layer</code> + <code>_evidence</code> 标签，
+      跨所部署只换 L3+L0 不动 L1+L2，开发周期从 3 个月 → 1-2 周。
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════ §1 设计目标 ═══════════ -->
+<section>
+  <h2>§1 设计目标与非目标</h2>
+
+  <div class="twocol">
+    <div class="innovation-card" style="border-left-color: #059669">
+      <h5 style="color:#059669">✅ 设计目标 (Goals)</h5>
+      <ul style="font-size:12.5px">
+        <li><strong>覆盖 4 层</strong>：L1 国际 + L2 中国 + L3 事务所 + L0 客户 + L4 经验</li>
+        <li><strong>双轨产物</strong>：Turtle/OWL (审计师 review + SPARQL) + JSON (前端 + 数据库)</li>
+        <li><strong>证据链强制</strong>：每条 L3 ABox / FillRule 必须有 <code>_evidence</code> 指针</li>
+        <li><strong>跨所可迁移</strong>：L1+L2 一字不改，L3 自动重抽，L0 重读客户数据</li>
+        <li><strong>增量可重跑</strong>：检测文件修改时间，只重抽变更部分</li>
+        <li><strong>可校验</strong>：18+ 个 validate.py check 跑过才能 sign-off</li>
+        <li><strong>L4 经验沉淀</strong>：ChatPanel + VBA 双管道自动累积候选规则</li>
+      </ul>
+    </div>
+
+    <div class="innovation-card" style="border-left-color: #ef4444">
+      <h5 style="color:#ef4444">❌ 设计非目标 (Non-Goals)</h5>
+      <ul style="font-size:12.5px">
+        <li><strong>不做 PDF OCR</strong> — pdftotext 已够；扫描件留给 v5</li>
+        <li><strong>不全自动化 L3 规则的 formal_expression</strong> — 阈值 / 公式仍需审计师人工编码（LLM 只给候选）</li>
+        <li><strong>不引入 OWL Reasoner</strong> — 不跑 HermiT/Pellet 推理，验证用 SHACL-lite</li>
+        <li><strong>不跨语言</strong> — 只支持中文事务所</li>
+        <li><strong>不替代审计师判断</strong> — Agent 只做 AI 初稿，最终结论由人审核</li>
+        <li><strong>不解锁加密 .xlsm</strong> — 加密文件 skip + log</li>
+        <li><strong>不做实时</strong> — 批处理，每个项目跑一次</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §2 整体架构 ═══════════ -->
+<section>
+  <h2>§2 整体架构 — 6 Phase 自动化管线</h2>
+
+  <div class="pipeline">
+    <div class="phase p0">
+      <span class="pn">0</span><span class="title">TBox 设计</span>
+      <div class="out">
+        <strong><span class="pill llm">🤖 LLM</span> + <span class="pill human">✍ 人</span></strong><br>
+        准则文档 → tbox.ttl + tbox.json<br>
+        <strong>频率</strong>: 部署新所时一次
+      </div>
+    </div>
+    <div class="phase p1">
+      <span class="pn">1</span><span class="title">证据自动抽取</span>
+      <div class="out">
+        <strong><span class="pill machine">⚙ 机器</span></strong><br>
+        4 个 extractor → 5 个 jsonl<br>
+        <strong>频率</strong>: 每个项目一次
+      </div>
+    </div>
+    <div class="phase p2">
+      <span class="pn">2</span><span class="title">知识对齐</span>
+      <div class="out">
+        <strong><span class="pill llm">🤖 LLM</span> + <span class="pill human">✍ 人 review</span></strong><br>
+        jsonl 打标签 → aligned_facts<br>
+        <strong>频率</strong>: 每次新 evidence
+      </div>
+    </div>
+    <div class="phase p3">
+      <span class="pn">3</span><span class="title">ABox + Rule 生成</span>
+      <div class="out">
+        <strong><span class="pill machine">⚙ 机器</span> + <span class="pill human">✍ 人编 formal</span></strong><br>
+        → abox.ttl + instances.json<br>
+        <strong>频率</strong>: 每次新 aligned
+      </div>
+    </div>
+    <div class="phase p4">
+      <span class="pn">4</span><span class="title">Agent 填稿</span>
+      <div class="out">
+        <strong><span class="pill machine">⚙ Agent</span></strong><br>
+        含 layer_chain 双轨追溯<br>
+        <strong>频率</strong>: 每张底稿一次
+      </div>
+    </div>
+    <div class="phase p5">
+      <span class="pn">5</span><span class="title">L4 经验捕获</span>
+      <div class="out">
+        <strong><span class="pill hybrid">🔀 双管道</span></strong><br>
+        Chat 改写 + VBA 模式<br>
+        <strong>频率</strong>: 持续运行
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>关键设计</strong>：6 Phase 是<strong>有向无环图（DAG）</strong>而不是严格瀑布。
+    Phase 0 完成后，Phase 1-3 可并行跑；Phase 4 依赖 1-3；Phase 5 持续运行。
+    重跑时只重跑变更的 Phase（增量 dirty-bit）。
+  </div>
+</section>
+
+<!-- ═══════════ §3 各 Phase 详细设计 ═══════════ -->
+<section>
+  <h2>§3 各 Phase 详细设计</h2>
+
+  <!-- Phase 0 -->
+  <div class="phase-card p0">
+    <h3><span class="num-badge p0">Phase 0</span> TBox 设计 — 类型骨架</h3>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px">
+      <strong>负责人</strong>：本体工程师 + 审计师 ·
+      <strong>工期</strong>：部署新所时 5-7 天 ·
+      <strong>频率</strong>：每事务所一次（之后增量）
+    </p>
+
+    <div class="io-grid">
+      <div class="io-box">
+        <h5>输入</h5>
+        <ul>
+          <li>ISA / IFRS 国际准则 PDF</li>
+          <li>CSA / CAS 中国准则 PDF</li>
+          <li>事务所 442-sheet 模板索引</li>
+          <li>方法 A 的 implementation_guide.md 蓝本</li>
+        </ul>
+      </div>
+      <div class="io-box">
+        <h5>处理</h5>
+        <ul>
+          <li>LLM 候选生成（Claude/GPT 读准则 → 提议 OT/LT/AT 候选）</li>
+          <li>人工 review 与定稿</li>
+          <li>每个 OT 强制标 <code>_layer</code> 字段</li>
+          <li>每个 ObjectType.properties_schema 双语 label</li>
+        </ul>
+      </div>
+      <div class="io-box">
+        <h5>输出</h5>
+        <ul>
+          <li><code>tbox.ttl</code> (W3C Turtle 格式)</li>
+          <li><code>tbox.json</code> (同构 JSON, 供前端)</li>
+          <li><code>link_types.json</code> + <code>action_types.json</code></li>
+          <li>各 OT 的 <code>_layer / _layer_basis</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="acceptance">
+      <h5>Acceptance Criteria</h5>
+      <ul>
+        <li>tbox.ttl 经 rdflib 解析 0 错误</li>
+        <li>每个 ObjectType 有 @en / @zh 双语 label</li>
+        <li>每个 OT/LT/AT 有 <code>_layer</code> 字段（取值 L1/L2/L3:firm-name）</li>
+        <li>tbox.json 和 tbox.ttl 内容等价（diff 工具校验）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase-card p1">
+    <h3><span class="num-badge p1">Phase 1</span> 证据自动抽取 — 4 个 extractor 并行跑</h3>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px">
+      <strong>负责人</strong>：纯机器（无人工） ·
+      <strong>工期</strong>：单项目 ~30 分钟 - 2 小时 ·
+      <strong>并行</strong>：4 个 extractor 同时跑
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Extractor</th>
+          <th>输入</th>
+          <th>输出 (jsonl)</th>
+          <th>预估行数</th>
+          <th>层</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="code">extract_excel.py</td>
+          <td>audit Knowledge/ 下所有 .xls/.xlsx/.xlsm</td>
+          <td>cell_formulas.jsonl<br>cross_sheet_edges.jsonl</td>
+          <td>~100K 公式<br>~30K 边</td>
+          <td><span class="pill L3">L3</span></td>
+        </tr>
+        <tr>
+          <td class="code">extract_vba.py</td>
+          <td>.xlsm 中的 VBA 模块</td>
+          <td>vba_account_map.jsonl<br>cross_sheet_edges.jsonl (追加)</td>
+          <td>~400 VBA 赋值<br>~1K 边</td>
+          <td><span class="pill L3">L3</span> 部分 <span class="pill L4">L4</span></td>
+        </tr>
+        <tr>
+          <td class="code">extract_pdf.py</td>
+          <td>报告 PDF (FSR/CIT) → pdftotext → UTF-8</td>
+          <td>pdf_facts.jsonl</td>
+          <td>~500 事实条目</td>
+          <td><span class="pill L0">L0</span></td>
+        </tr>
+        <tr>
+          <td class="code">extract_tb.py</td>
+          <td>客户 TB.xlsx / Aux.xlsx / Voucher.xlsx</td>
+          <td>tb_facts.jsonl<br>aux_facts.jsonl<br>voucher_facts.jsonl</td>
+          <td>~50 科目<br>~800 客户<br>~12,600 凭证</td>
+          <td><span class="pill L0">L0</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="acceptance">
+      <h5>Acceptance Criteria</h5>
+      <ul>
+        <li>每个 jsonl 文件用 jsonschema 验证（schema 与 v3 兼容）</li>
+        <li>每条记录有 <code>workbook</code> / <code>sheet</code> / <code>cell</code> 或类似的定位字段</li>
+        <li>跳过的文件（加密 / 损坏）写入 <code>skipped.md</code></li>
+        <li>支持增量：检测 .xlsm mtime，未变更跳过</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase-card p2">
+    <h3><span class="num-badge p2">Phase 2</span> 知识对齐 — LLM 把证据打 TBox 标签</h3>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px">
+      <strong>负责人</strong>：LLM + 人工 review 边界用例 ·
+      <strong>工期</strong>：单项目 ~2-4 小时 ·
+      <strong>关键创新</strong>：替代方法 A 的人工 markdown 步骤
+    </p>
+
+    <h4>核心算法</h4>
+<pre><span class="c"># 给每条 jsonl 用 LLM 打 TBox 标签</span>
+<span class="k">def</span> align_fact(jsonl_row, tbox_schema):
+    prompt = <span class="s">f"""
+你是审计本体专家。下面这条证据来自 {jsonl_row['source_file']}，
+内容: {jsonl_row}
+
+请判断它属于以下 TBox 类型中的哪一个，并解释原因：
+{tbox_schema}
+
+输出 JSON: {{ "tbox_slot": "WorkpaperField" | "Account" | ... ,
+            "extracted_fields": {{...}},
+            "confidence": 0.0~1.0,
+            "_layer": "L1" | "L2" | "L3" | "L0",
+            "_layer_basis": "..." }}
+"""</span>
+    result = llm.complete(prompt, model=<span class="s">"claude-opus-4-7"</span>)
+    <span class="k">return</span> json.loads(result)
+
+<span class="c"># 批量处理 + 缓存</span>
+<span class="k">for</span> row <span class="k">in</span> jsonl_rows:
+    cache_key = hash(row)
+    <span class="k">if</span> cache_key <span class="k">in</span> cache:
+        result = cache[cache_key]
+    <span class="k">else</span>:
+        result = align_fact(row, tbox_schema)
+        cache[cache_key] = result
+    aligned_facts.append({**row, **result})
+
+<span class="c"># confidence &lt; 0.7 的需人工 review</span>
+low_conf = [f <span class="k">for</span> f <span class="k">in</span> aligned_facts <span class="k">if</span> f[<span class="s">'confidence'</span>] &lt; <span class="n">0.7</span>]
+human_review(low_conf)  <span class="c"># 写入 review_queue.jsonl</span></pre>
+
+    <div class="acceptance">
+      <h5>Acceptance Criteria</h5>
+      <ul>
+        <li>aligned_facts.jsonl 行数 == 输入 jsonl 总行数（不丢数据）</li>
+        <li>每条带 <code>tbox_slot</code> + <code>_layer</code> + <code>_evidence</code> (原始行号)</li>
+        <li>confidence &lt; 0.7 的 ≤ 5%（高了说明 TBox 设计不全）</li>
+        <li>LLM 调用结果缓存，重跑相同 input 不重复消耗 token</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase-card p3">
+    <h3><span class="num-badge p3">Phase 3</span> ABox + Rule 生成 — 双轨产物</h3>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px">
+      <strong>负责人</strong>：程序自动 + 人工编 L2/L3 规则的 formal_expression ·
+      <strong>工期</strong>：单项目 ~1 天
+    </p>
+
+    <h4>核心步骤</h4>
+    <ol style="font-size:12.5px">
+      <li><strong>build_abox.py</strong>：把 aligned_facts 按 tbox_slot 分组，每组生成对应类型的 ObjectInstance + LinkInstance</li>
+      <li><strong>build_fill_rules.py</strong>：从 cell_formulas.jsonl + vba_account_map.jsonl 生成 FillRule + WorkpaperField 个体</li>
+      <li><strong>build_rules_l2.py</strong>：手工编 5 条中注协 / 财政部规则的 formal_expression</li>
+      <li><strong>build_rules_l3.py</strong>：手工编 7 条事务所内规（每条来源标 <code>_layer="L3:donglin"</code>）</li>
+      <li><strong>validate.py</strong>：跑 18+ 个一致性 check</li>
+    </ol>
+
+    <h4>validate.py 的 18 个 check（继承 v3）</h4>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36%">Check 名称</th>
+          <th>检查内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="code">TBox parses</td><td>tbox.ttl 经 rdflib 解析 0 错误</td></tr>
+        <tr><td class="code">ABox parses</td><td>abox.ttl 同上</td></tr>
+        <tr><td class="code">Bilingual labels</td><td>每个 Class 有 @en / @zh 标签</td></tr>
+        <tr><td class="code">Domain/Range integrity</td><td>每个 OP/DP 有 rdfs:domain + rdfs:range</td></tr>
+        <tr><td class="code">Individual has class</td><td>每个 ABox 个体至少有一条 <code>a :SomeClass</code></td></tr>
+        <tr><td class="code">Class declared in TBox</td><td>ABox 引用的 Class 在 TBox 必须存在</td></tr>
+        <tr><td class="code">_layer field present</td><td>每个 OT/LT/AT/Rule/Instance 必须有 <code>_layer</code></td></tr>
+        <tr><td class="code">_evidence field for L3</td><td>L3 ABox 必须有 <code>_evidence</code> 指针</td></tr>
+        <tr><td class="code">Evidence pointer valid</td><td>jsonl#L&lt;n&gt; 行号在源文件中存在</td></tr>
+        <tr><td class="code">Functional property unique</td><td>FunctionalProperty 一个主语只能有一个值（如 :outputField）</td></tr>
+        <tr><td class="code">No orphan WorkpaperField</td><td>每个 WorkpaperField 至少被一条 FillRule 引用</td></tr>
+        <tr><td class="code">USCC format</td><td>统一社会信用代码格式正确（18 位）</td></tr>
+        <tr><td class="code">Materiality formula</td><td>PM &gt; TE &gt; SUM 严格递减</td></tr>
+        <tr><td class="code">Rule formal_expression valid</td><td>规则的 formal_expression 是合法 Python 表达式</td></tr>
+        <tr><td class="code">JSON == TTL</td><td>双轨产物内容等价</td></tr>
+        <tr><td class="code">Account code 4-digit</td><td>科目代码符合企业会计制度格式</td></tr>
+        <tr><td class="code">Cross-link consistency</td><td>LinkInstance 的 source_id / target_id 都存在</td></tr>
+        <tr><td class="code">Total OT/LT/AT counts</td><td>52 OT / 73 LT / 11 AT 数量符合预期</td></tr>
+      </tbody>
+    </table>
+
+    <div class="acceptance">
+      <h5>Acceptance Criteria</h5>
+      <ul>
+        <li>validate.py 18 个 check 全过</li>
+        <li>双轨产物 (.ttl + .json) 100% 等价</li>
+        <li>每条 L3 ABox 都能在 jsonl 中追到证据</li>
+        <li>规则 formal_expression 可在 sandbox 中 eval 不报错</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase-card p4">
+    <h3><span class="num-badge p4">Phase 4</span> Agent 填稿 + 双轨追溯</h3>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px">
+      <strong>负责人</strong>：Agent 自动 ·
+      <strong>工期</strong>：每张底稿 ~30 秒 - 5 分钟
+    </p>
+
+    <h4>填稿时 Provenance 记录 (升级版)</h4>
+<pre>prov.add(
+    cell_key=<span class="s">"customer_detail.rows[0].closing_dr"</span>,
+    value=<span class="n">685088.49</span>,
+    source_kind=<span class="s">"Aux"</span>,
+    ontology_refs=[<span class="s">"📦 OT::SubLedger"</span>, <span class="s">"🔗 LT::SubLedgerForAccount"</span>],
+
+    <span class="y"># v4 新增字段 ↓</span>
+    evidence_ref=<span class="s">"tb_facts.jsonl#L1247"</span>,        <span class="c"># 指向原始数据行</span>
+    layer_chain=[                                  <span class="c"># 4 层完整链路</span>
+        {<span class="s">"layer"</span>: <span class="s">"L1"</span>, <span class="s">"basis"</span>: <span class="s">"ISA 530 抽样准则"</span>},
+        {<span class="s">"layer"</span>: <span class="s">"L2"</span>, <span class="s">"basis"</span>: <span class="s">"CSA 1101 一般要求"</span>},
+        {<span class="s">"layer"</span>: <span class="s">"L3"</span>, <span class="s">"basis"</span>: <span class="s">"东林辅助账标准列名"</span>},
+        {<span class="s">"layer"</span>: <span class="s">"L0"</span>, <span class="s">"basis"</span>: <span class="s">"江苏大王 1122 辅助账 客户 000860"</span>},
+    ],
+    fill_rule_ref=<span class="s">"fillrule-a6-c11-from-a62"</span>,    <span class="c"># 引用 B 抽出的 FillRule</span>
+
+    rule_code=<span class="k">None</span>,                              <span class="c"># 如果是规则触发的</span>
+)</pre>
+
+    <div class="acceptance">
+      <h5>Acceptance Criteria</h5>
+      <ul>
+        <li>每个 cell trace 都有 <code>layer_chain</code> + <code>evidence_ref</code></li>
+        <li>5 张 demo 底稿的 4,250 cell 全部有完整链路</li>
+        <li>ProvenanceDrawer 前端能正确显示 layer_chain 4 层链</li>
+        <li>cell_provenance.json 同步导出为 cell_provenance.ttl（双轨）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div class="phase-card p5">
+    <h3><span class="num-badge p5">Phase 5</span> L4 经验捕获 — 双管道沉淀</h3>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px">
+      <strong>负责人</strong>：双管道自动累积 + 审计师 sign-off ·
+      <strong>运行模式</strong>：持续后台
+    </p>
+
+    <div class="twocol">
+      <div class="innovation-card">
+        <h5>🅐 入口 A：ChatPanel 改写事件</h5>
+        <p style="font-size:12.5px">监听 ExcelGridView 上"审计师手动改 Agent 填的内容"事件，写入 <code>chat_change_events.jsonl</code>。</p>
+<pre>on_cell_edit({
+  paper_id: <span class="n">94</span>, cell: <span class="s">"A6.summary.tb_closing"</span>,
+  before: <span class="n">3360975.70</span>, after: <span class="n">3361000.00</span>,
+  user: <span class="s">"侯佳成"</span>,
+  reason: <span class="s">"四舍五入到百元"</span>,
+  ts: <span class="s">"2026-05-24T10:30"</span>
+})</pre>
+      </div>
+
+      <div class="innovation-card">
+        <h5>🅑 入口 B：VBA 个性化模式检测</h5>
+        <p style="font-size:12.5px">分析 VBA 源码，找跟"事务所标准模板"不一致的"个性化"赋值（这通常是审计师手写的）。</p>
+<pre>detect_personal_patterns(vba_file)
+  → vba_personal_patterns.jsonl<br>
+  &nbsp;&nbsp;<span class="c"># 标记: 与 group_modal 不一致</span>
+  &nbsp;&nbsp;<span class="c"># 通常是 项目经理个人改的</span></pre>
+      </div>
+    </div>
+
+    <h4>升级管道</h4>
+<pre>propose_rules.py:
+    <span class="c"># 找 ≥ 3 次类似改写事件</span>
+    <span class="k">for</span> pattern <span class="k">in</span> cluster_change_events():
+        <span class="k">if</span> pattern.count &gt;= <span class="n">3</span>:
+            <span class="k">yield</span> ProposedRule(
+                pattern=pattern,
+                suggested_formal=llm.infer_formal_expression(pattern),
+                layer=<span class="s">"L4:候选"</span>,
+            )
+
+    <span class="c"># 写入 proposed_rules.jsonl 等审计师 sign-off</span>
+
+<span class="c"># 审计师 sign-off 后:</span>
+upgrade_to_l3(proposed_rule, signed_by=<span class="s">"侯佳成"</span>)
+  <span class="c"># 写入 rules_l3_donglin.ttl, source="侯佳成 + 无锡东林沉淀"</span></pre>
+
+    <div class="acceptance">
+      <h5>Acceptance Criteria</h5>
+      <ul>
+        <li>chat_change_events.jsonl 累积 ≥ 100 条/月</li>
+        <li>cluster 算法每周跑一次，提议至少 1 条候选规则</li>
+        <li>LearningInbox 前端能展示候选规则 + 一键 sign-off</li>
+        <li>升级后规则进入 abox_l3_donglin.ttl，下次重跑 Phase 4 时被 Agent 使用</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §4 文件结构 ═══════════ -->
+<section>
+  <h2>§4 v4 引擎文件 / 模块结构</h2>
+
+<div class="filetree"><span class="dir">audit-ontology-tmp/backend/</span>
+├── <span class="dir">app/v4_engine/</span>                 <span class="annot"># v4 抽取引擎核心代码</span>
+│   ├── <span class="dir">extractors/</span>
+│   │   ├── <span class="reused-b">extract_excel.py</span>        <span class="annot"># B 复用 (v3 直接拿来用)</span>
+│   │   ├── <span class="reused-b">extract_vba.py</span>          <span class="annot"># B 复用</span>
+│   │   ├── <span class="new">extract_pdf.py</span>          <span class="annot"># 新: pdftotext + LLM 抽业务事实</span>
+│   │   └── <span class="reused-a">extract_tb.py</span>           <span class="annot"># A 的 openpyxl 读 TB/Aux/Voucher 抽出</span>
+│   │
+│   ├── <span class="dir">aligners/</span>
+│   │   ├── <span class="new">align_facts.py</span>          <span class="annot"># 新: LLM 给 jsonl 打 TBox 标签</span>
+│   │   └── <span class="new">human_review_queue.py</span>   <span class="annot"># 新: confidence&lt;0.7 走人工 review</span>
+│   │
+│   ├── <span class="dir">builders/</span>
+│   │   ├── <span class="reused-a">build_tbox.py</span>           <span class="annot"># 设计的 TBox → .ttl + .json 双轨输出</span>
+│   │   ├── <span class="new">build_abox.py</span>           <span class="annot"># 新: aligned_facts → abox.ttl + instances.json</span>
+│   │   ├── <span class="new">build_fill_rules.py</span>     <span class="annot"># 新: cell_formulas → fill_rules.ttl</span>
+│   │   ├── <span class="reused-a">build_rules_l2.py</span>       <span class="annot"># A 的中注协 5 规则</span>
+│   │   └── <span class="reused-a">build_rules_l3.py</span>       <span class="annot"># A 的东林 7 规则</span>
+│   │
+│   ├── <span class="dir">validators/</span>
+│   │   └── <span class="reused-b">validate.py</span>             <span class="annot"># B 复用 + 扩展到 18 check</span>
+│   │
+│   ├── <span class="dir">agent_fill/</span>
+│   │   ├── <span class="reused-a">agent_fill.py</span>           <span class="annot"># A 的 1500 行扩展 + layer_chain</span>
+│   │   └── <span class="reused-a">provenance.py</span>           <span class="annot"># Provenance 类 + evidence_ref</span>
+│   │
+│   ├── <span class="dir">learning/</span>                         <span class="annot"># L4 双管道 (创新)</span>
+│   │   ├── <span class="new">capture_chat_events.py</span>  <span class="annot"># 新: 监听 ExcelGridView 改写</span>
+│   │   ├── <span class="new">detect_vba_patterns.py</span>  <span class="annot"># 新: VBA 个性化模式</span>
+│   │   ├── <span class="new">propose_rules.py</span>        <span class="annot"># 新: 累积 → ProposedRule</span>
+│   │   └── <span class="new">upgrade_pipeline.py</span>     <span class="annot"># 新: sign-off → 写 L3</span>
+│   │
+│   └── <span class="dir">cli/</span>
+│       └── <span class="new">run.py</span>                  <span class="annot"># 新: 主入口 python -m v4.run --firm=donglin --client=jsdw</span>
+│
+└── <span class="dir">data/donglin/</span>                    <span class="annot"># 数据产物</span>
+    ├── <span class="dir">tbox/</span>                        <span class="annot"># Phase 0 产物</span>
+    │   ├── <span class="new">tbox.ttl</span>
+    │   ├── <span class="new">tbox.json</span>                <span class="annot"># 双轨</span>
+    │   └── <span class="new">tbox_donglin_ext.ttl</span>     <span class="annot"># L3 扩展</span>
+    │
+    ├── <span class="dir">evidence/</span>                    <span class="annot"># Phase 1 产物</span>
+    │   ├── <span class="reused-b">cell_formulas.jsonl</span>       <span class="annot"># ~100K 公式</span>
+    │   ├── <span class="reused-b">vba_account_map.jsonl</span>     <span class="annot"># ~400 VBA</span>
+    │   ├── <span class="reused-b">cross_sheet_edges.jsonl</span>
+    │   ├── <span class="new">pdf_facts.jsonl</span>
+    │   ├── <span class="reused-a">tb_facts.jsonl</span>
+    │   ├── <span class="reused-a">aux_facts.jsonl</span>
+    │   └── <span class="reused-a">voucher_facts.jsonl</span>
+    │
+    ├── <span class="dir">aligned/</span>                     <span class="annot"># Phase 2 产物</span>
+    │   ├── <span class="new">aligned_facts.jsonl</span>
+    │   └── <span class="new">review_queue.jsonl</span>       <span class="annot"># confidence&lt;0.7 待审</span>
+    │
+    ├── <span class="dir">abox/</span>                        <span class="annot"># Phase 3 产物</span>
+    │   ├── <span class="new">abox_l0_jsdw.ttl</span>
+    │   ├── <span class="new">abox_l0_jsdw.json</span>
+    │   ├── <span class="new">abox_l3_donglin.ttl</span>
+    │   ├── <span class="new">fill_rules.ttl</span>
+    │   └── <span class="new">instances.json</span>
+    │
+    ├── <span class="dir">rules/</span>
+    │   ├── <span class="reused-a">rules_l2_csa.ttl</span>          <span class="annot"># 5 条中注协 / 财政部</span>
+    │   └── <span class="reused-a">rules_l3_donglin.ttl</span>      <span class="annot"># 7 条东林内规</span>
+    │
+    ├── <span class="dir">provenance/</span>                  <span class="annot"># Phase 4 产物</span>
+    │   ├── <span class="reused-a">cell_provenance.json</span>     <span class="annot"># 含 layer_chain (v4 新增)</span>
+    │   └── <span class="new">cell_provenance.ttl</span>      <span class="annot"># 双轨</span>
+    │
+    └── <span class="dir">learning/</span>                    <span class="annot"># Phase 5 产物</span>
+        ├── <span class="new">chat_change_events.jsonl</span>
+        ├── <span class="new">vba_personal_patterns.jsonl</span>
+        ├── <span class="new">proposed_rules.jsonl</span>
+        └── <span class="new">sign_off_log.jsonl</span>
+
+<span class="annot">────────────────────────────────────
+图例:</span>
+  <span class="reused-a">紫色</span> = 来自方法 A 的复用 (~10 个文件)
+  <span class="reused-b">青色</span> = 来自方法 B 的复用 (~5 个文件)
+  <span class="new">绿色</span> = v4 新增 (~15 个文件)
+</div>
+</section>
+
+<!-- ═══════════ §5 编排与 CLI ═══════════ -->
+<section>
+  <h2>§5 编排 — 主入口 CLI</h2>
+
+<pre><span class="c"># 完整跑 6 Phase</span>
+$ python -m audit_ontology.v4.run \
+    --firm=donglin \
+    --client=jsdw \
+    --year=2025 \
+    --output=./data/donglin/
+
+<span class="c"># 只跑某个 Phase (增量)</span>
+$ python -m audit_ontology.v4.run --only-phase=2
+
+<span class="c"># 强制重跑（忽略缓存）</span>
+$ python -m audit_ontology.v4.run --force
+
+<span class="c"># 跨所部署</span>
+$ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
+  <span class="c"># Phase 0 自动跳过 (复用 tbox)</span>
+  <span class="c"># Phase 1-5 重新跑</span>
+
+<span class="c"># 输出 manifest.json</span>
+{
+    <span class="s">"firm"</span>: <span class="s">"donglin"</span>,
+    <span class="s">"client"</span>: <span class="s">"jsdw"</span>,
+    <span class="s">"phases_completed"</span>: [<span class="s">"P0"</span>,<span class="s">"P1"</span>,<span class="s">"P2"</span>,<span class="s">"P3"</span>,<span class="s">"P4"</span>,<span class="s">"P5"</span>],
+    <span class="s">"counts"</span>: {
+        <span class="s">"tbox_ot"</span>: <span class="n">52</span>, <span class="s">"tbox_lt"</span>: <span class="n">73</span>, <span class="s">"tbox_at"</span>: <span class="n">11</span>,
+        <span class="s">"evidence_rows"</span>: <span class="n">130000</span>,
+        <span class="s">"abox_instances"</span>: <span class="n">114</span>, <span class="s">"link_instances"</span>: <span class="n">139</span>,
+        <span class="s">"fill_rules"</span>: <span class="n">37</span>,
+        <span class="s">"rules_l2"</span>: <span class="n">5</span>, <span class="s">"rules_l3"</span>: <span class="n">7</span>,
+        <span class="s">"cell_provenance"</span>: <span class="n">4250</span>,
+        <span class="s">"proposed_rules"</span>: <span class="n">0</span>
+    },
+    <span class="s">"validation"</span>: { <span class="s">"checks_passed"</span>: <span class="n">18</span>, <span class="s">"checks_total"</span>: <span class="n">18</span> },
+    <span class="s">"timestamp"</span>: <span class="s">"2026-05-24T10:30:00"</span>
+}</pre>
+</section>
+
+<!-- ═══════════ §6 跨所部署 ═══════════ -->
+<section>
+  <h2>§6 跨所部署合约</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:8%">层</th>
+        <th style="width:30%">资产</th>
+        <th style="width:24%">跨所迁移动作</th>
+        <th style="width:14%">改动量</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill L1">L1</span></td>
+        <td>tbox.ttl 中 ~18 个 OT + 11 AT</td>
+        <td>✅ <strong>一字不改</strong></td>
+        <td><span class="pill gray" style="background:#dcfce7;color:#15803d">0%</span></td>
+        <td>ISA / IFRS 全球准则</td>
+      </tr>
+      <tr>
+        <td><span class="pill L2">L2</span></td>
+        <td>tbox.ttl 中 ~12 个 OT + rules_l2 (5 条)</td>
+        <td>✅ <strong>一字不改</strong></td>
+        <td><span class="pill gray" style="background:#dcfce7;color:#15803d">0%</span></td>
+        <td>CSA / CAS 国家准则</td>
+      </tr>
+      <tr>
+        <td><span class="pill L3">L3</span></td>
+        <td>tbox_xxx_ext.ttl + rules_l3_xxx + fill_rules</td>
+        <td>⚙ 重跑 Phase 1-3：扫新所 .xlsm + LLM 对齐 + 人工编规则</td>
+        <td><span class="pill" style="background:#fed7aa;color:#d97706">~100%</span></td>
+        <td>新所有新所的内规和模板</td>
+      </tr>
+      <tr>
+        <td><span class="pill L0">L0</span></td>
+        <td>abox_l0_xxx + cell_provenance</td>
+        <td>⚙ 每个新客户跑 Phase 1 (TB/Aux/Voucher 扫) + Phase 4 (Agent 填稿)</td>
+        <td><span class="pill" style="background:#fed7aa;color:#d97706">100% 重抽</span></td>
+        <td>每接新客户做一次</td>
+      </tr>
+      <tr>
+        <td><span class="pill L4">L4</span></td>
+        <td>各审计师经验沉淀</td>
+        <td>🔀 新所新审计师独立累积</td>
+        <td><span class="pill L4">独立</span></td>
+        <td>L4 不跨所共享 (审计师跳槽授权除外)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout success">
+    <strong>💎 v4 跨所部署的核心价值</strong>
+    <p style="margin:6px 0 0">
+      新所接入流程：<strong>L1+L2 零修改</strong>（≈50% 工作量免费搬）+
+      <strong>L3 自动重抽</strong>（一周内）+ <strong>L0 持续重抽</strong>（每客户）。
+      <strong>开发周期从 3 个月 → 1-2 周</strong>。
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════ §7 实施时间表 ═══════════ -->
+<section>
+  <h2>§7 v4 落地时间表 (Sprint 计划)</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:7%">阶段</th>
+        <th style="width:28%">动作</th>
+        <th style="width:16%">依赖</th>
+        <th style="width:12%">工期</th>
+        <th>关键产物 / 接收标准</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Sprint 1</strong></td>
+        <td>给现有 A 的 52 OT + 14 Rule 加 <code>_layer</code> 字段</td>
+        <td>无</td>
+        <td>2-3 天</td>
+        <td>tbox.json 全部 OT 标 L1/L2/L3； OntologyManager 加层过滤胶囊</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 2</strong></td>
+        <td>引入 B 的 extract_excel.py + extract_vba.py</td>
+        <td>S1</td>
+        <td>5-7 天</td>
+        <td>cell_formulas.jsonl ≥ 100K 行；vba_account_map.jsonl ≥ 300 行</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 3</strong></td>
+        <td>实现 align_facts.py + build_abox.py + 双轨产物</td>
+        <td>S2</td>
+        <td>1 周</td>
+        <td>abox.ttl + abox.json 等价；validate.py 18 check 全过</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 4</strong></td>
+        <td>升级 agent_fill.py 加 layer_chain；ProvenanceDrawer 显示链路</td>
+        <td>S3</td>
+        <td>1 周</td>
+        <td>5 张已填底稿的 4,250 cell 全有 layer_chain；前端 4 层链可视化</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 5</strong></td>
+        <td>L4 双管道：ChatPanel 改写事件 + VBA 模式检测</td>
+        <td>S4</td>
+        <td>1-2 周</td>
+        <td>chat_change_events.jsonl 写入；LearningInbox 展示候选规则；sign-off 流程闭环</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 6</strong></td>
+        <td>跨所迁移 PoC：跑立信/信永中和的 audit Knowledge/</td>
+        <td>S5</td>
+        <td>1 周</td>
+        <td>L1+L2 零改动；L3 自动抽出新所内规；新所 Demo 可演示</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:14px;font-size:13px">
+    <strong>共计</strong>: 5-7 周 ·
+    <strong>关键里程碑</strong>: Sprint 4 末 = v4 Demo 给侯佳成 (4 层全打通 + layer_chain) ·
+    <strong>商业里程碑</strong>: Sprint 6 末 = 跨所 PoC 可签合同
+  </p>
+</section>
+
+<!-- ═══════════ §8 v3 / v4 对比 ═══════════ -->
+<section>
+  <h2>§8 v4 vs v3 / 方法 A 的关键差异</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>维度</th>
+        <th>方法 A (我们 v1)</th>
+        <th>v3 (侯佳成 review 版)</th>
+        <th>v4 (本设计)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>TBox 设计</td>
+        <td>LLM + 人工设计 52 OT</td>
+        <td>从证据反推 20 Class</td>
+        <td><strong>A + 强制 _layer 标签</strong></td>
+      </tr>
+      <tr>
+        <td>L3 ABox 抽取</td>
+        <td>人工编码 Python 字面量</td>
+        <td>自动扫 .xlsm 公式</td>
+        <td><strong>采用 B 的全自动抽取</strong></td>
+      </tr>
+      <tr>
+        <td>L0 客户数据</td>
+        <td>openpyxl 读 TB/Aux/Voucher</td>
+        <td>未读</td>
+        <td><strong>采用 A 的客户数据读取</strong></td>
+      </tr>
+      <tr>
+        <td>规则形式化</td>
+        <td>人工编码 formal_expression</td>
+        <td>无（只有公式）</td>
+        <td><strong>采用 A 的人工编码</strong></td>
+      </tr>
+      <tr>
+        <td>序列化</td>
+        <td>JSON 单轨</td>
+        <td>Turtle 单轨</td>
+        <td><strong>双轨 (JSON + Turtle)</strong></td>
+      </tr>
+      <tr>
+        <td>证据强度</td>
+        <td>引用准则但无机器指针</td>
+        <td>jsonl#L&lt;n&gt; 行号</td>
+        <td><strong>采用 B 的 evidenceRef</strong></td>
+      </tr>
+      <tr>
+        <td>追溯</td>
+        <td>4,250 cell + source_kind</td>
+        <td>106K FillRule (静态)</td>
+        <td><strong>4,250 cell + layer_chain + evidence_ref + fill_rule_ref</strong></td>
+      </tr>
+      <tr>
+        <td>L4 经验</td>
+        <td>无</td>
+        <td>无</td>
+        <td><strong>双管道捕获 (新)</strong></td>
+      </tr>
+      <tr>
+        <td>校验</td>
+        <td>无</td>
+        <td>18 个 check</td>
+        <td><strong>采用 B 的 validate.py 扩展</strong></td>
+      </tr>
+      <tr>
+        <td>跨所部署</td>
+        <td>需重写大量 Python</td>
+        <td>跑 extract_*.py</td>
+        <td><strong>1-2 周完成 (L1+L2 零改动)</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════ §9 风险与开放问题 ═══════════ -->
+<section>
+  <h2>§9 风险与开放问题</h2>
+
+  <div class="callout danger">
+    <strong>⚠️ R1: LLM 对齐的 confidence 阈值需要校准</strong>
+    <p style="margin:6px 0 0">
+      Phase 2 的 LLM 打标签可能出现幻觉。需要人工 sample 100 条 review，确认 confidence ≥ 0.7 的准确率 ≥ 95%。如果不达标，需要更细的 prompt 工程 或换更强的模型。
+    </p>
+  </div>
+
+  <div class="callout danger">
+    <strong>⚠️ R2: 跨所 TBox 复用边界不清</strong>
+    <p style="margin:6px 0 0">
+      "事务所专有 OT" 和 "中国通用 OT" 的边界主观。如东林的 <code>AuditArea</code>（按字母分组）— 是 L3 还是 L2？侯佳成可能说这是中注协推荐的通用做法。需要每个 OT 加 <code>_layer_basis</code> 说明依据，由审计师共识决定。
+    </p>
+  </div>
+
+  <div class="callout">
+    <strong>❓ O1: L4 经验沉淀的隐私 / 合规问题</strong>
+    <p style="margin:6px 0 0">
+      审计师手写的 reason 字段可能含敏感信息（客户身份、内幕判断）。需要决定：是否对 L4 候选规则做匿名化？审计师 sign-off 时是否同意贡献给事务所知识库？这是 Phase 5 实现前必须解决的合规问题。
+    </p>
+  </div>
+
+  <div class="callout">
+    <strong>❓ O2: 双轨产物的同步成本</strong>
+    <p style="margin:6px 0 0">
+      JSON 和 Turtle 必须严格等价。如果 build_abox.py 有 bug，会导致两者偏离。需要在 validate.py 加 <code>JSON==TTL</code> 这个 check，且每次构建跑 diff。但这增加工程成本，可能不值得。备选：只保留 JSON 单轨，给侯佳成 demo 时单独生成 Turtle 快照。
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════ §10 与侯佳成的对话 ═══════════ -->
+<section>
+  <h2>§10 给侯佳成的 v4 一句话</h2>
+
+  <div class="callout info">
+    <p style="font-size:13.5px;margin:0">
+      "侯老师，<strong>v4 是把我们两个版本合到一起再加一层</strong>：
+      <br><br>
+      ① 我前面给你看的 52 OT + 14 Rule 那个版本（方法 A）— 强在<strong>业务规则的形式化和 Agent 实际能跑稿</strong>；<br>
+      ② v3 那个版本 — 强在<strong>把你们 442-sheet 模板的 10 万条公式 + VBA 全部自动抽出来</strong>；<br>
+      ③ <strong>新加的 L4 经验沉淀</strong> — 你以后每次手动改 Agent 填的内容，都会被累积成你个人的 AI 大脑。
+      <br><br>
+      合起来，每个数字既能追到准则（哪条 CSA + 哪条事务所内规），又能追到模板（A6.C11 = A6-2.F824 这条 Excel 公式），又能追到你自己的经验（你之前在类似场景做过的 3 次手动调整）。
+      <br><br>
+      <strong>跨所部署时</strong>： L1+L2 准则部分不动（占 50%），只需要跑 extract_*.py 重新抽你们的 .xlsm 模板（L3）+ 重新读新客户的 TB/Aux/Voucher（L0）。<strong>1-2 周就能完成新所的 PoC</strong>。"
+    </p>
+  </div>
+
+  <div class="acceptance">
+    <h5>侯佳成应该 review 什么？</h5>
+    <ul>
+      <li>§3 Phase 0 的 TBox 设计 — 52 OT 是否覆盖完整？哪些应该加？</li>
+      <li>§3 Phase 3 的 14 条规则 formal_expression — 阈值正确吗？source / effective 日期对吗？</li>
+      <li>§3 Phase 5 的 L4 隐私合规 — 是否同意把你的改写事件用于沉淀事务所规则？</li>
+      <li>§9 R1 / R2 / O1 / O2 — 风险与开放问题，需要你的判断</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<footer>
+  设计于 2026-05-24 · v4 本体知识抽取引擎 · pre-implementation design doc<br>
+  实施前需 sign-off 的负责人: <strong>项目工程师</strong> + <strong>侯佳成 (审计 review)</strong> + <strong>合规 (L4 隐私)</strong>
+</footer>
+
+</main>
+</body>
+</html>

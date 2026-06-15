@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+.env.local
+
+# Node
+node_modules/
+dist/
+.vite/
+*.log
+
+# TypeScript build artifacts
+*.tsbuildinfo
+frontend/vite.config.d.ts
+frontend/vite.config.js
+
+# DB / data
+*.db
+*.db-wal
+*.db-shm
+backend/data/*.db
+backend/data/*.db-*
+backend/data/evidence/*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# 东林真实 .xlsm 模板（27MB · 不提交，部署时本地复制）
+backend/data/donglin/templates/*.xlsm
+backend/data/donglin/templates/*.xlsx

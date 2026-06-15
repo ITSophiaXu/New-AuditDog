@@ -1,0 +1,165 @@
+[
+  {
+    "code": "Read",
+    "display_name": "读取",
+    "description": "从输入源读取数据（客户 TB / 凭证 / 银行流水 / 合同 / 发票 / 函证回函等）。所有客户原始数据进入本体前的第一步。",
+    "target_type_code": "*",
+    "kind": "read",
+    "parameters_schema": [
+      {"code": "source", "label": "数据源", "type": "enum",
+        "enum": ["TrialBalance", "GeneralLedger", "SubLedger", "Voucher", "BankStatement",
+                "Contract", "Invoice", "ConfirmationLetter", "CountSheet", "FinancialStatement", "其他文件"],
+        "required": true},
+      {"code": "source_file", "label": "源文件路径或URL", "type": "string"},
+      {"code": "filter", "label": "过滤条件 (科目/期间/客户码)", "type": "json"},
+      {"code": "target_object_type", "label": "落入哪个 ObjectType", "type": "string", "required": true}
+    ]
+  },
+  {
+    "code": "Map",
+    "display_name": "映射",
+    "description": "把客户编码映射到事务所标准 (科目代码→新准则项目；客户名→关联方名单；银行账号→Bank 实例)。",
+    "target_type_code": "*",
+    "kind": "map",
+    "parameters_schema": [
+      {"code": "from_code", "label": "源代码", "type": "string", "required": true},
+      {"code": "from_type", "label": "源类型", "type": "string"},
+      {"code": "to_type", "label": "目标类型", "type": "string", "required": true},
+      {"code": "mapping_table_ref", "label": "映射表引用", "type": "string", "help": "如 KM-2025 / RP-LIST-2025"},
+      {"code": "matched", "label": "是否命中", "type": "boolean"}
+    ]
+  },
+  {
+    "code": "Standardize",
+    "display_name": "标准化",
+    "description": "数据清洗与标准化：金额取 2 位小数 / 日期 ISO 化 / 科目代码补 0 / 客户名去空白与括号。",
+    "target_type_code": "*",
+    "kind": "normalize",
+    "parameters_schema": [
+      {"code": "field", "label": "字段", "type": "string", "required": true},
+      {"code": "rule", "label": "标准化规则", "type": "enum",
+        "enum": ["金额取2位小数", "日期 ISO 8601", "科目代码补零", "去除空白与全角", "大小写归一", "币种归一"]}
+    ]
+  },
+  {
+    "code": "Sample",
+    "display_name": "抽样",
+    "description": "从总体中抽取样本（统计/非统计抽样）。生成 Sampling 实例并附在 AuditProcedure 上。",
+    "target_type_code": "Sampling",
+    "kind": "sample",
+    "parameters_schema": [
+      {"code": "population_type", "label": "总体类型", "type": "string", "required": true,
+        "help": "如 Voucher / SubLedger.客户 / Contract"},
+      {"code": "population_size", "label": "总体规模", "type": "number"},
+      {"code": "population_value", "label": "总体金额", "type": "money"},
+      {"code": "method", "label": "抽样方法", "type": "enum",
+        "enum": ["统计抽样PPS", "随机抽样", "系统抽样", "整群抽样", "判断抽样", "全部检查"]},
+      {"code": "sample_size", "label": "目标样本量", "type": "number"},
+      {"code": "tolerable_error", "label": "可容忍误差", "type": "money"},
+      {"code": "confidence_level", "label": "置信水平", "type": "number"}
+    ]
+  },
+  {
+    "code": "Reconcile",
+    "display_name": "核对",
+    "description": "把两个或多个数据来源相互核对：TB vs 明细账 / 账面 vs 询证函 / 凭证 vs 发票 / 实物 vs 账面。差异落入 AbnormalTransaction。",
+    "target_type_code": "*",
+    "kind": "reconcile",
+    "parameters_schema": [
+      {"code": "left_source", "label": "左侧源", "type": "string", "required": true},
+      {"code": "right_source", "label": "右侧源", "type": "string", "required": true},
+      {"code": "key_field", "label": "对照键", "type": "string", "required": true,
+        "help": "如 account_code / customer_code / voucher_no"},
+      {"code": "value_field", "label": "数值字段", "type": "string", "required": true},
+      {"code": "tolerance", "label": "容差", "type": "money"},
+      {"code": "differences_max_n", "label": "差异返回上限", "type": "number"}
+    ]
+  },
+  {
+    "code": "Recompute",
+    "display_name": "重新计算",
+    "description": "对客户账面金额重新独立计算（折旧/摊销/利息/税费/汇兑），生成 Recomputation 实例。",
+    "target_type_code": "Recomputation",
+    "kind": "recompute",
+    "parameters_schema": [
+      {"code": "target", "label": "重算目标", "type": "string", "required": true,
+        "help": "如 折旧 / 利息 / 增值税 / 个税 / 印花税 / 汇兑"},
+      {"code": "formula", "label": "公式", "type": "string", "required": true},
+      {"code": "inputs", "label": "输入参数", "type": "json"},
+      {"code": "book_value", "label": "账面值", "type": "money"}
+    ]
+  },
+  {
+    "code": "Explain",
+    "display_name": "解释",
+    "description": "对发现的异常 / 差异 / 计算结果提供自然语言解释，并标注证据引用。用于审计师可读的结论生成。",
+    "target_type_code": "*",
+    "kind": "explain",
+    "parameters_schema": [
+      {"code": "target_object_id", "label": "解释对象", "type": "number", "required": true},
+      {"code": "context_refs", "label": "上下文引用", "type": "json", "help": "[OI#id, ...]"},
+      {"code": "evidence_refs", "label": "证据引用", "type": "json"},
+      {"code": "natural_language_output", "label": "中文解释", "type": "text"}
+    ]
+  },
+  {
+    "code": "Generate",
+    "display_name": "生成",
+    "description": "生成新对象 (调整分录 / 异常 / 风险记录 / 披露段落 / 整改要求 / 底稿子表内容)，原子写入。",
+    "target_type_code": "*",
+    "kind": "generate",
+    "parameters_schema": [
+      {"code": "target_type", "label": "生成的对象类型", "type": "enum",
+        "enum": ["AuditAdjustment", "AbnormalTransaction", "RelatedPartyRisk", "InternalControlDeficiency",
+                "WorkingPaper.sheet_data", "DisclosureNote", "SpecialFinding", "Recommendation",
+                "RemediationRequirement", "Evidence"], "required": true},
+      {"code": "data", "label": "数据", "type": "json", "required": true},
+      {"code": "triggered_by_rule", "label": "触发规则", "type": "string"},
+      {"code": "linked_to", "label": "关联到", "type": "json"}
+    ]
+  },
+  {
+    "code": "Review",
+    "display_name": "复核",
+    "description": "对底稿/调整/报告执行复核，生成 ReviewLevel 实例并更新 review_status。",
+    "target_type_code": "WorkingPaper",
+    "kind": "review",
+    "parameters_schema": [
+      {"code": "level", "label": "复核层级", "type": "enum",
+        "enum": ["一级复核", "二级复核", "三级复核", "项目合伙人", "质控复核"], "required": true},
+      {"code": "reviewer_name", "label": "复核人", "type": "string", "required": true},
+      {"code": "opinion", "label": "复核意见", "type": "text"},
+      {"code": "status", "label": "状态", "type": "enum", "enum": ["通过", "需修改", "退回"], "required": true},
+      {"code": "issues", "label": "复核问题清单", "type": "json"}
+    ]
+  },
+  {
+    "code": "SignOff",
+    "display_name": "签出",
+    "description": "项目合伙人/签字注师签出底稿或报告，状态进入「已完成」。",
+    "target_type_code": "*",
+    "kind": "signoff",
+    "parameters_schema": [
+      {"code": "target_type", "label": "签出对象类型", "type": "enum",
+        "enum": ["WorkingPaper", "AuditReport", "Engagement"], "required": true},
+      {"code": "signer_name", "label": "签字人", "type": "string", "required": true},
+      {"code": "signer_role", "label": "签字角色", "type": "enum",
+        "enum": ["项目合伙人", "签字注师", "质控合伙人"], "required": true},
+      {"code": "signed_at", "label": "签字日期", "type": "date", "required": true}
+    ]
+  },
+  {
+    "code": "Archive",
+    "display_name": "归档",
+    "description": "项目结束后归档（底稿冻结、证据打包、整理交接清单）。一旦归档不可修改。",
+    "target_type_code": "Engagement",
+    "kind": "archive",
+    "parameters_schema": [
+      {"code": "archive_date", "label": "归档日期", "type": "date", "required": true},
+      {"code": "archive_location", "label": "归档位置/系统", "type": "string"},
+      {"code": "archived_by", "label": "归档人", "type": "string"},
+      {"code": "package_size_mb", "label": "归档包大小(MB)", "type": "number"},
+      {"code": "retention_years", "label": "保管年限", "type": "number"}
+    ]
+  }
+]

@@ -1,0 +1,4123 @@
+[
+  {
+    "id": 1,
+    "key": "AuditedEntity::江苏大王通风机械有限公司",
+    "type_code": "AuditedEntity",
+    "display_name": "江苏大王通风机械有限公司",
+    "data": {
+      "name": "江苏大王通风机械有限公司",
+      "unified_social_credit_code": "91320206MA1MDD2LXW",
+      "legal_representative": "杨春平",
+      "registered_address": "无锡市惠山区堰桥街道堰锦路22号",
+      "establishment_date": "2015-12-28",
+      "industry": "制造业 - 通风设备",
+      "industry_code": "M7320",
+      "scale": "中型",
+      "registered_capital": 10000000.0,
+      "paid_in_capital": 2000000.0,
+      "employee_count": 56,
+      "operating_scope": "通风设备、工业风扇、电气机械及器材的研发、制造、加工及售后服务",
+      "tax_authority": "国家税务总局无锡市惠山区税务局",
+      "is_small_micro": true,
+      "is_public_company": false,
+      "is_high_tech": true,
+      "high_tech_cert_no": "GR202532011784",
+      "fiscal_year": "2025"
+    }
+  },
+  {
+    "id": 2,
+    "key": "RelatedParty::杨春平",
+    "type_code": "RelatedParty",
+    "display_name": "杨春平",
+    "data": {
+      "name": "杨春平",
+      "party_type": "控股股东",
+      "relation_to_client": "法定代表人/实际控制人",
+      "id_type": "身份证",
+      "shareholding_direct": 0.54,
+      "shareholding_lookthrough": 0.8
+    }
+  },
+  {
+    "id": 3,
+    "key": "RelatedParty::柒米叁（无锡）企业管理咨询合伙企业（有限合伙）",
+    "type_code": "RelatedParty",
+    "display_name": "柒米叁（无锡）企业管理咨询合伙企业（有限合伙）",
+    "data": {
+      "name": "柒米叁（无锡）企业管理咨询合伙企业（有限合伙）",
+      "party_type": "其他股东",
+      "relation_to_client": "股东",
+      "unified_social_credit_code": "91320213MAE0BWX508",
+      "id_type": "营业执照",
+      "shareholding_direct": 0.46
+    }
+  },
+  {
+    "id": 4,
+    "key": "RelatedParty::黄燕红",
+    "type_code": "RelatedParty",
+    "display_name": "黄燕红",
+    "data": {
+      "name": "黄燕红",
+      "party_type": "关联自然人",
+      "relation_to_client": "股东亲属 / 借款保证人"
+    }
+  },
+  {
+    "id": 5,
+    "key": "RelatedParty::朱洋红",
+    "type_code": "RelatedParty",
+    "display_name": "朱洋红",
+    "data": {
+      "name": "朱洋红",
+      "party_type": "关联自然人",
+      "relation_to_client": "股东亲属"
+    }
+  },
+  {
+    "id": 6,
+    "key": "Contact::黄燕红",
+    "type_code": "Contact",
+    "display_name": "黄燕红",
+    "data": {
+      "name": "黄燕红",
+      "title": "财务负责人",
+      "role_in_audit": "财务负责人"
+    }
+  },
+  {
+    "id": 7,
+    "key": "Contact::出纳A",
+    "type_code": "Contact",
+    "display_name": "（待补 - 客户出纳）",
+    "data": {
+      "name": "（待补 - 客户出纳）",
+      "title": "出纳",
+      "role_in_audit": "出纳"
+    }
+  },
+  {
+    "id": 8,
+    "key": "RelatedPartyGuarantee::G-001",
+    "type_code": "RelatedPartyGuarantee",
+    "display_name": "南京银行无锡分行 ¥440万",
+    "data": {
+      "creditor_name": "南京银行无锡分行",
+      "guarantor_names": "杨春平,黄燕红",
+      "amount": 4400000,
+      "term_start": "2025-11-21",
+      "term_end": "2026-11-20",
+      "guarantee_type": "连带保证",
+      "debt_type": "短期借款"
+    }
+  },
+  {
+    "id": 9,
+    "key": "RelatedPartyGuarantee::G-002",
+    "type_code": "RelatedPartyGuarantee",
+    "display_name": "江苏银行 ¥100万",
+    "data": {
+      "creditor_name": "江苏银行",
+      "guarantor_names": "杨春平,黄燕红",
+      "amount": 1000000,
+      "term_start": "2025-05-27",
+      "term_end": "2026-05-26",
+      "guarantee_type": "连带保证",
+      "debt_type": "短期借款"
+    }
+  },
+  {
+    "id": 10,
+    "key": "RelatedPartyGuarantee::G-003",
+    "type_code": "RelatedPartyGuarantee",
+    "display_name": "交通银行 ¥200万",
+    "data": {
+      "creditor_name": "交通银行",
+      "guarantor_names": "杨春平,黄燕红",
+      "amount": 2000000,
+      "term_start": "2025-07-29",
+      "term_end": "2026-07-29",
+      "guarantee_type": "连带保证",
+      "debt_type": "短期借款"
+    }
+  },
+  {
+    "id": 11,
+    "key": "RelatedPartyGuarantee::G-004",
+    "type_code": "RelatedPartyGuarantee",
+    "display_name": "中国农业银行(第1笔) ¥200万",
+    "data": {
+      "creditor_name": "中国农业银行(第1笔)",
+      "guarantor_names": "杨春平,黄燕红",
+      "amount": 2000000,
+      "term_start": "2025-12-23",
+      "term_end": "2026-01-23",
+      "guarantee_type": "连带保证",
+      "debt_type": "短期借款"
+    }
+  },
+  {
+    "id": 12,
+    "key": "RelatedPartyGuarantee::G-005",
+    "type_code": "RelatedPartyGuarantee",
+    "display_name": "中国农业银行(第2笔) ¥300万",
+    "data": {
+      "creditor_name": "中国农业银行(第2笔)",
+      "guarantor_names": "杨春平,黄燕红",
+      "amount": 3000000,
+      "term_start": "2025-12-24",
+      "term_end": "2026-01-24",
+      "guarantee_type": "连带保证",
+      "debt_type": "短期借款"
+    }
+  },
+  {
+    "id": 13,
+    "key": "AccountingPolicy::适用会计制度",
+    "type_code": "AccountingPolicy",
+    "display_name": "适用会计制度",
+    "data": {
+      "topic": "适用会计制度",
+      "framework_ref": "企业会计制度",
+      "policy_text": "执行《企业会计制度》（老准则，1993体系）。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 14,
+    "key": "AccountingPolicy::会计期间",
+    "type_code": "AccountingPolicy",
+    "display_name": "会计期间",
+    "data": {
+      "topic": "会计期间",
+      "framework_ref": "—",
+      "policy_text": "公历 1 月 1 日 — 12 月 31 日。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 15,
+    "key": "AccountingPolicy::记账本位币",
+    "type_code": "AccountingPolicy",
+    "display_name": "记账本位币",
+    "data": {
+      "topic": "记账本位币",
+      "framework_ref": "—",
+      "policy_text": "人民币元。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 16,
+    "key": "AccountingPolicy::外币业务",
+    "type_code": "AccountingPolicy",
+    "display_name": "外币业务",
+    "data": {
+      "topic": "外币业务",
+      "framework_ref": "CAS 19",
+      "policy_text": "业务发生当期期初基准汇率折算；资负日按当日基准汇率折算货币性资负。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 17,
+    "key": "AccountingPolicy::应收款项坏账",
+    "type_code": "AccountingPolicy",
+    "display_name": "应收款项坏账",
+    "data": {
+      "topic": "应收款项坏账",
+      "framework_ref": "企业会计制度",
+      "policy_text": "备抵法 + 个别认定法；未采用 CAS 22 ECL 模型。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 18,
+    "key": "AccountingPolicy::存货",
+    "type_code": "AccountingPolicy",
+    "display_name": "存货",
+    "data": {
+      "topic": "存货",
+      "framework_ref": "CAS 1",
+      "policy_text": "永续盘存制；加权平均发出；低值易耗品领用一次摊销。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 19,
+    "key": "AccountingPolicy::固定资产折旧",
+    "type_code": "AccountingPolicy",
+    "display_name": "固定资产折旧",
+    "data": {
+      "topic": "固定资产折旧",
+      "framework_ref": "CAS 4",
+      "policy_text": "直线法；残值率 5%；房屋 20 年 / 机器 10 年 / 运输 4 年 / 办公 5 年 / 电子 3 年。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 20,
+    "key": "AccountingPolicy::长期待摊费用",
+    "type_code": "AccountingPolicy",
+    "display_name": "长期待摊费用",
+    "data": {
+      "topic": "长期待摊费用",
+      "framework_ref": "企业会计制度",
+      "policy_text": "按预计受益期分期平均摊销；开办费开始经营当月一次性摊销。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 21,
+    "key": "AccountingPolicy::职工薪酬",
+    "type_code": "AccountingPolicy",
+    "display_name": "职工薪酬",
+    "data": {
+      "topic": "职工薪酬",
+      "framework_ref": "CAS 9",
+      "policy_text": "短期薪酬发生时确认负债；离职后福利-设定提存计划按规定基数比例缴纳。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 22,
+    "key": "AccountingPolicy::政府补助",
+    "type_code": "AccountingPolicy",
+    "display_name": "政府补助",
+    "data": {
+      "topic": "政府补助",
+      "framework_ref": "CAS 16",
+      "policy_text": "总额法；与资产相关确认递延收益按使用寿命平均分配。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 23,
+    "key": "AccountingPolicy::收入确认",
+    "type_code": "AccountingPolicy",
+    "display_name": "收入确认",
+    "data": {
+      "topic": "收入确认",
+      "framework_ref": "企业会计制度",
+      "policy_text": "销售产品按风险报酬转移；提供劳务按完工百分比。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 24,
+    "key": "AccountingPolicy::所得税",
+    "type_code": "AccountingPolicy",
+    "display_name": "所得税",
+    "data": {
+      "topic": "所得税",
+      "framework_ref": "企业会计制度",
+      "policy_text": "应付税款法；不计提递延所得税。",
+      "is_consistent_with_prior": true
+    }
+  },
+  {
+    "id": 25,
+    "key": "AuditType::FY-AUDIT",
+    "type_code": "AuditType",
+    "display_name": "财务报表审计",
+    "data": {
+      "code": "FY-AUDIT",
+      "name": "财务报表审计",
+      "is_statutory": false
+    }
+  },
+  {
+    "id": 26,
+    "key": "AuditPeriod::2025FY",
+    "type_code": "AuditPeriod",
+    "display_name": "2025 整年度",
+    "data": {
+      "period_start": "2025-01-01",
+      "period_end": "2025-12-31",
+      "period_label": "2025 年度",
+      "is_full_year": true
+    }
+  },
+  {
+    "id": 27,
+    "key": "Engager::江苏大王通风",
+    "type_code": "Engager",
+    "display_name": "江苏大王通风机械有限公司（同被审计单位）",
+    "data": {
+      "name": "江苏大王通风机械有限公司",
+      "type": "被审计单位本身",
+      "contract_no": "锡东林约[2026]",
+      "contract_date": "2026-02-15"
+    }
+  },
+  {
+    "id": 28,
+    "key": "ProjectTeam::JSDW-Team",
+    "type_code": "ProjectTeam",
+    "display_name": "无锡东林 · 五部 · 江苏大王项目组",
+    "data": {
+      "name": "江苏大王项目组",
+      "firm_name": "无锡东林会计师事务所有限公司",
+      "department": "五部",
+      "size": 4
+    }
+  },
+  {
+    "id": 29,
+    "key": "Auditor::童中国",
+    "type_code": "Auditor",
+    "display_name": "童中国",
+    "data": {
+      "name": "童中国",
+      "role": "签字合伙人",
+      "is_signing": true
+    }
+  },
+  {
+    "id": 30,
+    "key": "Auditor::侯佳成",
+    "type_code": "Auditor",
+    "display_name": "侯佳成",
+    "data": {
+      "name": "侯佳成",
+      "role": "项目经理",
+      "is_signing": true
+    }
+  },
+  {
+    "id": 31,
+    "key": "Auditor::王叙超",
+    "type_code": "Auditor",
+    "display_name": "王叙超",
+    "data": {
+      "name": "王叙超",
+      "role": "审核经理",
+      "is_signing": false
+    }
+  },
+  {
+    "id": 32,
+    "key": "Auditor::洪潇",
+    "type_code": "Auditor",
+    "display_name": "洪潇",
+    "data": {
+      "name": "洪潇",
+      "role": "高级审计师",
+      "is_signing": false
+    }
+  },
+  {
+    "id": 33,
+    "key": "ReviewLevel::一级复核-洪潇",
+    "type_code": "ReviewLevel",
+    "display_name": "一级复核-洪潇",
+    "data": {
+      "level": "一级复核",
+      "reviewer_name": "洪潇",
+      "reviewed_at": "2026-02-28",
+      "status": "通过"
+    }
+  },
+  {
+    "id": 34,
+    "key": "ReviewLevel::二级复核-侯佳成",
+    "type_code": "ReviewLevel",
+    "display_name": "二级复核-侯佳成",
+    "data": {
+      "level": "二级复核",
+      "reviewer_name": "侯佳成",
+      "reviewed_at": "2026-03-02",
+      "status": "通过"
+    }
+  },
+  {
+    "id": 35,
+    "key": "ReviewLevel::三级复核-童中国",
+    "type_code": "ReviewLevel",
+    "display_name": "三级复核-童中国",
+    "data": {
+      "level": "三级复核",
+      "reviewer_name": "童中国",
+      "reviewed_at": "2026-03-02",
+      "status": "通过"
+    }
+  },
+  {
+    "id": 36,
+    "key": "ReviewLevel::签发-童中国",
+    "type_code": "ReviewLevel",
+    "display_name": "签发-童中国",
+    "data": {
+      "level": "签发",
+      "reviewer_name": "童中国",
+      "reviewed_at": "2026-03-03",
+      "status": "通过"
+    }
+  },
+  {
+    "id": 37,
+    "key": "Engagement::ENG-JSDW-2025",
+    "type_code": "Engagement",
+    "display_name": "江苏大王 2025 年报审计 (ENG-JSDW-2025)",
+    "data": {
+      "code": "ENG-JSDW-2025",
+      "report_no": "锡东林内审〔2026〕号",
+      "status": "已完成",
+      "planned_fee": 5000.0
+    }
+  },
+  {
+    "id": 38,
+    "key": "ProjectTimeline::承接",
+    "type_code": "ProjectTimeline",
+    "display_name": "承接",
+    "data": {
+      "milestone": "承接",
+      "planned_date": "2026-02-15",
+      "actual_date": "2026-02-15",
+      "owner": "童中国"
+    }
+  },
+  {
+    "id": 39,
+    "key": "ProjectTimeline::外勤开始",
+    "type_code": "ProjectTimeline",
+    "display_name": "外勤开始",
+    "data": {
+      "milestone": "外勤开始",
+      "planned_date": "2026-02-28",
+      "actual_date": "2026-02-28",
+      "owner": "王叙超"
+    }
+  },
+  {
+    "id": 40,
+    "key": "ProjectTimeline::外勤结束",
+    "type_code": "ProjectTimeline",
+    "display_name": "外勤结束",
+    "data": {
+      "milestone": "外勤结束",
+      "planned_date": "2026-03-02",
+      "actual_date": "2026-03-02",
+      "owner": "王叙超"
+    }
+  },
+  {
+    "id": 41,
+    "key": "ProjectTimeline::三级复核",
+    "type_code": "ProjectTimeline",
+    "display_name": "三级复核",
+    "data": {
+      "milestone": "三级复核",
+      "planned_date": "2026-03-02",
+      "actual_date": "2026-03-02",
+      "owner": "童中国"
+    }
+  },
+  {
+    "id": 42,
+    "key": "ProjectTimeline::出报告",
+    "type_code": "ProjectTimeline",
+    "display_name": "出报告",
+    "data": {
+      "milestone": "出报告",
+      "planned_date": "2026-03-03",
+      "actual_date": "2026-03-03",
+      "owner": "童中国"
+    }
+  },
+  {
+    "id": 43,
+    "key": "AuditArea::货币资金",
+    "type_code": "AuditArea",
+    "display_name": "货币资金",
+    "data": {
+      "code": "AREA-A1",
+      "name": "货币资金",
+      "risk_baseline": "high",
+      "primary_assertions": [
+        "Existence",
+        "RightsAndObligations",
+        "Accuracy"
+      ]
+    }
+  },
+  {
+    "id": 44,
+    "key": "AuditArea::应收应付",
+    "type_code": "AuditArea",
+    "display_name": "应收应付",
+    "data": {
+      "code": "AREA-A6B6",
+      "name": "应收应付",
+      "risk_baseline": "high",
+      "primary_assertions": [
+        "Existence",
+        "Completeness",
+        "Valuation",
+        "Cutoff"
+      ]
+    }
+  },
+  {
+    "id": 45,
+    "key": "AuditArea::存货",
+    "type_code": "AuditArea",
+    "display_name": "存货",
+    "data": {
+      "code": "AREA-A10",
+      "name": "存货",
+      "risk_baseline": "medium",
+      "primary_assertions": [
+        "Existence",
+        "Valuation",
+        "Cutoff"
+      ]
+    }
+  },
+  {
+    "id": 46,
+    "key": "AuditArea::固定资产",
+    "type_code": "AuditArea",
+    "display_name": "固定资产",
+    "data": {
+      "code": "AREA-A24",
+      "name": "固定资产",
+      "risk_baseline": "medium",
+      "primary_assertions": [
+        "Existence",
+        "Completeness",
+        "Accuracy"
+      ]
+    }
+  },
+  {
+    "id": 47,
+    "key": "AuditArea::短期借款",
+    "type_code": "AuditArea",
+    "display_name": "短期借款",
+    "data": {
+      "code": "AREA-B1",
+      "name": "短期借款",
+      "risk_baseline": "high",
+      "primary_assertions": [
+        "Completeness",
+        "RightsAndObligations"
+      ]
+    }
+  },
+  {
+    "id": 48,
+    "key": "AuditArea::应交税费",
+    "type_code": "AuditArea",
+    "display_name": "应交税费",
+    "data": {
+      "code": "AREA-B10",
+      "name": "应交税费",
+      "risk_baseline": "medium",
+      "primary_assertions": [
+        "Completeness",
+        "Accuracy"
+      ]
+    }
+  },
+  {
+    "id": 49,
+    "key": "AuditArea::收入",
+    "type_code": "AuditArea",
+    "display_name": "收入",
+    "data": {
+      "code": "AREA-D1",
+      "name": "收入",
+      "risk_baseline": "high",
+      "primary_assertions": [
+        "Occurrence",
+        "Completeness",
+        "Cutoff"
+      ]
+    }
+  },
+  {
+    "id": 50,
+    "key": "AuditArea::成本",
+    "type_code": "AuditArea",
+    "display_name": "成本",
+    "data": {
+      "code": "AREA-D2",
+      "name": "成本",
+      "risk_baseline": "medium",
+      "primary_assertions": [
+        "Accuracy",
+        "Cutoff"
+      ]
+    }
+  },
+  {
+    "id": 51,
+    "key": "AuditArea::权益",
+    "type_code": "AuditArea",
+    "display_name": "权益",
+    "data": {
+      "code": "AREA-C",
+      "name": "权益",
+      "risk_baseline": "low",
+      "primary_assertions": [
+        "Existence",
+        "RightsAndObligations"
+      ]
+    }
+  },
+  {
+    "id": 52,
+    "key": "Account::1001",
+    "type_code": "Account",
+    "display_name": "1001 库存现金",
+    "data": {
+      "code": "1001",
+      "name": "库存现金",
+      "type": "资产",
+      "opening_balance": 575833.99,
+      "closing_balance_unaudited": 667895.58,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "库存现金"
+    }
+  },
+  {
+    "id": 53,
+    "key": "Account::1102",
+    "type_code": "Account",
+    "display_name": "1102 基金",
+    "data": {
+      "code": "1102",
+      "name": "基金",
+      "type": "资产",
+      "opening_balance": 8028060.8,
+      "closing_balance_unaudited": 8481392.67,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "交易性金融资产"
+    }
+  },
+  {
+    "id": 54,
+    "key": "Account::1121",
+    "type_code": "Account",
+    "display_name": "1121 应收票据",
+    "data": {
+      "code": "1121",
+      "name": "应收票据",
+      "type": "资产",
+      "opening_balance": 0.0,
+      "closing_balance_unaudited": 105798.46,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "应收票据"
+    }
+  },
+  {
+    "id": 55,
+    "key": "Account::1122",
+    "type_code": "Account",
+    "display_name": "1122 应收账款",
+    "data": {
+      "code": "1122",
+      "name": "应收账款",
+      "type": "资产",
+      "opening_balance": 5206404.33,
+      "closing_balance_unaudited": 3360975.7,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "应收账款"
+    }
+  },
+  {
+    "id": 56,
+    "key": "Account::1123",
+    "type_code": "Account",
+    "display_name": "1123 水电",
+    "data": {
+      "code": "1123",
+      "name": "水电",
+      "type": "资产",
+      "opening_balance": 0.0,
+      "closing_balance_unaudited": -4000.0,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "预付账款"
+    }
+  },
+  {
+    "id": 57,
+    "key": "Account::1221",
+    "type_code": "Account",
+    "display_name": "1221 其他应收款",
+    "data": {
+      "code": "1221",
+      "name": "其他应收款",
+      "type": "资产",
+      "opening_balance": 0.0,
+      "closing_balance_unaudited": -350610.14,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "其他应收款"
+    }
+  },
+  {
+    "id": 58,
+    "key": "Account::1403",
+    "type_code": "Account",
+    "display_name": "1403 原材料",
+    "data": {
+      "code": "1403",
+      "name": "原材料",
+      "type": "资产",
+      "opening_balance": 546735.78,
+      "closing_balance_unaudited": 1862930.33,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "原材料"
+    }
+  },
+  {
+    "id": 59,
+    "key": "Account::1405",
+    "type_code": "Account",
+    "display_name": "1405 库存商品",
+    "data": {
+      "code": "1405",
+      "name": "库存商品",
+      "type": "资产",
+      "opening_balance": 656433.53,
+      "closing_balance_unaudited": 0.0,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "库存商品"
+    }
+  },
+  {
+    "id": 60,
+    "key": "Account::1601",
+    "type_code": "Account",
+    "display_name": "1601 固定资产",
+    "data": {
+      "code": "1601",
+      "name": "固定资产",
+      "type": "资产",
+      "opening_balance": 3798888.61,
+      "closing_balance_unaudited": 3777740.02,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "固定资产"
+    }
+  },
+  {
+    "id": 61,
+    "key": "Account::1602",
+    "type_code": "Account",
+    "display_name": "1602 累计折旧",
+    "data": {
+      "code": "1602",
+      "name": "累计折旧",
+      "type": "资产",
+      "opening_balance": -2658464.93,
+      "closing_balance_unaudited": -2489309.31,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "累计折旧"
+    }
+  },
+  {
+    "id": 62,
+    "key": "Account::2001",
+    "type_code": "Account",
+    "display_name": "2001 短期借款",
+    "data": {
+      "code": "2001",
+      "name": "短期借款",
+      "type": "负债",
+      "opening_balance": 14400000.0,
+      "closing_balance_unaudited": 12400000.0,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "短期借款"
+    }
+  },
+  {
+    "id": 63,
+    "key": "Account::2201",
+    "type_code": "Account",
+    "display_name": "2201 应付票据",
+    "data": {
+      "code": "2201",
+      "name": "应付票据",
+      "type": "负债",
+      "opening_balance": 0.0,
+      "closing_balance_unaudited": 1739392.54,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "应付票据"
+    }
+  },
+  {
+    "id": 64,
+    "key": "Account::2202",
+    "type_code": "Account",
+    "display_name": "2202 应付账款",
+    "data": {
+      "code": "2202",
+      "name": "应付账款",
+      "type": "负债",
+      "opening_balance": 2840663.2,
+      "closing_balance_unaudited": 1485470.2,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "应付账款"
+    }
+  },
+  {
+    "id": 65,
+    "key": "Account::2203",
+    "type_code": "Account",
+    "display_name": "2203 美元",
+    "data": {
+      "code": "2203",
+      "name": "美元",
+      "type": "负债",
+      "opening_balance": 64256.84,
+      "closing_balance_unaudited": 64256.84,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "预收款项"
+    }
+  },
+  {
+    "id": 66,
+    "key": "Account::2211",
+    "type_code": "Account",
+    "display_name": "2211 应付职工工资",
+    "data": {
+      "code": "2211",
+      "name": "应付职工工资",
+      "type": "负债",
+      "opening_balance": 291272.72,
+      "closing_balance_unaudited": 274780.81,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "应付职工薪酬"
+    }
+  },
+  {
+    "id": 67,
+    "key": "Account::2221",
+    "type_code": "Account",
+    "display_name": "2221 进项税额",
+    "data": {
+      "code": "2221",
+      "name": "进项税额",
+      "type": "负债",
+      "opening_balance": 396100.52,
+      "closing_balance_unaudited": -282901.15,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "应交税费"
+    }
+  },
+  {
+    "id": 68,
+    "key": "Account::2241",
+    "type_code": "Account",
+    "display_name": "2241 其他",
+    "data": {
+      "code": "2241",
+      "name": "其他",
+      "type": "负债",
+      "opening_balance": -713364.18,
+      "closing_balance_unaudited": -734845.26,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "其他应付款"
+    }
+  },
+  {
+    "id": 69,
+    "key": "Account::4001",
+    "type_code": "Account",
+    "display_name": "4001 实收资本",
+    "data": {
+      "code": "4001",
+      "name": "实收资本",
+      "type": "权益",
+      "opening_balance": 2000000.0,
+      "closing_balance_unaudited": 2000000.0,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "实收资本"
+    }
+  },
+  {
+    "id": 70,
+    "key": "Account::4104",
+    "type_code": "Account",
+    "display_name": "4104 未分配利润",
+    "data": {
+      "code": "4104",
+      "name": "未分配利润",
+      "type": "权益",
+      "opening_balance": -2590030.56,
+      "closing_balance_unaudited": -1533340.67,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "未分配利润"
+    }
+  },
+  {
+    "id": 71,
+    "key": "Account::5001",
+    "type_code": "Account",
+    "display_name": "5001 人工",
+    "data": {
+      "code": "5001",
+      "name": "人工",
+      "type": "成本",
+      "opening_balance": 535006.43,
+      "closing_balance_unaudited": 0.0,
+      "closing_balance_audited": null,
+      "new_framework_mapping": "人工"
+    }
+  },
+  {
+    "id": 72,
+    "key": "TrialBalance::2025-12-31",
+    "type_code": "TrialBalance",
+    "display_name": "2025-12-31 科目余额表 (客户 ERP 导出)",
+    "data": {
+      "period": "2025-12-31",
+      "currency": "CNY",
+      "framework": "企业会计制度",
+      "rows": [
+        {
+          "account_code": "1001",
+          "sub_code": "1001",
+          "name": "库存现金",
+          "opening": 121236.21,
+          "closing": 0.0
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100201",
+          "name": "农行惠山支行",
+          "opening": 439289.24,
+          "closing": 539860.1
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100202",
+          "name": "浙商银行",
+          "opening": 1444.85,
+          "closing": 0.0
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100203",
+          "name": "农行美元-8954",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100204",
+          "name": "交通银行4482",
+          "opening": 4081.43,
+          "closing": 95959.43
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100206",
+          "name": "建设银行1282",
+          "opening": 625.71,
+          "closing": 265.13
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100207",
+          "name": "江苏常熟农村商业银行7905",
+          "opening": 1599.05,
+          "closing": 22211.5
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100208",
+          "name": "南京银行0860",
+          "opening": 7394.89,
+          "closing": 3872.42
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "100209",
+          "name": "江苏银行",
+          "opening": 0.0,
+          "closing": 5727.0
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "101201",
+          "name": "保证金",
+          "opening": 162.61,
+          "closing": 0.0
+        },
+        {
+          "account_code": "1001",
+          "sub_code": "101202",
+          "name": "常熟农商银行保证金",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "1102",
+          "sub_code": "110103",
+          "name": "基金",
+          "opening": 3843810.23,
+          "closing": 0.0
+        },
+        {
+          "account_code": "1102",
+          "sub_code": "110104",
+          "name": "定期",
+          "opening": 4184250.57,
+          "closing": 8481392.67
+        },
+        {
+          "account_code": "1121",
+          "sub_code": "1121",
+          "name": "应收票据",
+          "opening": 0.0,
+          "closing": 105798.46
+        },
+        {
+          "account_code": "1122",
+          "sub_code": "1122",
+          "name": "应收账款",
+          "opening": 5206404.33,
+          "closing": 3360975.7
+        },
+        {
+          "account_code": "1123",
+          "sub_code": "112302",
+          "name": "水电",
+          "opening": 0.0,
+          "closing": -4000.0
+        },
+        {
+          "account_code": "1221",
+          "sub_code": "1133",
+          "name": "应收出口退税款",
+          "opening": 0.0,
+          "closing": -430610.14
+        },
+        {
+          "account_code": "1221",
+          "sub_code": "1221",
+          "name": "其他应收款",
+          "opening": 0.0,
+          "closing": 80000.0
+        },
+        {
+          "account_code": "1403",
+          "sub_code": "1403",
+          "name": "原材料",
+          "opening": 546735.78,
+          "closing": 1862930.33
+        },
+        {
+          "account_code": "1405",
+          "sub_code": "1405",
+          "name": "库存商品",
+          "opening": 656433.53,
+          "closing": 0.0
+        },
+        {
+          "account_code": "1601",
+          "sub_code": "1601",
+          "name": "固定资产",
+          "opening": 3798888.61,
+          "closing": 3777740.02
+        },
+        {
+          "account_code": "1602",
+          "sub_code": "1602",
+          "name": "累计折旧",
+          "opening": -2658464.93,
+          "closing": -2489309.31
+        },
+        {
+          "account_code": "1606",
+          "sub_code": "1606",
+          "name": "固定资产清理",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "2001",
+          "sub_code": "2001",
+          "name": "短期借款",
+          "opening": 14400000.0,
+          "closing": 12400000.0
+        },
+        {
+          "account_code": "2201",
+          "sub_code": "2201",
+          "name": "应付票据",
+          "opening": 0.0,
+          "closing": 1739392.54
+        },
+        {
+          "account_code": "2202",
+          "sub_code": "2202",
+          "name": "应付账款",
+          "opening": 2840663.2,
+          "closing": 1485470.2
+        },
+        {
+          "account_code": "2203",
+          "sub_code": "220301",
+          "name": "美元",
+          "opening": 62856.84,
+          "closing": 62856.84
+        },
+        {
+          "account_code": "2203",
+          "sub_code": "220302",
+          "name": "人民币",
+          "opening": 1400.0,
+          "closing": 1400.0
+        },
+        {
+          "account_code": "2211",
+          "sub_code": "221101",
+          "name": "应付职工工资",
+          "opening": 291272.72,
+          "closing": 265965.94
+        },
+        {
+          "account_code": "2211",
+          "sub_code": "221102",
+          "name": "应付奖金、津贴和补贴",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "2211",
+          "sub_code": "221103",
+          "name": "应付福利费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "2211",
+          "sub_code": "221104",
+          "name": "应付社会保险费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "2211",
+          "sub_code": "221105",
+          "name": "应付住房公积金",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "2211",
+          "sub_code": "221106",
+          "name": "应付工会经费",
+          "opening": 0.0,
+          "closing": 8814.87
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "22210101",
+          "name": "进项税额",
+          "opening": -11616892.18,
+          "closing": -13736649.03
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "22210104",
+          "name": "转出未交增值税",
+          "opening": -2729980.46,
+          "closing": -4131250.65
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "22210105",
+          "name": "减免税款",
+          "opening": -1400.0,
+          "closing": -1400.0
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "22210106",
+          "name": "出口抵减内销产品应纳税额",
+          "opening": -44781.83,
+          "closing": -44781.83
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "22210107",
+          "name": "销项税额",
+          "opening": 14194238.03,
+          "closing": 17283671.88
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "22210108",
+          "name": "出口退税",
+          "opening": 286025.83,
+          "closing": 286025.83
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "22210109",
+          "name": "进项税额转出",
+          "opening": 48844.5,
+          "closing": 49827.55
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "222102",
+          "name": "未交增值税",
+          "opening": 248336.47,
+          "closing": 29638.81
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "222104",
+          "name": "待抵扣进项税额",
+          "opening": 0.0,
+          "closing": -14380.54
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "222117",
+          "name": "应交城市维护建设税",
+          "opening": 8590.11,
+          "closing": 935.7
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "222121",
+          "name": "应交个人所得税",
+          "opening": -4411.7,
+          "closing": -6264.55
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "222122",
+          "name": "教育费附加",
+          "opening": 6135.8,
+          "closing": 668.35
+        },
+        {
+          "account_code": "2221",
+          "sub_code": "222125",
+          "name": "应交印花税",
+          "opening": 1395.95,
+          "closing": 1057.33
+        },
+        {
+          "account_code": "2241",
+          "sub_code": "224101",
+          "name": "其他",
+          "opening": -713364.18,
+          "closing": -734845.26
+        },
+        {
+          "account_code": "4001",
+          "sub_code": "3001",
+          "name": "实收资本",
+          "opening": 2000000.0,
+          "closing": 2000000.0
+        },
+        {
+          "account_code": "4103",
+          "sub_code": "3103",
+          "name": "本年利润",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "4104",
+          "sub_code": "310406",
+          "name": "未分配利润",
+          "opening": -2590030.56,
+          "closing": -1533340.67
+        },
+        {
+          "account_code": "5001",
+          "sub_code": "40010101",
+          "name": "人工",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5001",
+          "sub_code": "40010102",
+          "name": "材料",
+          "opening": 535006.43,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5001",
+          "sub_code": "40010103",
+          "name": "费用",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410101",
+          "name": "折旧",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410102",
+          "name": "水电费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410103",
+          "name": "耗材",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410104",
+          "name": "其他",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410105",
+          "name": "加工费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410106",
+          "name": "低值易耗品",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410107",
+          "name": "食堂费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "5101",
+          "sub_code": "410108",
+          "name": "安装费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6001",
+          "sub_code": "50010101",
+          "name": "服务费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6001",
+          "sub_code": "50010102",
+          "name": "大王工业风扇",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6001",
+          "sub_code": "500102",
+          "name": "外销",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6301",
+          "sub_code": "530101",
+          "name": "非流动资产处置净收益",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6301",
+          "sub_code": "530102",
+          "name": "政府补助",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6301",
+          "sub_code": "530111",
+          "name": "其他",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6401",
+          "sub_code": "5401",
+          "name": "主营业务成本",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6403",
+          "sub_code": "5403",
+          "name": "税金及附加",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560101",
+          "name": "销售人员职工薪酬",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560102",
+          "name": "商品维修费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560103",
+          "name": "运输费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560104",
+          "name": "广告费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560106",
+          "name": "运费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560107",
+          "name": "服务费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560108",
+          "name": "保险费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560110",
+          "name": "租赁费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560111",
+          "name": "推广费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560112",
+          "name": "专利费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6601",
+          "sub_code": "560113",
+          "name": "报关费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560201",
+          "name": "管理人员职工薪酬",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560202",
+          "name": "办公费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560203",
+          "name": "业务招待费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560205",
+          "name": "差旅费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560206",
+          "name": "交通费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560210",
+          "name": "工资",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560211",
+          "name": "折旧",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560212",
+          "name": "福利费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560213",
+          "name": "车辆使用费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560214",
+          "name": "社保",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560215",
+          "name": "公积金",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560216",
+          "name": "租赁费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "56021701",
+          "name": "工资",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "56021702",
+          "name": "直接投入",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "56021703",
+          "name": "折旧与长期待摊费用",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "56021707",
+          "name": "工具",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560220",
+          "name": "招聘服务费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560221",
+          "name": "车辆维修",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560225",
+          "name": "收派服务费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560227",
+          "name": "垃圾费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560228",
+          "name": "印花税",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560229",
+          "name": "加油费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560230",
+          "name": "火车票",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560232",
+          "name": "居间服务费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560233",
+          "name": "餐费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560234",
+          "name": "维修费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560235",
+          "name": "工会经费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560237",
+          "name": "残保金",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6602",
+          "sub_code": "560238",
+          "name": "其他",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6603",
+          "sub_code": "560302",
+          "name": "汇兑损失",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6603",
+          "sub_code": "560303",
+          "name": "银行手续费",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6603",
+          "sub_code": "560305",
+          "name": "利息收支",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6603",
+          "sub_code": "560306",
+          "name": "汇兑损益",
+          "opening": 0.0,
+          "closing": 0.0
+        },
+        {
+          "account_code": "6711",
+          "sub_code": "571101",
+          "name": "非流动资产处置净损失",
+          "opening": 0.0,
+          "closing": 0.0
+        }
+      ],
+      "balance_check": true,
+      "source_file": "input/input_tb.xlsx"
+    }
+  },
+  {
+    "id": 73,
+    "key": "SubLedger::1122",
+    "type_code": "SubLedger",
+    "display_name": "1122 明细账 (807 客户)",
+    "data": {
+      "account_code": "1122",
+      "account_name": "应收账款",
+      "aux_type": "客户",
+      "row_count": 807,
+      "rows": [
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000001",
+          "customer_name": "000001公司",
+          "closing_dr": 0.0,
+          "closing_cr": 388206.67
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000006",
+          "customer_name": "000006公司",
+          "closing_dr": 65820.43,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000011",
+          "customer_name": "000011公司",
+          "closing_dr": 187608.2,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000014",
+          "customer_name": "000014公司",
+          "closing_dr": 0.0,
+          "closing_cr": 3604.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000020",
+          "customer_name": "000020公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000025",
+          "customer_name": "000025公司",
+          "closing_dr": 0.0,
+          "closing_cr": 16000.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000027",
+          "customer_name": "000027公司",
+          "closing_dr": 0.0,
+          "closing_cr": 19880.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000037",
+          "customer_name": "000037公司",
+          "closing_dr": 0.0,
+          "closing_cr": 1200.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000038",
+          "customer_name": "000038公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000044",
+          "customer_name": "000044公司",
+          "closing_dr": 0.0,
+          "closing_cr": 50000.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000045",
+          "customer_name": "000045公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000047",
+          "customer_name": "000047公司",
+          "closing_dr": 3150.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000048",
+          "customer_name": "000048公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000051",
+          "customer_name": "000051公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.18
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000056",
+          "customer_name": "000056公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000057",
+          "customer_name": "000057公司",
+          "closing_dr": 1400.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000058",
+          "customer_name": "000058公司",
+          "closing_dr": 54454.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000059",
+          "customer_name": "000059公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000065",
+          "customer_name": "000065公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000072",
+          "customer_name": "000072公司",
+          "closing_dr": 6660.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000073",
+          "customer_name": "000073公司",
+          "closing_dr": 0.0,
+          "closing_cr": 1.61
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000075",
+          "customer_name": "000075公司",
+          "closing_dr": 0.0,
+          "closing_cr": 60000.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000077",
+          "customer_name": "000077公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000078",
+          "customer_name": "000078公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000079",
+          "customer_name": "000079公司",
+          "closing_dr": 0.0,
+          "closing_cr": 52260.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000080",
+          "customer_name": "000080公司",
+          "closing_dr": 0.0,
+          "closing_cr": 10000.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000083",
+          "customer_name": "000083公司",
+          "closing_dr": 13730.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000087",
+          "customer_name": "000087公司",
+          "closing_dr": 9767.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000089",
+          "customer_name": "000089公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1122",
+          "name": "应收账款",
+          "customer_code": "000090",
+          "customer_name": "000090公司",
+          "closing_dr": 0.0,
+          "closing_cr": 9100.0
+        }
+      ],
+      "source_file": "input/input_aux.xlsx"
+    }
+  },
+  {
+    "id": 74,
+    "key": "SubLedger::1221",
+    "type_code": "SubLedger",
+    "display_name": "1221 明细账 (3 客户)",
+    "data": {
+      "account_code": "1221",
+      "account_name": "其他应收款",
+      "aux_type": "客户",
+      "row_count": 3,
+      "rows": [
+        {
+          "code": "1221",
+          "name": "其他应收款",
+          "customer_code": "000049",
+          "customer_name": "000049公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1221",
+          "name": "其他应收款",
+          "customer_code": "001146",
+          "customer_name": "001146公司",
+          "closing_dr": 0.0,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "1221",
+          "name": "其他应收款",
+          "customer_code": "001356",
+          "customer_name": "001356公司",
+          "closing_dr": 80000.0,
+          "closing_cr": 0.0
+        }
+      ],
+      "source_file": "input/input_aux.xlsx"
+    }
+  },
+  {
+    "id": 75,
+    "key": "SubLedger::2203",
+    "type_code": "SubLedger",
+    "display_name": "2203 明细账 (12 客户)",
+    "data": {
+      "account_code": "2203",
+      "account_name": "预收账款",
+      "aux_type": "客户",
+      "row_count": 12,
+      "rows": [
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000001",
+          "customer_name": "000001公司",
+          "closing_dr": 0.0,
+          "closing_cr": 80683.98
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000002",
+          "customer_name": "000002公司",
+          "closing_dr": 0.0,
+          "closing_cr": 4306.08
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000003",
+          "customer_name": "000003公司",
+          "closing_dr": 22061.71,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000005",
+          "customer_name": "000005公司",
+          "closing_dr": 0.0,
+          "closing_cr": 55184.18
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000006",
+          "customer_name": "000006公司",
+          "closing_dr": 75554.06,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000007",
+          "customer_name": "000007公司",
+          "closing_dr": 9116.8,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000008",
+          "customer_name": "000008公司",
+          "closing_dr": 22200.95,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000009",
+          "customer_name": "000009公司",
+          "closing_dr": 26201.44,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000010",
+          "customer_name": "000010公司",
+          "closing_dr": 30022.82,
+          "closing_cr": 0.0
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000012",
+          "customer_name": "000012公司",
+          "closing_dr": 0.0,
+          "closing_cr": 127878.9
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000013",
+          "customer_name": "000013公司",
+          "closing_dr": 0.0,
+          "closing_cr": 1400.0
+        },
+        {
+          "code": "2203",
+          "name": "预收账款",
+          "customer_code": "000530",
+          "customer_name": "000530公司",
+          "closing_dr": 20038.52,
+          "closing_cr": 0.0
+        }
+      ],
+      "source_file": "input/input_aux.xlsx"
+    }
+  },
+  {
+    "id": 76,
+    "key": "GeneralLedger::2025FY",
+    "type_code": "GeneralLedger",
+    "display_name": "2025 年度总账 (12,620 笔凭证)",
+    "data": {
+      "period_label": "2025-01 至 2025-12",
+      "rows": [
+        {
+          "month": 1,
+          "voucher_lines": 537
+        },
+        {
+          "month": 2,
+          "voucher_lines": 591
+        },
+        {
+          "month": 3,
+          "voucher_lines": 632
+        },
+        {
+          "month": 4,
+          "voucher_lines": 1018
+        },
+        {
+          "month": 5,
+          "voucher_lines": 1167
+        },
+        {
+          "month": 6,
+          "voucher_lines": 1457
+        },
+        {
+          "month": 7,
+          "voucher_lines": 1807
+        },
+        {
+          "month": 8,
+          "voucher_lines": 1535
+        },
+        {
+          "month": 9,
+          "voucher_lines": 1224
+        },
+        {
+          "month": 10,
+          "voucher_lines": 729
+        },
+        {
+          "month": 11,
+          "voucher_lines": 854
+        },
+        {
+          "month": 12,
+          "voucher_lines": 1069
+        }
+      ],
+      "source_file": "input/input_vouchers.xlsx"
+    }
+  },
+  {
+    "id": 77,
+    "key": "BankStatement::南京银行无锡分行",
+    "type_code": "BankStatement",
+    "display_name": "南京银行无锡分行",
+    "data": {
+      "bank_name": "南京银行无锡分行",
+      "currency": "CNY",
+      "period": "2025-12",
+      "closing_balance": 0,
+      "transaction_count": "待补 - 银行流水未导入"
+    }
+  },
+  {
+    "id": 78,
+    "key": "BankStatement::江苏银行无锡分行",
+    "type_code": "BankStatement",
+    "display_name": "江苏银行无锡分行",
+    "data": {
+      "bank_name": "江苏银行无锡分行",
+      "currency": "CNY",
+      "period": "2025-12",
+      "closing_balance": 1005055.14,
+      "transaction_count": "待补 - 银行流水未导入"
+    }
+  },
+  {
+    "id": 79,
+    "key": "BankStatement::交通银行无锡分行",
+    "type_code": "BankStatement",
+    "display_name": "交通银行无锡分行",
+    "data": {
+      "bank_name": "交通银行无锡分行",
+      "currency": "CNY",
+      "period": "2025-12",
+      "closing_balance": 739394.0,
+      "transaction_count": "待补 - 银行流水未导入"
+    }
+  },
+  {
+    "id": 80,
+    "key": "BankStatement::中国农业银行惠山支行",
+    "type_code": "BankStatement",
+    "display_name": "中国农业银行惠山支行",
+    "data": {
+      "bank_name": "中国农业银行惠山支行",
+      "currency": "CNY",
+      "period": "2025-12",
+      "closing_balance": 539860.1,
+      "transaction_count": "待补 - 银行流水未导入"
+    }
+  },
+  {
+    "id": 81,
+    "key": "BankStatement::江苏常熟农村商业银行",
+    "type_code": "BankStatement",
+    "display_name": "江苏常熟农村商业银行",
+    "data": {
+      "bank_name": "江苏常熟农村商业银行",
+      "currency": "CNY",
+      "period": "2025-12",
+      "closing_balance": 22211.5,
+      "transaction_count": "待补 - 银行流水未导入"
+    }
+  },
+  {
+    "id": 82,
+    "key": "Assertion::Existence",
+    "type_code": "Assertion",
+    "display_name": "存在",
+    "data": {
+      "code": "Existence",
+      "name": "存在",
+      "applies_to": "所有科目"
+    }
+  },
+  {
+    "id": 83,
+    "key": "Assertion::Completeness",
+    "type_code": "Assertion",
+    "display_name": "完整性",
+    "data": {
+      "code": "Completeness",
+      "name": "完整性",
+      "applies_to": "所有科目"
+    }
+  },
+  {
+    "id": 84,
+    "key": "Assertion::Accuracy",
+    "type_code": "Assertion",
+    "display_name": "准确性",
+    "data": {
+      "code": "Accuracy",
+      "name": "准确性",
+      "applies_to": "所有科目"
+    }
+  },
+  {
+    "id": 85,
+    "key": "Assertion::Cutoff",
+    "type_code": "Assertion",
+    "display_name": "截止",
+    "data": {
+      "code": "Cutoff",
+      "name": "截止",
+      "applies_to": "所有科目"
+    }
+  },
+  {
+    "id": 86,
+    "key": "Assertion::RightsAndObligations",
+    "type_code": "Assertion",
+    "display_name": "权利义务",
+    "data": {
+      "code": "RightsAndObligations",
+      "name": "权利义务",
+      "applies_to": "所有科目"
+    }
+  },
+  {
+    "id": 87,
+    "key": "Assertion::Presentation",
+    "type_code": "Assertion",
+    "display_name": "列报",
+    "data": {
+      "code": "Presentation",
+      "name": "列报",
+      "applies_to": "所有科目"
+    }
+  },
+  {
+    "id": 88,
+    "key": "RiskOfMaterialMisstatement::R-001",
+    "type_code": "RiskOfMaterialMisstatement",
+    "display_name": "R-001",
+    "data": {
+      "risk_name": "应收账款大量贷方余额未重分类 → 资产虚增",
+      "risk_level": "认定层次",
+      "is_special": false,
+      "addressable_by_substantive": true,
+      "affected_areas": [
+        "应收应付"
+      ],
+      "affected_assertions": [
+        "Completeness",
+        "Presentation"
+      ],
+      "severity": "high"
+    }
+  },
+  {
+    "id": 89,
+    "key": "RiskOfMaterialMisstatement::R-002",
+    "type_code": "RiskOfMaterialMisstatement",
+    "display_name": "R-002",
+    "data": {
+      "risk_name": "高资产负债率 98.98% + 短借全由关联方担保 → 持续经营压力",
+      "risk_level": "报表层次",
+      "is_special": false,
+      "addressable_by_substantive": false,
+      "affected_areas": [
+        "短期借款"
+      ],
+      "severity": "high"
+    }
+  },
+  {
+    "id": 90,
+    "key": "RelatedPartyRisk::RPR-001",
+    "type_code": "RelatedPartyRisk",
+    "display_name": "RPR-001",
+    "data": {
+      "related_party_name": "黄燕红",
+      "risk_type": "资金占用",
+      "amount_involved": 811739.84,
+      "description": "黄燕红其他应收款 ¥811,739.84，1-2 年账龄，超 PM 5.25 倍"
+    }
+  },
+  {
+    "id": 91,
+    "key": "MaterialityLevel::ENG-JSDW-2025",
+    "type_code": "MaterialityLevel",
+    "display_name": "PM 154,544.70 / TE 115,908.53 / SUM 7,727.24",
+    "data": {
+      "benchmark": "总资产法",
+      "benchmark_value": 15454470.23,
+      "benchmark_ratio": 0.01,
+      "overall_materiality_pm": 154544.7023,
+      "performance_materiality_te": 115908.5267,
+      "clearly_trivial_sum": 7727.2351
+    }
+  },
+  {
+    "id": 92,
+    "key": "PaperTemplate::TPL-DL-FY2025",
+    "type_code": "PaperTemplate",
+    "display_name": "东林 442-sheet 年审底稿模板 (2025X04A)",
+    "data": {
+      "code": "TPL-DL-FY2025",
+      "name": "东林 442-sheet 年审底稿模板",
+      "scenario": "底稿填写",
+      "version": "2025X04A",
+      "sheets": [
+        {
+          "code": "summary",
+          "name": "审定表",
+          "kind": "summary"
+        },
+        {
+          "code": "bank_detail",
+          "name": "银行存款明细",
+          "kind": "table"
+        },
+        {
+          "code": "cash_count",
+          "name": "库存现金盘点",
+          "kind": "table"
+        },
+        {
+          "code": "cutoff_test",
+          "name": "截止性测试",
+          "kind": "table"
+        },
+        {
+          "code": "customer_detail",
+          "name": "客户明细",
+          "kind": "table"
+        },
+        {
+          "code": "aging_analysis",
+          "name": "账龄分析",
+          "kind": "table"
+        }
+      ],
+      "default_rules": [
+        "CASH-RULE-001",
+        "CASH-RULE-002",
+        "AR-RULE-001",
+        "RP-RULE-001",
+        "REV-RULE-001",
+        "FA-RULE-001"
+      ]
+    }
+  },
+  {
+    "id": 93,
+    "key": "WorkingPaper::WP-A1-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "A1 货币资金",
+    "data": {
+      "index": "A1",
+      "name": "货币资金",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 94,
+    "key": "WorkingPaper::WP-A6-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "A6 应收账款",
+    "data": {
+      "index": "A6",
+      "name": "应收账款",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 95,
+    "key": "WorkingPaper::WP-A9-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "A9 其他应收款",
+    "data": {
+      "index": "A9",
+      "name": "其他应收款",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 96,
+    "key": "WorkingPaper::WP-A10-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "A10 存货",
+    "data": {
+      "index": "A10",
+      "name": "存货",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 97,
+    "key": "WorkingPaper::WP-A24-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "A24 固定资产",
+    "data": {
+      "index": "A24",
+      "name": "固定资产",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 98,
+    "key": "WorkingPaper::WP-B1-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "B1 短期借款",
+    "data": {
+      "index": "B1",
+      "name": "短期借款",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 99,
+    "key": "WorkingPaper::WP-B6-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "B6 应付账款",
+    "data": {
+      "index": "B6",
+      "name": "应付账款",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 100,
+    "key": "WorkingPaper::WP-B9-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "B9 应付职工薪酬",
+    "data": {
+      "index": "B9",
+      "name": "应付职工薪酬",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 101,
+    "key": "WorkingPaper::WP-D1-2025",
+    "type_code": "WorkingPaper",
+    "display_name": "D1 营业收入",
+    "data": {
+      "index": "D1",
+      "name": "营业收入",
+      "template_code": "TPL-DL-FY2025",
+      "engagement_code": "ENG-JSDW-2025",
+      "sheet_data": {},
+      "cross_references": [],
+      "audit_conclusion": "（待 agent 填写）",
+      "review_status": "未开始"
+    }
+  },
+  {
+    "id": 102,
+    "key": "AuditRule::CASH-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "银行存款账面 vs 询证函一致性",
+    "data": {
+      "code": "CASH-RULE-001",
+      "name": "银行存款账面 vs 询证函一致性",
+      "category": "货币资金",
+      "expression": "IF |book_balance - confirmed_balance| < ¥0.01 THEN 通过；ELSE 标记差异并核对调节项 (托收未达 / 在途凭证 / 汇率差异)",
+      "narrative": "对每个银行账户：将账面余额与银行回函金额逐一核对；差异须按未达账项调节表分类（4 类：托收未达/进账未达/支付未达/出账未达）",
+      "formal_expression": "abs(book - confirmation) < 0.01",
+      "severity": "high",
+      "source": "公共",
+      "issuer": "中注协",
+      "effective": "2023-12"
+    }
+  },
+  {
+    "id": 103,
+    "key": "AuditRule::CASH-RULE-002",
+    "type_code": "AuditRule",
+    "display_name": "大额现金收支凭证审批",
+    "data": {
+      "code": "CASH-RULE-002",
+      "name": "大额现金收支凭证审批",
+      "category": "货币资金",
+      "expression": "IF |voucher_amount| > ¥500,000 AND account ∈ (1001/1002) THEN 须有授权审批文件 + 业务凭证",
+      "narrative": "扫描全年货币资金凭证；单笔 ≥ ¥500,000 须有总经理或授权人审批文件，否则标记为内控缺陷",
+      "formal_expression": "amount >= 500000",
+      "severity": "medium",
+      "source": "公共",
+      "issuer": "中注协",
+      "effective": "2023-12"
+    }
+  },
+  {
+    "id": 104,
+    "key": "AuditRule::AR-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "应收账款贷方余额重分类",
+    "data": {
+      "code": "AR-RULE-001",
+      "name": "应收账款贷方余额重分类",
+      "category": "应收应付",
+      "expression": "IF customer.closing_balance < 0 (即贷方余额) THEN 重分类至 2203 预收款项",
+      "narrative": "客户级期末贷方余额 = 客户预付/超付 → 资产负债表列报时移到「预收款项」，避免资产虚增",
+      "formal_expression": "closing_cr > 0",
+      "severity": "high",
+      "source": "事务所",
+      "issuer": "无锡东林",
+      "effective": "2024-01"
+    }
+  },
+  {
+    "id": 105,
+    "key": "AuditRule::AP-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "应付账款借方余额重分类",
+    "data": {
+      "code": "AP-RULE-001",
+      "name": "应付账款借方余额重分类",
+      "category": "应收应付",
+      "expression": "IF supplier.closing_balance > 0 (即借方余额) THEN 重分类至 1123 预付款项",
+      "narrative": "供应商级期末借方余额 = 我方预付 → 资产负债表列报时移到「预付款项」",
+      "formal_expression": "closing_dr > 0",
+      "severity": "high",
+      "source": "事务所",
+      "issuer": "无锡东林",
+      "effective": "2024-01"
+    }
+  },
+  {
+    "id": 106,
+    "key": "AuditRule::RP-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "关联方资金占用披露",
+    "data": {
+      "code": "RP-RULE-001",
+      "name": "关联方资金占用披露",
+      "category": "关联交易",
+      "expression": "IF customer ∈ RelatedParty.list AND |closing_balance| > PM THEN 触发 ZK5 单独披露段",
+      "narrative": "CAS 36：股东/关联自然人/控股股东等占用资金超 PM 须在 ZK5 关联方段单独披露名称/性质/期初期末/利率/还款计划",
+      "formal_expression": "is_related_party AND |balance| > PM",
+      "severity": "high",
+      "source": "事务所",
+      "issuer": "无锡东林",
+      "effective": "2025-01"
+    }
+  },
+  {
+    "id": 107,
+    "key": "AuditRule::REV-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "收入截止性核查",
+    "data": {
+      "code": "REV-RULE-001",
+      "name": "收入截止性核查",
+      "category": "收入",
+      "expression": "IF voucher_date ∈ [期末-5 个工作日, 期末+5 个工作日] AND account ∈ (6001) THEN 比对发货单 / 验收单日期判定归属期",
+      "narrative": "扫描期末前后 5 工作日的收入凭证，与发货/验收单核对，识别提前确认或递延错报",
+      "formal_expression": "abs(voucher_date - period_end_date) <= 5 days",
+      "severity": "high",
+      "source": "公共",
+      "issuer": "中注协",
+      "effective": "2023-12"
+    }
+  },
+  {
+    "id": 108,
+    "key": "AuditRule::FA-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "固定资产折旧重算 (重要性梯度判定)",
+    "data": {
+      "code": "FA-RULE-001",
+      "name": "固定资产折旧重算 (重要性梯度判定)",
+      "category": "固定资产",
+      "expression": "Recompute_Dep = Σ(类别 × 权重 × 平均原值 × (1-残值率) / 年限)；按重要性梯度 SUM/TE/PM 四级判定 → 通过 / 通过 / 需细节测试 / 重大差异",
+      "narrative": "按客户折旧政策（X5/ZS4）和资产构成假设重算本期折旧，与账面对比；差异按 CSA 1221 四级梯度处理",
+      "formal_expression": "|book_dep - recomputed_dep| split by [SUM, TE, PM]",
+      "severity": "high",
+      "source": "公共",
+      "issuer": "中注协",
+      "effective": "2023-12"
+    }
+  },
+  {
+    "id": 109,
+    "key": "AuditRule::INV-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "存货归零异常检测",
+    "data": {
+      "code": "INV-RULE-001",
+      "name": "存货归零异常检测",
+      "category": "存货",
+      "expression": "IF |year_dr| + |year_cr| > ¥5,000,000 AND closing_balance ≈ 0 THEN 触发凭证级深度核查",
+      "narrative": "年度发生额大但期末归零 → 提示截止测试不充分 / 库存数据不全 / 大额对冲 / 反舞弊关注",
+      "formal_expression": "(year_dr + year_cr > 5000000) AND abs(closing) < 100",
+      "severity": "medium",
+      "source": "事务所",
+      "issuer": "无锡东林",
+      "effective": "2024-01"
+    }
+  },
+  {
+    "id": 110,
+    "key": "AuditRule::TAX-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "业务招待费 5‰/60% 孰低",
+    "data": {
+      "code": "TAX-RULE-001",
+      "name": "业务招待费 5‰/60% 孰低",
+      "category": "纳税调整",
+      "expression": "Tax_Deductible_Entertainment = MIN(销售净额 × 0.005, 实际发生 × 0.6)；超额部分调增",
+      "narrative": "《企业所得税法实施条例》第 43 条：业务招待费扣除限额取销售收入的千分之五与实际发生额的 60% 孰低",
+      "formal_expression": "deductible = min(revenue * 0.005, actual * 0.6)",
+      "severity": "high",
+      "source": "公共",
+      "issuer": "财政部",
+      "effective": "2008-01"
+    }
+  },
+  {
+    "id": 111,
+    "key": "AuditRule::TAX-RECLASS-001",
+    "type_code": "AuditRule",
+    "display_name": "应收出口退税款反向余额重分类",
+    "data": {
+      "code": "TAX-RECLASS-001",
+      "name": "应收出口退税款反向余额重分类",
+      "category": "纳税调整",
+      "expression": "IF account[1133].closing_balance < 0 AND |balance| > TE THEN 重分类至 22210106 应交税费-出口抵减内销产品应纳税额",
+      "narrative": "1133 应收出口退税款期末出现贷方余额 (反向) → 已退税但账面未冲销 → 实质应在「应交税费」科目下反映，重分类后两科目均合规列报",
+      "formal_expression": "code == '1133' AND closing < 0 AND abs(closing) > TE",
+      "severity": "high",
+      "source": "事务所",
+      "issuer": "无锡东林",
+      "effective": "2025-01"
+    }
+  },
+  {
+    "id": 112,
+    "key": "AuditRule::GC-INDICATOR-001",
+    "type_code": "AuditRule",
+    "display_name": "持续经营关注 - 关联方担保集中度",
+    "data": {
+      "code": "GC-INDICATOR-001",
+      "name": "持续经营关注 - 关联方担保集中度",
+      "category": "持续经营",
+      "expression": "IF (短期借款.closing > 0) AND (关联担保覆盖率 ≥ 100%) THEN 触发持续经营关注信号 → 标记 RiskFlag + ZK4 持续经营段披露 + Y9 复评",
+      "narrative": "CSA 1331：100% 短借由实控人/关联自然人担保 = 偿债能力高度依赖关联方信用 → 评估 12 个月内偿债能力 + 评估关联方代偿意愿与能力 + ZK4 附注披露",
+      "formal_expression": "(loan_closing > 0) AND (sum(related_party_guarantee) / sum(loan_principal) >= 1.0)",
+      "severity": "high",
+      "source": "事务所",
+      "issuer": "无锡东林",
+      "effective": "2025-01"
+    }
+  },
+  {
+    "id": 113,
+    "key": "AuditRule::DL-RULE-001",
+    "type_code": "AuditRule",
+    "display_name": "三级复核签字完整性",
+    "data": {
+      "code": "DL-RULE-001",
+      "name": "三级复核签字完整性",
+      "category": "复核标准",
+      "expression": "IF working_paper.review_status == '已完成' THEN 编制/部门/合伙人三级签字齐备",
+      "narrative": "底稿状态为「已完成」前必须有项目编制人、项目经理/部门负责人、签字合伙人三级签字",
+      "formal_expression": "all(['编制人', '部门负责人', '签字合伙人'] in signatures)",
+      "severity": "medium",
+      "source": "事务所",
+      "issuer": "无锡东林",
+      "effective": "2025-01"
+    }
+  },
+  {
+    "id": 114,
+    "key": "AuditReport::锡东林内审〔2026〕号",
+    "type_code": "AuditReport",
+    "display_name": "江苏大王 2025 审计报告",
+    "data": {
+      "report_no": "锡东林内审〔2026〕号",
+      "report_date": "2026-03-03",
+      "opinion_type": "无保留意见"
+    }
+  },
+  {
+    "id": 115,
+    "key": "WorkpaperField::field-a6-c11",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!C11",
+    "data": {
+      "code": "field-a6-c11",
+      "hasSheetName": "A6",
+      "hasCellAddress": "C11",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 116,
+    "key": "WorkpaperField::field-a6-d11",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!D11",
+    "data": {
+      "code": "field-a6-d11",
+      "hasSheetName": "A6",
+      "hasCellAddress": "D11",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 117,
+    "key": "WorkpaperField::field-a6-b19",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!B19",
+    "data": {
+      "code": "field-a6-b19",
+      "hasSheetName": "A6",
+      "hasCellAddress": "B19",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 118,
+    "key": "WorkpaperField::field-a6-c19",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!C19",
+    "data": {
+      "code": "field-a6-c19",
+      "hasSheetName": "A6",
+      "hasCellAddress": "C19",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 119,
+    "key": "WorkpaperField::field-a6-c20",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!C20",
+    "data": {
+      "code": "field-a6-c20",
+      "hasSheetName": "A6",
+      "hasCellAddress": "C20",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 120,
+    "key": "WorkpaperField::field-a6-g8",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!G8",
+    "data": {
+      "code": "field-a6-g8",
+      "hasSheetName": "A6",
+      "hasCellAddress": "G8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 121,
+    "key": "WorkpaperField::field-a6-g10",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!G10",
+    "data": {
+      "code": "field-a6-g10",
+      "hasSheetName": "A6",
+      "hasCellAddress": "G10",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 122,
+    "key": "WorkpaperField::field-a6-g11",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!G11",
+    "data": {
+      "code": "field-a6-g11",
+      "hasSheetName": "A6",
+      "hasCellAddress": "G11",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 123,
+    "key": "WorkpaperField::field-a6-g13",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!G13",
+    "data": {
+      "code": "field-a6-g13",
+      "hasSheetName": "A6",
+      "hasCellAddress": "G13",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 124,
+    "key": "WorkpaperField::field-a6-c9",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!C9",
+    "data": {
+      "code": "field-a6-c9",
+      "hasSheetName": "A6",
+      "hasCellAddress": "C9",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 125,
+    "key": "WorkpaperField::field-a6-d9",
+    "type_code": "WorkpaperField",
+    "display_name": "A6!D9",
+    "data": {
+      "code": "field-a6-d9",
+      "hasSheetName": "A6",
+      "hasCellAddress": "D9",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 126,
+    "key": "WorkpaperField::field-a62-f824",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!F824",
+    "data": {
+      "code": "field-a62-f824",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "F824",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 127,
+    "key": "WorkpaperField::field-a62-i824",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!I824",
+    "data": {
+      "code": "field-a62-i824",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "I824",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 128,
+    "key": "WorkpaperField::field-a62-b831",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!B831",
+    "data": {
+      "code": "field-a62-b831",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "B831",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 129,
+    "key": "WorkpaperField::field-a62-k834",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!K834",
+    "data": {
+      "code": "field-a62-k834",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "K834",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 130,
+    "key": "WorkpaperField::field-a62-k835",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!K835",
+    "data": {
+      "code": "field-a62-k835",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "K835",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 131,
+    "key": "WorkpaperField::field-a62-i8",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!I8",
+    "data": {
+      "code": "field-a62-i8",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "I8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 132,
+    "key": "WorkpaperField::field-a62-o8",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!O8",
+    "data": {
+      "code": "field-a62-o8",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "O8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 133,
+    "key": "WorkpaperField::field-a62-d824",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-2!D824",
+    "data": {
+      "code": "field-a62-d824",
+      "hasSheetName": "A6-2",
+      "hasCellAddress": "D824",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 134,
+    "key": "WorkpaperField::field-a699-h8",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!H8",
+    "data": {
+      "code": "field-a699-h8",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "H8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 135,
+    "key": "WorkpaperField::field-a699-h9",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!H9",
+    "data": {
+      "code": "field-a699-h9",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "H9",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 136,
+    "key": "WorkpaperField::field-a699-h10",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!H10",
+    "data": {
+      "code": "field-a699-h10",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "H10",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 137,
+    "key": "WorkpaperField::field-a699-m8",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!M8",
+    "data": {
+      "code": "field-a699-m8",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "M8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 138,
+    "key": "WorkpaperField::field-a699-m9",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!M9",
+    "data": {
+      "code": "field-a699-m9",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "M9",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 139,
+    "key": "WorkpaperField::field-a699-l8",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!L8",
+    "data": {
+      "code": "field-a699-l8",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "L8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 140,
+    "key": "WorkpaperField::field-a699-l819",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!L819",
+    "data": {
+      "code": "field-a699-l819",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "L819",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 141,
+    "key": "WorkpaperField::field-a699-l820",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!L820",
+    "data": {
+      "code": "field-a699-l820",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "L820",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 142,
+    "key": "WorkpaperField::field-a699-k9",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!K9",
+    "data": {
+      "code": "field-a699-k9",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "K9",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 143,
+    "key": "WorkpaperField::field-a699-m4",
+    "type_code": "WorkpaperField",
+    "display_name": "A6-99!M4",
+    "data": {
+      "code": "field-a699-m4",
+      "hasSheetName": "A6-99",
+      "hasCellAddress": "M4",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 144,
+    "key": "WorkpaperField::field-b62-l8",
+    "type_code": "WorkpaperField",
+    "display_name": "B6-2!L8",
+    "data": {
+      "code": "field-b62-l8",
+      "hasSheetName": "B6-2",
+      "hasCellAddress": "L8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 145,
+    "key": "WorkpaperField::field-b62-l9",
+    "type_code": "WorkpaperField",
+    "display_name": "B6-2!L9",
+    "data": {
+      "code": "field-b62-l9",
+      "hasSheetName": "B6-2",
+      "hasCellAddress": "L9",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 146,
+    "key": "WorkpaperField::field-z9-h16",
+    "type_code": "WorkpaperField",
+    "display_name": "Z9!H16",
+    "data": {
+      "code": "field-z9-h16",
+      "hasSheetName": "Z9",
+      "hasCellAddress": "H16",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 147,
+    "key": "WorkpaperField::field-z9-b14",
+    "type_code": "WorkpaperField",
+    "display_name": "Z9!B14",
+    "data": {
+      "code": "field-z9-b14",
+      "hasSheetName": "Z9",
+      "hasCellAddress": "B14",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 148,
+    "key": "WorkpaperField::field-zk32-c12",
+    "type_code": "WorkpaperField",
+    "display_name": "ZK3.2!C12",
+    "data": {
+      "code": "field-zk32-c12",
+      "hasSheetName": "ZK3.2",
+      "hasCellAddress": "C12",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 149,
+    "key": "WorkpaperField::field-zk31-b51",
+    "type_code": "WorkpaperField",
+    "display_name": "ZK3.1!B51",
+    "data": {
+      "code": "field-zk31-b51",
+      "hasSheetName": "ZK3.1",
+      "hasCellAddress": "B51",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 150,
+    "key": "WorkpaperField::field-zk4-i1867",
+    "type_code": "WorkpaperField",
+    "display_name": "ZK4!I1867",
+    "data": {
+      "code": "field-zk4-i1867",
+      "hasSheetName": "ZK4",
+      "hasCellAddress": "I1867",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 151,
+    "key": "WorkpaperField::field-zk34-k30",
+    "type_code": "WorkpaperField",
+    "display_name": "ZK3.4!K30",
+    "data": {
+      "code": "field-zk34-k30",
+      "hasSheetName": "ZK3.4",
+      "hasCellAddress": "K30",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 152,
+    "key": "WorkpaperField::field-zd61-a4",
+    "type_code": "WorkpaperField",
+    "display_name": "ZD6-1!A4",
+    "data": {
+      "code": "field-zd61-a4",
+      "hasSheetName": "ZD6-1",
+      "hasCellAddress": "A4",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 153,
+    "key": "WorkpaperField::field-zd61-a6",
+    "type_code": "WorkpaperField",
+    "display_name": "ZD6-1!A6",
+    "data": {
+      "code": "field-zd61-a6",
+      "hasSheetName": "ZD6-1",
+      "hasCellAddress": "A6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 154,
+    "key": "WorkpaperField::field-zd61-e33",
+    "type_code": "WorkpaperField",
+    "display_name": "ZD6-1!E33",
+    "data": {
+      "code": "field-zd61-e33",
+      "hasSheetName": "ZD6-1",
+      "hasCellAddress": "E33",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 155,
+    "key": "WorkpaperField::field-shouye-e5",
+    "type_code": "WorkpaperField",
+    "display_name": "首页!E5",
+    "data": {
+      "code": "field-shouye-e5",
+      "hasSheetName": "首页",
+      "hasCellAddress": "E5",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 156,
+    "key": "WorkpaperField::field-shouye-e11",
+    "type_code": "WorkpaperField",
+    "display_name": "首页!E11",
+    "data": {
+      "code": "field-shouye-e11",
+      "hasSheetName": "首页",
+      "hasCellAddress": "E11",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 157,
+    "key": "WorkpaperField::field-shouye-f11",
+    "type_code": "WorkpaperField",
+    "display_name": "首页!F11",
+    "data": {
+      "code": "field-shouye-f11",
+      "hasSheetName": "首页",
+      "hasCellAddress": "F11",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 158,
+    "key": "WorkpaperField::field-zhmgmt-g7",
+    "type_code": "WorkpaperField",
+    "display_name": "账号管理!G7",
+    "data": {
+      "code": "field-zhmgmt-g7",
+      "hasSheetName": "账号管理",
+      "hasCellAddress": "G7",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 159,
+    "key": "WorkpaperField::field-zhmgmt-g6",
+    "type_code": "WorkpaperField",
+    "display_name": "账号管理!G6",
+    "data": {
+      "code": "field-zhmgmt-g6",
+      "hasSheetName": "账号管理",
+      "hasCellAddress": "G6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 160,
+    "key": "WorkpaperField::field-zhmgmt-g3",
+    "type_code": "WorkpaperField",
+    "display_name": "账号管理!G3",
+    "data": {
+      "code": "field-zhmgmt-g3",
+      "hasSheetName": "账号管理",
+      "hasCellAddress": "G3",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 161,
+    "key": "WorkpaperField::field-g-i8",
+    "type_code": "WorkpaperField",
+    "display_name": "G!I8",
+    "data": {
+      "code": "field-g-i8",
+      "hasSheetName": "G",
+      "hasCellAddress": "I8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 162,
+    "key": "WorkpaperField::field-g-i23",
+    "type_code": "WorkpaperField",
+    "display_name": "G!I23",
+    "data": {
+      "code": "field-g-i23",
+      "hasSheetName": "G",
+      "hasCellAddress": "I23",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 163,
+    "key": "WorkpaperField::field-g-i9",
+    "type_code": "WorkpaperField",
+    "display_name": "G!I9",
+    "data": {
+      "code": "field-g-i9",
+      "hasSheetName": "G",
+      "hasCellAddress": "I9",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 164,
+    "key": "WorkpaperField::field-g-i24",
+    "type_code": "WorkpaperField",
+    "display_name": "G!I24",
+    "data": {
+      "code": "field-g-i24",
+      "hasSheetName": "G",
+      "hasCellAddress": "I24",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 165,
+    "key": "WorkpaperField::field-g102-e8",
+    "type_code": "WorkpaperField",
+    "display_name": "G102!E8",
+    "data": {
+      "code": "field-g102-e8",
+      "hasSheetName": "G102",
+      "hasCellAddress": "E8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 166,
+    "key": "WorkpaperField::field-g102-e42",
+    "type_code": "WorkpaperField",
+    "display_name": "G102!E42",
+    "data": {
+      "code": "field-g102-e42",
+      "hasSheetName": "G102",
+      "hasCellAddress": "E42",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 167,
+    "key": "WorkpaperField::field-g202-e8",
+    "type_code": "WorkpaperField",
+    "display_name": "G202!E8",
+    "data": {
+      "code": "field-g202-e8",
+      "hasSheetName": "G202",
+      "hasCellAddress": "E8",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 168,
+    "key": "WorkpaperField::field-g202-e40",
+    "type_code": "WorkpaperField",
+    "display_name": "G202!E40",
+    "data": {
+      "code": "field-g202-e40",
+      "hasSheetName": "G202",
+      "hasCellAddress": "E40",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 169,
+    "key": "WorkpaperField::field-s0-e7",
+    "type_code": "WorkpaperField",
+    "display_name": "S0!E7",
+    "data": {
+      "code": "field-s0-e7",
+      "hasSheetName": "S0",
+      "hasCellAddress": "E7",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 170,
+    "key": "WorkpaperField::field-s102-c4",
+    "type_code": "WorkpaperField",
+    "display_name": "S102!C4",
+    "data": {
+      "code": "field-s102-c4",
+      "hasSheetName": "S102",
+      "hasCellAddress": "C4",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 171,
+    "key": "FillRule::fillrule-a6-c11-from-a62",
+    "type_code": "FillRule",
+    "display_name": "A6.C11 = 'A6-2'!F824",
+    "data": {
+      "code": "fillrule-a6-c11-from-a62",
+      "hasRuleKind": "cross-sheet",
+      "hasFormulaExpression": "='A6-2'!F824",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14614",
+      "outputField": "field-a6-c11",
+      "inputFields": [
+        "field-a62-f824"
+      ],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 172,
+    "key": "FillRule::fillrule-a6-d11-from-a62",
+    "type_code": "FillRule",
+    "display_name": "A6.D11 = 'A6-2'!I824",
+    "data": {
+      "code": "fillrule-a6-d11-from-a62",
+      "hasRuleKind": "cross-sheet",
+      "hasFormulaExpression": "='A6-2'!I824",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14615",
+      "outputField": "field-a6-d11",
+      "inputFields": [
+        "field-a62-i824"
+      ],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 173,
+    "key": "FillRule::fillrule-a6-b19-from-a62",
+    "type_code": "FillRule",
+    "display_name": "A6.B19 = 'A6-2'!B831",
+    "data": {
+      "code": "fillrule-a6-b19-from-a62",
+      "hasRuleKind": "cross-sheet",
+      "hasFormulaExpression": "='A6-2'!B831",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14623",
+      "outputField": "field-a6-b19",
+      "inputFields": [
+        "field-a62-b831"
+      ],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 174,
+    "key": "FillRule::fillrule-a6-c19-from-a62",
+    "type_code": "FillRule",
+    "display_name": "A6.C19 = 'A6-2'!K834",
+    "data": {
+      "code": "fillrule-a6-c19-from-a62",
+      "hasRuleKind": "cross-sheet",
+      "hasFormulaExpression": "='A6-2'!K834",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14624",
+      "outputField": "field-a6-c19",
+      "inputFields": [
+        "field-a62-k834"
+      ],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 175,
+    "key": "FillRule::fillrule-a6-c20-from-a62",
+    "type_code": "FillRule",
+    "display_name": "A6.C20 = 'A6-2'!K835",
+    "data": {
+      "code": "fillrule-a6-c20-from-a62",
+      "hasRuleKind": "cross-sheet",
+      "hasFormulaExpression": "='A6-2'!K835",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14625",
+      "outputField": "field-a6-c20",
+      "inputFields": [
+        "field-a62-k835"
+      ],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 176,
+    "key": "FillRule::fillrule-a699-h8-rollup",
+    "type_code": "FillRule",
+    "display_name": "A6-99.H8 rollforward = E8+F8-G8",
+    "data": {
+      "code": "fillrule-a699-h8-rollup",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=E8+F8-G8",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18794",
+      "outputField": "field-a699-h8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 177,
+    "key": "FillRule::fillrule-a699-h9-rollup",
+    "type_code": "FillRule",
+    "display_name": "A6-99.H9 rollforward = E9+F9-G9",
+    "data": {
+      "code": "fillrule-a699-h9-rollup",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=E9+F9-G9",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18800",
+      "outputField": "field-a699-h9",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 178,
+    "key": "FillRule::fillrule-a699-h10-rollup",
+    "type_code": "FillRule",
+    "display_name": "A6-99.H10 rollforward = E10+F10-G10",
+    "data": {
+      "code": "fillrule-a699-h10-rollup",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=E10+F10-G10",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18806",
+      "outputField": "field-a699-h10",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 179,
+    "key": "FillRule::fillrule-a699-m8-audited",
+    "type_code": "FillRule",
+    "display_name": "A6-99.M8 audited = H8+K8-L8",
+    "data": {
+      "code": "fillrule-a699-m8-audited",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=+H8+K8-L8",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18798",
+      "outputField": "field-a699-m8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 180,
+    "key": "FillRule::fillrule-a699-m9-audited",
+    "type_code": "FillRule",
+    "display_name": "A6-99.M9 audited = H9+K9-L9",
+    "data": {
+      "code": "fillrule-a699-m9-audited",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=+H9+K9-L9",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18804",
+      "outputField": "field-a699-m9",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 181,
+    "key": "FillRule::fillrule-a699-l8-sumifs",
+    "type_code": "FillRule",
+    "display_name": "A6-99.L8 SUMIFS by counterparty",
+    "data": {
+      "code": "fillrule-a699-l8-sumifs",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=SUMIFS(G$1314:G$1396,$B$1314:$B$1396,$D8,$C$1314:$C$1396,$I8)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18797",
+      "outputField": "field-a699-l8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 182,
+    "key": "FillRule::fillrule-a699-k9-sumifs",
+    "type_code": "FillRule",
+    "display_name": "A6-99.K9 SUMIFS",
+    "data": {
+      "code": "fillrule-a699-k9-sumifs",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=SUMIFS(F$1314:F$1396,$B$1314:$B$1396,$D9,$C$1314:$C$1396,$I9)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18802",
+      "outputField": "field-a699-k9",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 183,
+    "key": "FillRule::fillrule-a699-m4-subtotal",
+    "type_code": "FillRule",
+    "display_name": "A6-99.M4 SUBTOTAL",
+    "data": {
+      "code": "fillrule-a699-m4-subtotal",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=SUBTOTAL(109,M7:M1312)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L18793",
+      "outputField": "field-a699-m4",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-99",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 184,
+    "key": "FillRule::fillrule-b62-l8-from-a699",
+    "type_code": "FillRule",
+    "display_name": "B6-2.L8 = 'A6-99'!L819",
+    "data": {
+      "code": "fillrule-b62-l8-from-a699",
+      "hasRuleKind": "cross-sheet",
+      "hasFormulaExpression": "='A6-99'!L819",
+      "hasEvidenceRef": "cell_formulas.jsonl#L30546",
+      "outputField": "field-b62-l8",
+      "inputFields": [
+        "field-a699-l819"
+      ],
+      "appliesToWorkpaper": "tpl-b6-2",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 185,
+    "key": "FillRule::fillrule-b62-l9-from-a699",
+    "type_code": "FillRule",
+    "display_name": "B6-2.L9 = 'A6-99'!L820",
+    "data": {
+      "code": "fillrule-b62-l9-from-a699",
+      "hasRuleKind": "cross-sheet",
+      "hasFormulaExpression": "='A6-99'!L820",
+      "hasEvidenceRef": "cell_formulas.jsonl#L30550",
+      "outputField": "field-b62-l9",
+      "inputFields": [
+        "field-a699-l820"
+      ],
+      "appliesToWorkpaper": "tpl-b6-2",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 186,
+    "key": "FillRule::fillrule-vba-zhmgmt-g7-copy",
+    "type_code": "FillRule",
+    "display_name": "VBA copy 账号管理.G7 from 账号管理.G6",
+    "data": {
+      "code": "fillrule-vba-zhmgmt-g7-copy",
+      "hasRuleKind": "vba-copy",
+      "hasFormulaExpression": "Sheets(\\",
+      "hasEvidenceRef": "vba_account_map.jsonl#L4",
+      "outputField": "field-zhmgmt-g7",
+      "inputFields": [
+        "field-zhmgmt-g6",
+        "field-zhmgmt-g3",
+        "field-g102-e8",
+        "field-g102-e42",
+        "field-g202-e8",
+        "field-g202-e40",
+        "field-s102-c4"
+      ],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 187,
+    "key": "FillRule::fillrule-a6-g10-rollforward",
+    "type_code": "FillRule",
+    "display_name": "A6.G10 rollforward = ROUND(D10+E10-F10,2)",
+    "data": {
+      "code": "fillrule-a6-g10-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(D10+E10-F10,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14613",
+      "outputField": "field-a6-g10",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 188,
+    "key": "FillRule::fillrule-a6-g11-rollforward",
+    "type_code": "FillRule",
+    "display_name": "A6.G11 rollforward = ROUND(D11+E11-F11,2)",
+    "data": {
+      "code": "fillrule-a6-g11-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(D11+E11-F11,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14616",
+      "outputField": "field-a6-g11",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 189,
+    "key": "FillRule::fillrule-a6-g13-rollforward",
+    "type_code": "FillRule",
+    "display_name": "A6.G13 rollforward = ROUND(D13+E13-F13,2)",
+    "data": {
+      "code": "fillrule-a6-g13-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(D13+E13-F13,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14617",
+      "outputField": "field-a6-g13",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 190,
+    "key": "FillRule::fillrule-a6-c9-sum",
+    "type_code": "FillRule",
+    "display_name": "A6.C9 = SUM(C10:C13)",
+    "data": {
+      "code": "fillrule-a6-c9-sum",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=SUM(C10:C13)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14608",
+      "outputField": "field-a6-c9",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 191,
+    "key": "FillRule::fillrule-a6-d9-sum",
+    "type_code": "FillRule",
+    "display_name": "A6.D9 = SUM(D10:D13)",
+    "data": {
+      "code": "fillrule-a6-d9-sum",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=SUM(D10:D13)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14609",
+      "outputField": "field-a6-d9",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 192,
+    "key": "FillRule::fillrule-a62-i8-rollforward",
+    "type_code": "FillRule",
+    "display_name": "A6-2.I8 rollforward = D8+G8-H8",
+    "data": {
+      "code": "fillrule-a62-i8-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=D8+G8-H8",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14627",
+      "outputField": "field-a62-i8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-2",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 193,
+    "key": "FillRule::fillrule-a62-o8-rollforward",
+    "type_code": "FillRule",
+    "display_name": "A6-2.O8 audited = ROUND(I8+M8-N8,2)",
+    "data": {
+      "code": "fillrule-a62-o8-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(I8+M8-N8,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L14630",
+      "outputField": "field-a62-o8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a6-2",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 194,
+    "key": "FillRule::fillrule-zd61-e33-rollforward",
+    "type_code": "FillRule",
+    "display_name": "ZD6-1.E33 = E9+E19-E31",
+    "data": {
+      "code": "fillrule-zd61-e33-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=E9+E19-E31",
+      "hasEvidenceRef": "cell_formulas.jsonl#L12",
+      "outputField": "field-zd61-e33",
+      "inputFields": [
+        "field-zk4-i1867"
+      ],
+      "appliesToWorkpaper": "tpl-zk4",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 195,
+    "key": "FillRule::fillrule-zk31-b51-check",
+    "type_code": "FillRule",
+    "display_name": "ZK3.1.B51 check (unallocated profit balance)",
+    "data": {
+      "code": "fillrule-zk31-b51-check",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=IF(E43=ZK3.4!$K$30,\\",
+      "hasEvidenceRef": "cell_formulas.jsonl#L2739",
+      "outputField": "field-zk31-b51",
+      "inputFields": [
+        "field-zk34-k30",
+        "field-a62-d824",
+        "field-a62-d824",
+        "field-shouye-e5",
+        "field-shouye-e11"
+      ],
+      "appliesToWorkpaper": "tpl-a1",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 196,
+    "key": "FillRule::fillrule-b1-g8-rollforward",
+    "type_code": "FillRule",
+    "display_name": "B1.G8 = ROUND(D8+E8-F8,2)",
+    "data": {
+      "code": "fillrule-b1-g8-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(D8+E8-F8,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L30171",
+      "outputField": "field-b1-g8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-b1",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 197,
+    "key": "FillRule::fillrule-a11-g8-rollforward",
+    "type_code": "FillRule",
+    "display_name": "A11.G8 = ROUND(D8+E8-F8,2)",
+    "data": {
+      "code": "fillrule-a11-g8-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(D8+E8-F8,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L25670",
+      "outputField": "field-a11-g8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-a11",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 198,
+    "key": "FillRule::fillrule-d1-e8-rollforward",
+    "type_code": "FillRule",
+    "display_name": "D1.E8 = ROUND(B8+D8-C8,2)",
+    "data": {
+      "code": "fillrule-d1-e8-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(B8+D8-C8,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L34829",
+      "outputField": "field-d1-e8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-d1",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  },
+  {
+    "id": 199,
+    "key": "FillRule::fillrule-c1-g8-rollforward",
+    "type_code": "FillRule",
+    "display_name": "C1.G8 = ROUND(D8+E8-F8,2)",
+    "data": {
+      "code": "fillrule-c1-g8-rollforward",
+      "hasRuleKind": "formula",
+      "hasFormulaExpression": "=ROUND(D8+E8-F8,2)",
+      "hasEvidenceRef": "cell_formulas.jsonl#L34453",
+      "outputField": "field-c1-g8",
+      "inputFields": [],
+      "appliesToWorkpaper": "tpl-c1",
+      "_layer": "L3:donglin",
+      "_source": "v5_fill_rules.ttl"
+    }
+  }
+]

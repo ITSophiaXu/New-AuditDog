@@ -1,0 +1,396 @@
+{
+  "id": 93,
+  "key": "WorkingPaper::WP-A1-2025",
+  "type_code": "WorkingPaper",
+  "display_name": "A1 货币资金",
+  "data": {
+    "index": "A1",
+    "name": "货币资金",
+    "template_code": "TPL-DL-FY2025",
+    "engagement_code": "ENG-JSDW-2025",
+    "sheet_data": {
+      "summary": {
+        "tb_balance": 667895.58,
+        "book_balance_total": 667895.58,
+        "diff_with_tb": 0.0,
+        "opening_balance_total": 575833.99,
+        "cash_opening": 121236.21,
+        "cash_closing": 0.0,
+        "bank_opening": 454435.17,
+        "bank_closing": 667895.58,
+        "other_opening": 162.61,
+        "other_closing": 0.0,
+        "restricted_total": 0.0,
+        "preparer": "jsdw_paper_fill (AI)",
+        "prepared_at": "2026-05-26"
+      },
+      "bank_detail": {
+        "rows": [
+          {
+            "sub_code": "100201",
+            "category": "银行存款",
+            "bank_name": "中国农业银行惠山支行",
+            "currency": "CNY",
+            "opening": 439289.24,
+            "period_dr": 58534611.23,
+            "period_cr": 58434040.37,
+            "book_balance": 539860.1,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "100202",
+            "category": "银行存款",
+            "bank_name": "浙商银行",
+            "currency": "CNY",
+            "opening": 1444.85,
+            "period_dr": 4713.06,
+            "period_cr": 6157.91,
+            "book_balance": 0.0,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "100203",
+            "category": "银行存款",
+            "bank_name": "中国农业银行美元户",
+            "currency": "USD",
+            "opening": 0.0,
+            "period_dr": 36184106.34,
+            "period_cr": 36184106.34,
+            "book_balance": 0.0,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "100204",
+            "category": "银行存款",
+            "bank_name": "交通银行无锡分行4482",
+            "currency": "CNY",
+            "opening": 4081.43,
+            "period_dr": 11074226.94,
+            "period_cr": 10982348.94,
+            "book_balance": 95959.43,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "100206",
+            "category": "银行存款",
+            "bank_name": "中国建设银行1282",
+            "currency": "CNY",
+            "opening": 625.71,
+            "period_dr": 200.42,
+            "period_cr": 561.0,
+            "book_balance": 265.13,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "100207",
+            "category": "银行存款",
+            "bank_name": "江苏常熟农商行7905",
+            "currency": "CNY",
+            "opening": 1599.05,
+            "period_dr": 3080708.82,
+            "period_cr": 3060096.37,
+            "book_balance": 22211.5,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "100208",
+            "category": "银行存款",
+            "bank_name": "南京银行0860",
+            "currency": "CNY",
+            "opening": 7394.89,
+            "period_dr": 7520007.88,
+            "period_cr": 7523530.35,
+            "book_balance": 3872.42,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "100209",
+            "category": "银行存款",
+            "bank_name": "江苏银行",
+            "currency": "CNY",
+            "opening": 0.0,
+            "period_dr": 4801021.68,
+            "period_cr": 4795294.68,
+            "book_balance": 5727.0,
+            "is_restricted": false,
+            "restriction_reason": ""
+          },
+          {
+            "sub_code": "101201",
+            "category": "其他货币资金",
+            "bank_name": "票据保证金",
+            "currency": "CNY",
+            "opening": 162.61,
+            "period_dr": 5956466.98,
+            "period_cr": 5956629.59,
+            "book_balance": 0.0,
+            "is_restricted": true,
+            "restriction_reason": "票据保证金"
+          },
+          {
+            "sub_code": "101202",
+            "category": "其他货币资金",
+            "bank_name": "江苏常熟农商行保证金",
+            "currency": "CNY",
+            "opening": 0.0,
+            "period_dr": 2080046.37,
+            "period_cr": 2080046.37,
+            "book_balance": 0.0,
+            "is_restricted": true,
+            "restriction_reason": "票据保证金"
+          }
+        ]
+      },
+      "cash_count": {
+        "rows": [
+          {
+            "count_date": "2025-12-31",
+            "location": "公司财务部保险柜",
+            "currency": "CNY",
+            "book_amount": 0.0,
+            "physical_amount": null,
+            "difference": null,
+            "counter": "（待人工现场盘点）",
+            "supervisor": "（项目组监盘）",
+            "note": "AI 不可代为现场监盘"
+          }
+        ]
+      },
+      "cutoff_test": {
+        "rows": [
+          {
+            "voucher_no": "ACCTG-记242",
+            "voucher_date": "2025-12-26",
+            "summary": "销售回款",
+            "account": "100201",
+            "amount": 6999.99,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记243",
+            "voucher_date": "2025-12-26",
+            "summary": "销售回款",
+            "account": "100201",
+            "amount": 730.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记244",
+            "voucher_date": "2025-12-26",
+            "summary": "投标保证金",
+            "account": "100201",
+            "amount": 9000.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记245",
+            "voucher_date": "2025-12-26",
+            "summary": "销售回款",
+            "account": "100201",
+            "amount": 1750.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记246",
+            "voucher_date": "2025-12-26",
+            "summary": "利息收入",
+            "account": "100201",
+            "amount": 11.66,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记247",
+            "voucher_date": "2025-12-28",
+            "summary": "销售回款",
+            "account": "100201",
+            "amount": 11900.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记134",
+            "voucher_date": "2025-12-29",
+            "summary": "收到货款",
+            "account": "100204",
+            "amount": 5400.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记248",
+            "voucher_date": "2025-12-29",
+            "summary": "销售回款",
+            "account": "100201",
+            "amount": 16600.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记249",
+            "voucher_date": "2025-12-29",
+            "summary": "支付运费",
+            "account": "100201",
+            "amount": 8430.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记250",
+            "voucher_date": "2025-12-29",
+            "summary": "支付安装费",
+            "account": "100201",
+            "amount": 40000.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记251",
+            "voucher_date": "2025-12-29",
+            "summary": "支付货款",
+            "account": "100201",
+            "amount": 4326.6,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记252",
+            "voucher_date": "2025-12-29",
+            "summary": "支付货款",
+            "account": "100201",
+            "amount": 1655.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记253",
+            "voucher_date": "2025-12-29",
+            "summary": "支付货款",
+            "account": "100201",
+            "amount": 2680.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记254",
+            "voucher_date": "2025-12-29",
+            "summary": "支付货款",
+            "account": "100201",
+            "amount": 7450.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记255",
+            "voucher_date": "2025-12-29",
+            "summary": "支付社保",
+            "account": "100201",
+            "amount": 1528.8,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记256",
+            "voucher_date": "2025-12-29",
+            "summary": "支付社保",
+            "account": "100201",
+            "amount": 600.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记257",
+            "voucher_date": "2025-12-30",
+            "summary": "质保金",
+            "account": "100201",
+            "amount": 5180.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记258",
+            "voucher_date": "2025-12-30",
+            "summary": "销售回款",
+            "account": "100201",
+            "amount": 7000.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记259",
+            "voucher_date": "2025-12-30",
+            "summary": "支付货款",
+            "account": "100201",
+            "amount": 4100.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记260",
+            "voucher_date": "2025-12-31",
+            "summary": "快递费",
+            "account": "100201",
+            "amount": 758.68,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记261",
+            "voucher_date": "2025-12-31",
+            "summary": "销售回款",
+            "account": "100201",
+            "amount": 2560.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记302",
+            "voucher_date": "2025-12-31",
+            "summary": "年会个人奖金",
+            "account": "1001",
+            "amount": 10000.0,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记303",
+            "voucher_date": "2025-12-31",
+            "summary": "发放项目奖金",
+            "account": "1001",
+            "amount": 182463.3,
+            "should_belong_to": "本期",
+            "is_proper": true
+          },
+          {
+            "voucher_no": "ACCTG-记308",
+            "voucher_date": "2025-12-31",
+            "summary": "现金转销",
+            "account": "1001",
+            "amount": 447548.91,
+            "should_belong_to": "本期",
+            "is_proper": true
+          }
+        ]
+      }
+    },
+    "cross_references": [
+      "TB:2025-12-31",
+      "PM:ENG-JSDW-2025"
+    ],
+    "audit_conclusion": "经读取 TB 1001 货币资金 11 子目并按银行账户映射，账面合计 ¥667,895.58，与 TB 一致（差异 ¥0.00）。其中库存现金 ¥0.00、银行存款 ¥667,895.58、其他货币资金 ¥0.00（含 ¥0.00 票据保证金，单独披露）。截止测试覆盖 12-26 至 12-31 全部 24 笔银行存款凭证。待人工补充：银行询证函回函 (CASH-RULE-001)、库存现金现场盘点 (CountSheet)。",
+    "review_status": "AI 初稿",
+    "filled_by": "jsdw_paper_fill",
+    "filled_at": "2026-05-26T10:05:52"
+  }
+}

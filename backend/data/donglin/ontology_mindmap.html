@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东林审计本体 · 全景思维导图</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --tbox: #4f46e5;
+    --tbox-bg: #eef2ff;
+    --tbox-soft: #f5f3ff;
+    --abox: #059669;
+    --abox-bg: #d1fae5;
+    --abox-soft: #ecfdf5;
+    --L0: #64748b; --L0-bg: #f1f5f9;
+    --L1: #2563eb; --L1-bg: #dbeafe;
+    --L2: #0d9488; --L2-bg: #ccfbf1;
+    --L3: #d97706; --L3-bg: #fed7aa;
+    --L4: #7c3aed; --L4-bg: #ede9fe;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.55; font-size: 13.5px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 40%, #6d28d9 80%);
+    color: white; padding: 32px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
+  header .sub { font-size: 13px; opacity: 0.92; max-width: 900px; }
+  header .meta { margin-top: 12px; font-size: 11.5px; opacity: 0.85; display: flex; gap: 22px; }
+  main { max-width: 1320px; margin: 0 auto; padding: 28px 40px 60px; }
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 32px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 18px 0 10px; color: #334155; }
+
+  .root-split {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 24px; align-items: stretch; margin: 24px 0 32px;
+  }
+  .root-tbox, .root-abox {
+    border-radius: 12px; padding: 18px 22px; color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .root-tbox { background: linear-gradient(135deg, var(--tbox) 0%, #6366f1 100%); }
+  .root-abox { background: linear-gradient(135deg, var(--abox) 0%, #10b981 100%); }
+  .root-tbox h3, .root-abox h3 { color: white; margin: 0 0 4px; font-size: 17px; }
+  .root-tbox .role, .root-abox .role { font-size: 11.5px; opacity: 0.9; margin-bottom: 8px; }
+  .root-tbox .stats, .root-abox .stats {
+    display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px;
+  }
+  .root-tbox .stats .stat, .root-abox .stats .stat {
+    background: rgba(255,255,255,0.18); padding: 3px 10px; border-radius: 6px;
+  }
+  .root-center {
+    background: var(--card); border: 2px solid #1e293b;
+    border-radius: 12px; padding: 14px 20px;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-width: 180px;
+  }
+  .root-center .title { font-weight: 700; font-size: 14.5px; }
+  .root-center .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .root-center .arrows { display: flex; gap: 6px; margin-top: 8px; font-size: 18px; color: #64748b; }
+
+  .mindmap {
+    background: var(--card); border-radius: 10px;
+    padding: 24px; border: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .mm-side {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .mm-branch {
+    border-radius: 10px; padding: 16px 20px;
+    border: 1px solid var(--border);
+  }
+  .mm-branch.tbox { background: var(--tbox-soft); border-color: var(--tbox-bg); }
+  .mm-branch.abox { background: var(--abox-soft); border-color: var(--abox-bg); }
+  .mm-branch > .head {
+    font-size: 15px; font-weight: 700; margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 2px solid;
+  }
+  .mm-branch.tbox > .head { color: var(--tbox); border-bottom-color: var(--tbox); }
+  .mm-branch.abox > .head { color: var(--abox); border-bottom-color: var(--abox); }
+
+  .node {
+    margin: 6px 0 6px 0;
+    padding-left: 14px;
+    border-left: 2px solid;
+    position: relative;
+  }
+  .mm-branch.tbox .node { border-left-color: var(--tbox-bg); }
+  .mm-branch.abox .node { border-left-color: var(--abox-bg); }
+  .node > .label {
+    font-weight: 600; font-size: 13px; margin-bottom: 2px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .node > .label .count {
+    color: var(--muted); font-weight: 400; font-size: 11px;
+  }
+  .node > .items {
+    margin: 4px 0 8px; padding-left: 8px;
+    display: flex; flex-wrap: wrap; gap: 4px;
+  }
+  .item {
+    background: white; border: 1px solid var(--border);
+    padding: 2px 8px; border-radius: 4px;
+    font-family: ui-monospace, monospace; font-size: 11px;
+    color: var(--text); white-space: nowrap;
+  }
+  .item.L0 { background: var(--L0-bg); color: var(--L0); border-color: #cbd5e1; }
+  .item.L1 { background: var(--L1-bg); color: var(--L1); border-color: #93c5fd; }
+  .item.L2 { background: var(--L2-bg); color: var(--L2); border-color: #5eead4; }
+  .item.L3 { background: var(--L3-bg); color: var(--L3); border-color: #fcd34d; }
+  .item.L4 { background: var(--L4-bg); color: var(--L4); border-color: #c4b5fd; }
+  .item .num {
+    color: var(--muted); font-size: 10px; margin-left: 4px;
+  }
+  .pill {
+    display: inline-block; padding: 1px 6px; border-radius: 8px;
+    font-size: 10px; font-weight: 600;
+  }
+  .pill.tbox { background: var(--tbox-bg); color: var(--tbox); }
+  .pill.abox { background: var(--abox-bg); color: var(--abox); }
+  .pill.L0 { background: var(--L0-bg); color: var(--L0); }
+  .pill.L1 { background: var(--L1-bg); color: var(--L1); }
+  .pill.L2 { background: var(--L2-bg); color: var(--L2); }
+  .pill.L3 { background: var(--L3-bg); color: var(--L3); }
+  .pill.L4 { background: var(--L4-bg); color: var(--L4); }
+
+  .scenario {
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: 10px; padding: 20px 24px; margin: 16px 0;
+  }
+  .scenario-title {
+    font-size: 16px; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 8px; border-bottom: 2px solid #fef3c7;
+  }
+  .scenario-title .badge {
+    background: #fbbf24; color: #78350f; padding: 2px 10px;
+    border-radius: 12px; font-size: 11px; font-weight: 700;
+  }
+
+  .biz-flow {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    margin: 14px 0;
+  }
+  .biz-side {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .biz-side.tbox { background: var(--tbox-soft); border-color: var(--tbox-bg); }
+  .biz-side.abox { background: var(--abox-soft); border-color: var(--abox-bg); }
+  .biz-side h4 {
+    margin: 0 0 8px; font-size: 13.5px;
+    padding-bottom: 6px; border-bottom: 1px dashed var(--border);
+  }
+  .biz-side.tbox h4 { color: var(--tbox); }
+  .biz-side.abox h4 { color: var(--abox); }
+  .biz-side ul { padding-left: 18px; margin: 6px 0; font-size: 12.5px; }
+  .biz-side li { margin: 4px 0; }
+  .biz-side code {
+    background: white; padding: 1px 5px; border-radius: 3px;
+    font-size: 11px; color: #be185d; border: 1px solid var(--border);
+  }
+
+  .link-demo {
+    margin: 12px 0; padding: 12px;
+    background: #fafafa; border-radius: 6px;
+    font-family: ui-monospace, monospace; font-size: 11.5px;
+    line-height: 1.7;
+  }
+  .link-demo .ot { color: var(--tbox); font-weight: 600; }
+  .link-demo .oi { color: var(--abox); font-weight: 600; }
+  .link-demo .lk { color: #d97706; }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px; margin: 12px 0;
+    font-size: 12px;
+  }
+  .legend .key {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .legend .swatch {
+    width: 14px; height: 14px; border-radius: 3px;
+    border: 1px solid;
+  }
+
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+    margin: 14px 0;
+  }
+  .sg-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px; text-align: center;
+  }
+  .sg-card .v { font-size: 24px; font-weight: 700; line-height: 1.1; }
+  .sg-card .l { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+  .sg-card.tbox { border-top: 3px solid var(--tbox); }
+  .sg-card.tbox .v { color: var(--tbox); }
+  .sg-card.abox { border-top: 3px solid var(--abox); }
+  .sg-card.abox .v { color: var(--abox); }
+
+  .callout {
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.tbox { background: var(--tbox-soft); border-color: var(--tbox); }
+  .callout.abox { background: var(--abox-soft); border-color: var(--abox); }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+
+  .interactive-link {
+    background: linear-gradient(135deg, #be185d, #7c2d12);
+    color: white; padding: 14px 20px; border-radius: 10px;
+    margin: 16px 0; display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(190, 24, 93, 0.2);
+  }
+  .interactive-link:hover { box-shadow: 0 5px 16px rgba(190, 24, 93, 0.3); }
+  .interactive-link .icon { font-size: 22px; }
+  .interactive-link .title { font-weight: 700; font-size: 14px; }
+  .interactive-link .desc { font-size: 12px; opacity: 0.92; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>东林审计本体 · 全景思维导图（静态版）</h1>
+  <div class="sub">江苏大王 2025 案例。把抽出来的本体知识库展开成静态思维导图 — 让你一眼看清：TBox（类型骨架）和 ABox（具体实例）分别长什么样、各自里面有哪些东西、怎么互相引用。</div>
+  <div class="meta">
+    <span>📅 2026-05-24</span>
+    <span>📂 backend/data/donglin/ontology_mindmap.html</span>
+    <span>🎯 2 维（TBox/ABox）× 4 层（L0/L1/L2/L3）</span>
+  </div>
+</header>
+
+<main>
+
+<a href="./ontology_mindmap_interactive.html" class="interactive-link">
+  <span class="icon">🌳</span>
+  <div>
+    <div class="title">想要可展开、可缩放、可拖拽的真·思维导图？</div>
+    <div class="desc">点击进入交互版 ontology_mindmap_interactive.html — 点 ⊕/⊖ 一层一层展开，拖拽平移，滚轮缩放</div>
+  </div>
+  <span style="margin-left:auto;font-size:20px">→</span>
+</a>
+
+<section>
+  <div class="legend">
+    <div class="key"><span class="swatch" style="background:var(--tbox-bg);border-color:var(--tbox)"></span><strong>TBox 蓝色 = 类型骨架</strong>（"定义世界上能有什么"）</div>
+    <div class="key"><span class="swatch" style="background:var(--abox-bg);border-color:var(--abox)"></span><strong>ABox 绿色 = 具体实例</strong>（"这个世界里此时此刻有什么"）</div>
+    <div class="key"><span class="swatch" style="background:var(--L0-bg);border-color:var(--L0)"></span>L0 客户事实</div>
+    <div class="key"><span class="swatch" style="background:var(--L1-bg);border-color:var(--L1)"></span>L1 国际通用</div>
+    <div class="key"><span class="swatch" style="background:var(--L2-bg);border-color:var(--L2)"></span>L2 中国本地</div>
+    <div class="key"><span class="swatch" style="background:var(--L3-bg);border-color:var(--L3)"></span>L3 东林专有</div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="sg-card tbox"><div class="v">52</div><div class="l">ObjectType</div></div>
+    <div class="sg-card tbox"><div class="v">73</div><div class="l">LinkType</div></div>
+    <div class="sg-card tbox"><div class="v">11</div><div class="l">ActionType</div></div>
+    <div class="sg-card abox"><div class="v">114</div><div class="l">ObjectInstance</div></div>
+    <div class="sg-card abox"><div class="v">139</div><div class="l">LinkInstance</div></div>
+    <div class="sg-card abox"><div class="v">4,250</div><div class="l">Cell 追溯</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>§1 整体结构 — 本体 = TBox + ABox</h2>
+
+  <div class="root-split">
+    <div class="root-tbox">
+      <h3>TBox（类型骨架）</h3>
+      <div class="role">📐 定义"世界上能有什么"<br>跨所大概率通用 · 跨客户不动</div>
+      <div class="stats">
+        <span class="stat">52 ObjectType</span>
+        <span class="stat">73 LinkType</span>
+        <span class="stat">11 ActionType</span>
+      </div>
+    </div>
+
+    <div class="root-center">
+      <div class="title">东林审计本体</div>
+      <div class="sub">江苏大王 2025 案例</div>
+      <div class="arrows">←→</div>
+    </div>
+
+    <div class="root-abox">
+      <h3>ABox（具体实例）</h3>
+      <div class="role">📋 描述"此时此刻有什么"<br>跨客户/跨所差异化</div>
+      <div class="stats">
+        <span class="stat">114 ObjectInstance</span>
+        <span class="stat">139 LinkInstance</span>
+        <span class="stat">+ 14 规则实例</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>读图说明</strong>：下面 §2 展开 <span class="pill tbox">TBox</span>，§3 展开 <span class="pill abox">ABox</span>，
+    §4 用 <strong>A6 应收账款审计</strong>这一个具体业务场景演示两者如何配合。
+    每个叶子节点用颜色标出它属于 L0/L1/L2/L3 哪一层。
+  </div>
+</section>
+
+<section>
+  <h2>§2 TBox 展开（类型骨架 = 跨所通用资产）</h2>
+
+  <div class="mindmap">
+    <div class="mm-side">
+
+      <div class="mm-branch tbox">
+        <div class="head">📦 ObjectType (52 类) — 对象类型</div>
+
+        <div class="node">
+          <div class="label">客户类 <span class="count">5 类</span></div>
+          <div class="items">
+            <span class="item L1">AuditedEntity</span>
+            <span class="item L1">ClientGroup</span>
+            <span class="item L1">RelatedParty</span>
+            <span class="item L1">Contact</span>
+            <span class="item L3">RelatedPartyGuarantee</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">项目类 <span class="count">7 类</span></div>
+          <div class="items">
+            <span class="item L1">Engagement</span>
+            <span class="item L1">AuditType</span>
+            <span class="item L1">AuditPeriod</span>
+            <span class="item L1">Engager</span>
+            <span class="item L1">ProjectTeam</span>
+            <span class="item L1">Auditor</span>
+            <span class="item L3">ProjectTimeline</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">数据类 <span class="count">9 类</span></div>
+          <div class="items">
+            <span class="item L1">TrialBalance</span>
+            <span class="item L1">Account</span>
+            <span class="item L1">SubLedger</span>
+            <span class="item L1">Voucher</span>
+            <span class="item L1">BankStatement</span>
+            <span class="item L1">AccountingPolicy</span>
+            <span class="item L1">Sampling</span>
+            <span class="item L1">CrossReference</span>
+            <span class="item L1">DataMap</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">审计区域 <span class="count">1 类</span></div>
+          <div class="items">
+            <span class="item L3">AuditArea</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">认定类 <span class="count">1 类</span></div>
+          <div class="items">
+            <span class="item L1">Assertion</span>
+            <span class="pill" style="background:#e0e7ff;color:#4338ca;font-size:9px">含 6 子认定实例</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">风险类 <span class="count">5 类</span></div>
+          <div class="items">
+            <span class="item L2">RiskOfMaterialMisstatement</span>
+            <span class="item L2">MaterialityLevel</span>
+            <span class="item L2">RelatedPartyRisk</span>
+            <span class="item L3">SpecialRiskFlag</span>
+            <span class="item L1">RiskAssessment</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">程序/证据/规则 <span class="count">6 类</span></div>
+          <div class="items">
+            <span class="item L1">AuditProcedure</span>
+            <span class="item L1">AuditEvidence</span>
+            <span class="item L1">AuditRule</span>
+            <span class="item L1">RuleHit</span>
+            <span class="item L1">AnomalyTrigger</span>
+            <span class="item L3">FillRule</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">底稿类 <span class="count">7 类</span></div>
+          <div class="items">
+            <span class="item L1">WorkingPaper</span>
+            <span class="item L1">PaperTemplate</span>
+            <span class="item L1">Sheet</span>
+            <span class="item L1">SheetField</span>
+            <span class="item L1">Anomaly</span>
+            <span class="item L1">CorrectionLog</span>
+            <span class="item L3">PaperPhase</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">报告类 <span class="count">7 类</span></div>
+          <div class="items">
+            <span class="item L1">AuditReport</span>
+            <span class="item L2">AuditOpinion</span>
+            <span class="item L2">ReviewLevel</span>
+            <span class="item L1">AuditAdjustment</span>
+            <span class="item L3">Z6AdjustmentEntry</span>
+            <span class="item L1">DisclosureItem</span>
+            <span class="item L2">ManagementRep</span>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="label">辅助类 <span class="count">2 类</span></div>
+          <div class="items">
+            <span class="item L1">SpecialAuditCase</span>
+            <span class="item L1">ToolUsage</span>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;font-size:11.5px;color:var(--muted);font-style:italic">
+          每个 ObjectType 包含 properties_schema（字段定义）— 例如 <code>AuditedEntity</code> 有 uscc / legal_rep / scale / industry 等 17 个字段。
+        </div>
+      </div>
+
+      <div>
+        <div class="mm-branch tbox" style="margin-bottom:18px">
+          <div class="head">🔗 LinkType (73 关系) — 类型之间的关系</div>
+
+          <div class="node">
+            <div class="label">客户 ↔ 关联方 <span class="count">~5 条</span></div>
+            <div class="items">
+              <span class="item L1">EntityHasRelatedParty</span>
+              <span class="item L1">EntityHasContact</span>
+              <span class="item L3">GuaranteeByParty</span>
+              <span class="item L1">EntityHasAccountingPolicy</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">项目维度 <span class="count">~12 条</span></div>
+            <div class="items">
+              <span class="item L1">EngagementForEntity</span>
+              <span class="item L1">EngagementForPeriod</span>
+              <span class="item L1">EngagementHasTeam</span>
+              <span class="item L1">EngagementHasPaper</span>
+              <span class="item L1">EngagementHasMateriality</span>
+              <span class="item L1">EngagementHasReport</span>
+              <span class="item L1">TeamHasAuditor</span>
+              <span class="item L2">TeamHasReviewLevel</span>
+              <span class="item L1">EngagementHasTimeline</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">底稿 ↔ 模板 / 区域 / 科目 / 认定 <span class="count">~15 条</span></div>
+            <div class="items">
+              <span class="item L1">PaperUsesTemplate</span>
+              <span class="item L3">PaperForArea</span>
+              <span class="item L1">PaperConcernsAccount</span>
+              <span class="item L1">PaperAddressesAssertion</span>
+              <span class="item L1">PaperAppliesRule</span>
+              <span class="item L1">PaperHasAnomaly</span>
+              <span class="item L1">PaperHasEvidence</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">规则 ↔ 程序 / 调整 / 风险 <span class="count">~10 条</span></div>
+            <div class="items">
+              <span class="item L1">RuleTriggersAdjustment</span>
+              <span class="item L1">RuleAddressesAssertion</span>
+              <span class="item L1">ProcedureRunsForArea</span>
+              <span class="item L1">ProcedureProducesEvidence</span>
+              <span class="item L1">RiskAddressedByProcedure</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">数据维度 <span class="count">~15 条</span></div>
+            <div class="items">
+              <span class="item L1">EntityHasTrialBalance</span>
+              <span class="item L1">EntityHasVoucher</span>
+              <span class="item L1">AccountInArea</span>
+              <span class="item L1">SubLedgerForAccount</span>
+              <span class="item L1">VoucherTouchesAccount</span>
+              <span class="item L1">BankStatementForAccount</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">认定 / 复核 / 报告 <span class="count">~16 条</span></div>
+            <div class="items">
+              <span class="item L1">SamplingTargetsArea</span>
+              <span class="item L1">EvidenceSupportsAssertion</span>
+              <span class="item L2">ReviewLevelReviews</span>
+              <span class="item L1">ReportContainsOpinion</span>
+              <span class="item L1">AdjustmentInPeriod</span>
+              <span class="item L2">DisclosureForRelatedParty</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mm-branch tbox">
+          <div class="head">⚡ ActionType (11 动作) — 智能体可执行</div>
+
+          <div class="node">
+            <div class="label">数据准备 <span class="count">4 类</span></div>
+            <div class="items">
+              <span class="item L1">Read</span>
+              <span class="item L1">Map</span>
+              <span class="item L1">Standardize</span>
+              <span class="item L1">Sample</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">实质性测试 <span class="count">2 类</span></div>
+            <div class="items">
+              <span class="item L1">Reconcile</span>
+              <span class="item L1">Recompute</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">推理 / 输出 <span class="count">2 类</span></div>
+            <div class="items">
+              <span class="item L1">Explain</span>
+              <span class="item L1">Generate</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">复核 / 治理 <span class="count">3 类</span></div>
+            <div class="items">
+              <span class="item L1">Review</span>
+              <span class="item L1">SignOff</span>
+              <span class="item L1">Archive</span>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;font-size:11.5px;color:var(--muted);font-style:italic">
+            ActionType 定义了 target_type_code + parameters_schema — 例如 <code>Recompute</code> 接收 {field, rule, tolerance} 三个参数。
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout tbox" style="margin-top: 18px">
+      <strong>TBox 跨所迁移性</strong>：上面 52 OT 中，约 <strong>40 个标 L1/L2</strong> 是跨所通用的（任何中国所都得用），
+      <strong>10 个标 L3</strong> 是东林独有的（如 <code>AuditArea</code>、<code>RelatedPartyGuarantee</code>、<code>Z6AdjustmentEntry</code>）。
+      迁移到立信、信永中和时，<strong>40 个 L1/L2 一字不改</strong>，10 个 L3 需要替换为该所的对应概念（可能 5-10 个）。
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>§3 ABox 展开（具体实例 = 客户与事务所差异化资产）</h2>
+
+  <div class="mindmap">
+    <div class="mm-side">
+
+      <div class="mm-branch abox">
+        <div class="head">📋 ObjectInstance (114 实例) — 具体对象</div>
+
+        <div class="node">
+          <div class="label">L0 江苏大王专有 <span class="count">≈ 90 实例</span></div>
+
+          <div class="node" style="margin-top: 4px">
+            <div class="label" style="font-size:12px">客户与人物</div>
+            <div class="items">
+              <span class="item L0">江苏大王通风机械有限公司 <span class="num">×1</span></span>
+              <span class="item L0">杨春平 <span class="num">实控人</span></span>
+              <span class="item L0">黄燕红 <span class="num">财务负责人</span></span>
+              <span class="item L0">朱洋红 <span class="num">关联自然人</span></span>
+              <span class="item L0">柒米叁合伙 <span class="num">股东</span></span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label" style="font-size:12px">关联担保（5 笔）</div>
+            <div class="items">
+              <span class="item L0">G-001 南京银行 ¥440万</span>
+              <span class="item L0">G-002 江苏银行 ¥100万</span>
+              <span class="item L0">G-003 交通银行 ¥200万</span>
+              <span class="item L0">G-004 农行 ¥200万</span>
+              <span class="item L0">G-005 农行 ¥300万</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label" style="font-size:12px">项目治理</div>
+            <div class="items">
+              <span class="item L0">ENG-JSDW-2025</span>
+              <span class="item L0">江苏大王项目组</span>
+              <span class="item L0">童中国 (签字)</span>
+              <span class="item L0">侯佳成 (经理)</span>
+              <span class="item L0">王叙超 (审核)</span>
+              <span class="item L0">洪潇 (高级)</span>
+              <span class="item L0">三级复核 ×4</span>
+              <span class="item L0">里程碑 ×5</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label" style="font-size:12px">重要性</div>
+            <div class="items">
+              <span class="item L0">PM ¥154,544.70</span>
+              <span class="item L0">TE ¥115,908.53</span>
+              <span class="item L0">SUM ¥7,727.24</span>
+              <span class="item L0">基准: 总资产 1%</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label" style="font-size:12px">财务数据</div>
+            <div class="items">
+              <span class="item L0">TB 2025-12-31</span>
+              <span class="item L0">Account ×50+</span>
+              <span class="item L0">SubLedger ×808 客户</span>
+              <span class="item L0">Voucher ×12,620 笔</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label" style="font-size:12px">底稿（9 张）</div>
+            <div class="items">
+              <span class="item L0">A1 货币资金 ✓</span>
+              <span class="item L0">A6 应收账款 ✓</span>
+              <span class="item L0">A9 其他应收款 ✓</span>
+              <span class="item L0">A10 存货</span>
+              <span class="item L0">A24 固定资产 ✓</span>
+              <span class="item L0">B1 短期借款 ✓</span>
+              <span class="item L0">B6 应付账款</span>
+              <span class="item L0">B9 应付薪酬</span>
+              <span class="item L0">D1 营业收入</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label" style="font-size:12px">会计政策（12 条 X5 披露）</div>
+            <div class="items">
+              <span class="item L0">企业会计制度（老准则）</span>
+              <span class="item L0">直线法折旧 残值 5%</span>
+              <span class="item L0">永续盘存 加权平均</span>
+              <span class="item L0">应付税款法</span>
+              <span class="item L0">+ 8 条</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label" style="font-size:12px">风险 / 审计区域 / 报告</div>
+            <div class="items">
+              <span class="item L0">RMM R-001 应收虚增</span>
+              <span class="item L0">RMM R-002 持续经营</span>
+              <span class="item L0">RPR-001 黄燕红占用</span>
+              <span class="item L0">9 大审计区域</span>
+              <span class="item L0">AuditReport 锡东林〔2026〕号</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="node" style="margin-top: 10px">
+          <div class="label">L1 国际通用 ABox <span class="count">17 实例</span></div>
+          <div class="items">
+            <span class="item L1">Assertion: Existence</span>
+            <span class="item L1">Completeness</span>
+            <span class="item L1">Accuracy</span>
+            <span class="item L1">Cutoff</span>
+            <span class="item L1">RightsObligations</span>
+            <span class="item L1">Presentation</span>
+            <span class="item L1">ActionType: Read</span>
+            <span class="item L1">Map</span>
+            <span class="item L1">Reconcile</span>
+            <span class="item L1">+ 8 个 Action</span>
+          </div>
+        </div>
+
+        <div class="node" style="margin-top: 10px">
+          <div class="label">L2 中国通用 ABox · AuditRule 实例 <span class="count">5 条</span></div>
+          <div class="items">
+            <span class="item L2">CASH-RULE-001 银行函证</span>
+            <span class="item L2">CASH-RULE-002 大额审批</span>
+            <span class="item L2">REV-RULE-001 收入截止</span>
+            <span class="item L2">FA-RULE-001 折旧重算</span>
+            <span class="item L2">TAX-RULE-001 招待费 5‰/60%</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;padding-left:8px">
+            source = "中注协" / "财政部"
+          </div>
+        </div>
+
+        <div class="node" style="margin-top: 10px">
+          <div class="label">L3 东林专有 ABox · AuditRule 实例 <span class="count">7 条</span></div>
+          <div class="items">
+            <span class="item L3">AR-RULE-001 应收贷方重分类</span>
+            <span class="item L3">AP-RULE-001 应付借方重分类</span>
+            <span class="item L3">RP-RULE-001 关联方占用披露</span>
+            <span class="item L3">INV-RULE-001 存货归零异常</span>
+            <span class="item L3">TAX-RECLASS-001 出口退税重分类</span>
+            <span class="item L3">GC-INDICATOR-001 关联担保 → 持续经营</span>
+            <span class="item L3">DL-RULE-001 三级复核签字</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;padding-left:8px">
+            source = "无锡东林" · effective = 2024-2025
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="mm-branch abox" style="margin-bottom: 18px">
+          <div class="head">🔗 LinkInstance (139 链接) — 实例之间的具体连接</div>
+
+          <div class="node">
+            <div class="label">客户关联方关系 <span class="count">4 链接</span></div>
+            <div class="link-demo">
+              江苏大王 <span class="lk">─[EntityHasRelatedParty]→</span> 杨春平 (54%)<br>
+              江苏大王 <span class="lk">─[EntityHasRelatedParty]→</span> 柒米叁 (46%)<br>
+              江苏大王 <span class="lk">─[EntityHasRelatedParty]→</span> 黄燕红<br>
+              江苏大王 <span class="lk">─[EntityHasRelatedParty]→</span> 朱洋红
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">担保链路 <span class="count">10 链接</span></div>
+            <div class="link-demo">
+              G-001 <span class="lk">─[GuaranteeByParty]→</span> 杨春平<br>
+              G-001 <span class="lk">─[GuaranteeByParty]→</span> 黄燕红<br>
+              <span style="color:var(--muted)">...（5 担保 × 2 担保人 = 10 条）</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">项目-团队-成员 <span class="count">9 链接</span></div>
+            <div class="link-demo">
+              ENG-JSDW-2025 <span class="lk">─[EngagementHasTeam]→</span> 江苏大王项目组<br>
+              江苏大王项目组 <span class="lk">─[TeamHasAuditor]→</span> 童中国<br>
+              江苏大王项目组 <span class="lk">─[TeamHasAuditor]→</span> 侯佳成<br>
+              <span style="color:var(--muted)">...（4 成员 + 4 复核级）</span>
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">底稿-科目-区域 <span class="count">~30 链接</span></div>
+            <div class="link-demo">
+              A1 货币资金 <span class="lk">─[PaperConcernsAccount]→</span> Account-1001<br>
+              A1 货币资金 <span class="lk">─[PaperForArea]→</span> AuditArea-货币资金<br>
+              A1 货币资金 <span class="lk">─[PaperUsesTemplate]→</span> TPL-DL-FY2025
+            </div>
+          </div>
+
+          <div class="node">
+            <div class="label">其余链接 <span class="count">86 链接</span></div>
+            <div style="font-size:11.5px;color:var(--muted);padding-left:8px;line-height:1.6">
+              EntityHasAccountingPolicy × 12 (12 条政策)<br>
+              EntityHasContact × 2<br>
+              EngagementHasPaper × 9<br>
+              EngagementHasTimeline × 5<br>
+              EngagementHasReport × 1<br>
+              EngagementHasMateriality × 1<br>
+              RPRiskInvolvesParty × 1<br>
+              <span style="font-style:italic">... 等等</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mm-branch abox">
+          <div class="head">🎯 Cell-Level Provenance (4,250 单元格追溯)</div>
+          <div style="font-size:12.5px;margin-bottom:8px">
+            5 张已填底稿（A1/A6/A9/A24/B1）的每个单元格都记录：
+          </div>
+          <div class="link-demo">
+            cell_key: <span class="oi">customer_detail.rows[0].closing_dr</span><br>
+            value: <span class="oi">685,088.49</span><br>
+            source_kind: <strong>Aux</strong>（辅助账）<br>
+            ontology_refs:<br>
+            &nbsp;&nbsp;<span class="ot">📦 OT::SubLedger</span><br>
+            &nbsp;&nbsp;<span class="lk">🔗 LT::SubLedgerForAccount</span><br>
+            source_detail: 辅助账 1122 客户 000860 期末借方<br>
+            rule_code: <em>None</em>
+          </div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:8px">
+            按 source_kind 分布: TB / Aux / Voucher / Computed / RuleDerived / Knowledge / TemplateConst<br>
+            其中 RuleDerived 对应规则触发的单元格（如 A6 的 153 个 AR-RULE-001 命中）
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout abox" style="margin-top: 18px">
+      <strong>ABox 跨场景迁移性</strong>：
+      <ul style="margin:6px 0 0">
+        <li><strong>L0 江苏大王</strong> 90 个实例 = 每接新客户全部重抽（用 <code>extract_tb.py</code>）</li>
+        <li><strong>L1 通用</strong> 17 个 = Assertion / ActionType 实例，一字不改跨所</li>
+        <li><strong>L2 中国规则</strong> 5 个 = 中注协/财政部规则，一字不改跨所（但需关注准则更新）</li>
+        <li><strong>L3 东林规则</strong> 7 个 = 换所必换（立信会有立信的 7-10 条）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>§4 业务场景实例 — A6 应收账款审计</h2>
+
+  <p>用一个具体场景演示 <span class="pill tbox">TBox</span> 和 <span class="pill abox">ABox</span> 如何在审计中配合：</p>
+
+  <div class="scenario">
+    <div class="scenario-title">
+      <span class="badge">场景</span>
+      A6 应收账款审计 — Agent 自动填稿过程
+    </div>
+
+    <p style="font-size:12.5px;margin:0 0 12px">
+      Agent 接到任务"填 A6 应收账款"。它从 TBox 知道"这种底稿要做什么"，从 ABox 知道"江苏大王这家公司有哪些应收账款数据"。
+    </p>
+
+    <div class="biz-flow">
+      <div class="biz-side tbox">
+        <h4>📐 TBox 提供"做什么" — 类型骨架</h4>
+        <ul>
+          <li><code>WorkingPaper</code> 类型 — 定义"什么叫底稿，要有 sheet_data / audit_conclusion / review_status"</li>
+          <li><code>Account</code> 类型 — 定义"什么叫科目"</li>
+          <li><code>SubLedger</code> 类型 — 定义"什么叫辅助账"</li>
+          <li><code>AuditRule</code> 类型 — 定义"什么叫规则，要有 formal_expression"</li>
+          <li><code>Sampling</code> 类型 — 定义"什么叫样本"</li>
+          <li><code>RelatedPartyRisk</code> 类型 — 定义"什么叫关联方资金占用"</li>
+        </ul>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">
+          上面 TBox 全是 L1+L2 / L3 类型，跨所通用
+        </p>
+
+        <h4 style="margin-top: 12px">🔗 LinkType 定义关系</h4>
+        <ul>
+          <li><code>PaperConcernsAccount</code> — "底稿 → 涉及科目"</li>
+          <li><code>SubLedgerForAccount</code> — "辅助账 → 科目"</li>
+          <li><code>PaperAppliesRule</code> — "底稿 → 应用规则"</li>
+          <li><code>RuleTriggersAdjustment</code> — "规则 → 触发调整"</li>
+        </ul>
+
+        <h4 style="margin-top: 12px">⚡ ActionType 定义动作</h4>
+        <ul>
+          <li><code>Read</code> — 读取 TB / Aux / Voucher</li>
+          <li><code>Reconcile</code> — 比对账面 vs 辅助账</li>
+          <li><code>Sample</code> — 抽样 Top 5 客户</li>
+          <li><code>Generate</code> — 生成调整分录</li>
+        </ul>
+      </div>
+
+      <div class="biz-side abox">
+        <h4>📋 ABox 提供"是什么" — 具体实例</h4>
+        <ul>
+          <li><code>WorkingPaper</code> 实例：<span class="pill L0">L0</span> A6 货币资金 (id=94, 江苏大王专属)</li>
+          <li><code>Account</code> 实例：<span class="pill L0">L0</span> 1122 应收账款 (江苏大王 TB 期末 ¥3,360,975.70)</li>
+          <li><code>SubLedger</code> 实例：<span class="pill L0">L0</span> 808 客户辅助账行</li>
+          <li><code>AuditRule</code> 实例：<span class="pill L3">L3</span> AR-RULE-001 (东林内规, formal: <code>closing_cr&gt;0</code>)</li>
+          <li><code>RelatedPartyRisk</code> 实例：<span class="pill L0">L0</span> 黄燕红 ¥811,739.84</li>
+        </ul>
+
+        <h4 style="margin-top: 12px">🔗 LinkInstance 具体连接</h4>
+        <ul>
+          <li><code>PaperConcernsAccount</code>: A6 → Account-1122</li>
+          <li><code>SubLedgerForAccount</code>: 808 行 → Account-1122</li>
+          <li><code>PaperAppliesRule</code>: A6 → AR-RULE-001 / RP-RULE-001</li>
+          <li><code>RuleTriggersAdjustment</code>: AR-RULE-001 → Z6-AI-A6-01 (¥7.11M)</li>
+        </ul>
+
+        <h4 style="margin-top: 12px">📑 Agent 跑出的产物（也是 ABox）</h4>
+        <ul>
+          <li>A6.sheet_data.summary（审定表填好）</li>
+          <li>A6.sheet_data.customer_detail（458 客户行）</li>
+          <li>A6.sheet_data.aging_analysis（305 客户 FIFO 账龄）</li>
+          <li>3,978 条 cell 追溯（含 153 个 RuleDerived）</li>
+          <li>1 笔 Z6-AI-A6-01 调整分录 ¥7,114,390.40</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; padding: 12px 16px; background: #fffbeb; border-radius: 6px; font-size: 12.5px">
+      <strong>关键洞察</strong>：Agent 跑 A6 时<strong>同时引用了 TBox 和 ABox</strong> ——
+      <ul style="margin: 6px 0">
+        <li>TBox 告诉它"应收账款审计要 Read + Reconcile + Sample + apply AR-RULE-001"</li>
+        <li>ABox 告诉它"江苏大王的 1122 期末是 ¥3.36M，要从 808 辅助账行抽数据，153 个客户命中 AR-RULE-001"</li>
+        <li>填稿时<strong>每个数字都引用</strong>：<code>📦 OT::SubLedger</code>(TBox 类型) + <code>客户 000860</code>(ABox 实例) + <code>📜 AR-RULE-001</code>(ABox 规则实例)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>§5 一句话总结</h2>
+
+  <div class="root-split">
+    <div class="root-tbox">
+      <h3>TBox 字典</h3>
+      <div class="role" style="font-size: 12.5px; line-height: 1.7">
+        告诉你"<strong>世界上能有什么</strong>" ——<br>
+        52 个对象类型 + 73 种关系 + 11 个动作。<br>
+        <strong>跨所大概率通用</strong>（L1+L2 主体）。<br>
+        换客户 / 换事务所时 <strong>40 个一字不改</strong>。
+      </div>
+    </div>
+
+    <div class="root-center">
+      <div class="title">本体 =</div>
+      <div class="title" style="font-size: 18px; margin-top: 4px; color: #4f46e5">TBox</div>
+      <div class="sub">+</div>
+      <div class="title" style="font-size: 18px; color: #059669">ABox</div>
+    </div>
+
+    <div class="root-abox">
+      <h3>ABox 句子</h3>
+      <div class="role" style="font-size: 12.5px; line-height: 1.7">
+        告诉你"<strong>此时此刻有什么</strong>" ——<br>
+        114 个具体对象 + 139 个具体链接 + 14 条规则实例。<br>
+        <strong>跨客户/跨所差异化</strong>（L0+L3 主体）。<br>
+        换客户全部重抽，换所重抽 L3 部分。
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>给侯佳成的话</strong>
+    <p style="margin: 8px 0 0; font-size: 13px">
+      "侯老师，本体知识库分成两部分：<strong>TBox 字典</strong>定义了"什么叫审计客户、什么叫底稿、什么叫规则"，
+      这层我抽了 52 个类型 + 73 种关系 + 11 个动作；<strong>ABox 句子</strong>把江苏大王这家公司的具体数据填进去 ——
+      具体到 5 笔关联担保是谁担保的、12,620 笔凭证、5 张已填底稿的 4,250 个单元格。
+      <strong>TBox 跨所通用，ABox 换客户全重抽</strong> —— 这就是本体作为长期资产的复用价值所在。"
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  生成于 2026-05-24 · 东林审计本体 · 江苏大王 2025 案例 · TBox/ABox 静态全景思维导图<br>
+  想要可展开 / 可缩放 / 可拖拽的交互版？打开同目录 <code>ontology_mindmap_interactive.html</code>
+</footer>
+
+</body>
+</html>

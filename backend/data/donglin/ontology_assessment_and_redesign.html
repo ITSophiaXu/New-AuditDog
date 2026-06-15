@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<title>本体知识库 · 现状评估 + 重新设计</title>
+<style>
+  :root {
+    --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0;
+    --text: #0f172a; --muted: #64748b;
+    --code-bg: #1e293b; --code-fg: #e2e8f0;
+    --good: #059669; --bad: #dc2626; --warn: #d97706;
+    --L1: #2563eb; --L2: #0d9488; --L3: #d97706; --L4: #7c3aed; --L0: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Noto Sans SC", -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.65; font-size: 13.5px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 30%, #be185d 70%, #b45309 100%);
+    color: white; padding: 36px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  header .sub { font-size: 13.5px; opacity: 0.94; max-width: 1000px; line-height: 1.65; }
+  header .meta { margin-top: 14px; display: flex; gap: 22px; font-size: 12px; opacity: 0.85; }
+  main { max-width: 1280px; margin: 0 auto; padding: 28px 40px 60px; }
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 36px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 22px 0 10px; color: #334155; }
+  h4 { font-size: 13.5px; font-weight: 600; margin: 14px 0 8px; color: #475569; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    background: #f1f5f9; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, monospace; font-size: 12px; color: #be185d;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 12px 16px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 11.5px; line-height: 1.55; overflow-x: auto; margin: 8px 0;
+  }
+  pre .k { color: #c084fc; } pre .s { color: #86efac; }
+  pre .n { color: #fde68a; } pre .c { color: #94a3b8; }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0;
+    background: var(--card); border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  th {
+    background: #f8fafc; padding: 10px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid var(--border); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border);
+       vertical-align: top; font-size: 13px; }
+  tr:last-child td { border-bottom: 0; }
+
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 600;
+  }
+  .pill.L1 { background: #dbeafe; color: var(--L1); }
+  .pill.L2 { background: #ccfbf1; color: var(--L2); }
+  .pill.L3 { background: #fed7aa; color: var(--L3); }
+  .pill.L4 { background: #ede9fe; color: var(--L4); }
+  .pill.L0 { background: #f1f5f9; color: var(--L0); }
+  .pill.good { background: #d1fae5; color: var(--good); }
+  .pill.bad { background: #fee2e2; color: var(--bad); }
+  .pill.warn { background: #fef3c7; color: var(--warn); }
+  .pill.new { background: #fce7f3; color: #be185d; }
+
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+    margin: 14px 0;
+  }
+  .stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-top: 3px solid;
+    border-radius: 6px; padding: 12px; text-align: center;
+  }
+  .stat .v { font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .stat .l { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+  .stat.L1 { border-top-color: var(--L1); } .stat.L1 .v { color: var(--L1); }
+  .stat.L2 { border-top-color: var(--L2); } .stat.L2 .v { color: var(--L2); }
+  .stat.L3 { border-top-color: var(--L3); } .stat.L3 .v { color: var(--L3); }
+  .stat.L0 { border-top-color: var(--L0); } .stat.L0 .v { color: var(--L0); }
+  .stat.warn { border-top-color: var(--warn); } .stat.warn .v { color: var(--warn); }
+  .stat.bad { border-top-color: var(--bad); } .stat.bad .v { color: var(--bad); }
+
+  .problem-card {
+    background: var(--card); border-left: 6px solid var(--bad);
+    border-radius: 8px; padding: 16px 20px; margin: 12px 0;
+  }
+  .problem-card h4 { margin-top: 0; color: var(--bad); display: flex; align-items: center; gap: 8px; }
+  .problem-card .num {
+    background: var(--bad); color: white; padding: 2px 10px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+  }
+  .fix-block {
+    background: #f0fdf4; border-left: 4px solid var(--good);
+    padding: 10px 14px; margin: 10px 0; border-radius: 4px;
+    font-size: 12.5px;
+  }
+  .fix-block strong { color: #15803d; }
+
+  .pipeline {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+    margin: 16px 0;
+  }
+  .pipeline .step {
+    background: var(--card); border-top: 4px solid #4338ca;
+    border-radius: 6px; padding: 10px 8px;
+    border: 1px solid var(--border); position: relative;
+  }
+  .pipeline .step .num {
+    background: #4338ca; color: white; width: 22px; height: 22px;
+    border-radius: 50%; display: inline-flex; align-items: center;
+    justify-content: center; font-size: 11px; font-weight: 700;
+  }
+  .pipeline .step .name { font-weight: 600; font-size: 12px; margin-top: 4px; display: block; }
+  .pipeline .step .desc { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+  .pipeline .step::after {
+    content: "→"; position: absolute; right: -8px; top: 50%;
+    transform: translateY(-50%); color: var(--muted); font-size: 14px;
+  }
+  .pipeline .step:last-child::after { content: ""; }
+
+  .module-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    margin: 14px 0;
+  }
+  .module-card {
+    background: var(--card); border: 2px solid; border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .module-card h4 { margin-top: 0; }
+
+  .callout {
+    background: #fffbeb; border-left: 4px solid var(--warn);
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.danger { background: #fef2f2; border-color: var(--bad); }
+  .callout.success { background: #f0fdf4; border-color: var(--good); }
+  .callout.info { background: #eff6ff; border-color: var(--L1); }
+  .callout strong { display: inline-block; margin-bottom: 4px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>本体知识库 · 现状评估 + 重新设计</h1>
+  <div class="sub">
+    诚实总结目前 pilot demo 里的本体知识库长什么样、是怎么"抽取"出来的、
+    设计上有哪些根本问题，以及一套<strong>真正可落地的重新设计 + 抽取流程 + 审计所材料清单</strong>。
+    这份文档是给侯总（或新所合伙人）看的"现状 + 路线图"，目的是把 demo 升级为
+    可上线的事务所长期资产。
+  </div>
+  <div class="meta">
+    <span>📅 2026-05-25</span>
+    <span>📂 backend/data/donglin/ontology_assessment_and_redesign.html</span>
+    <span>🎯 给侯佳成 + 新所合伙人</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ §1 现状 ═══════════ -->
+<section>
+  <h2>§1 当前本体知识库长什么样（现状）</h2>
+
+  <h3>1.1 整体规模</h3>
+  <div class="stat-grid">
+    <div class="stat L1"><div class="v">107</div><div class="l">ObjectType</div></div>
+    <div class="stat L1"><div class="v">97</div><div class="l">LinkType</div></div>
+    <div class="stat L1"><div class="v">11</div><div class="l">ActionType</div></div>
+    <div class="stat L0"><div class="v">200+</div><div class="l">实例 (江苏大王)</div></div>
+    <div class="stat L2"><div class="v">12</div><div class="l">AuditRule</div></div>
+    <div class="stat L2"><div class="v">30</div><div class="l">法规库 (CSA/CAS/法律)</div></div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat warn"><div class="v">9</div><div class="l">Anomaly</div></div>
+    <div class="stat warn"><div class="v">2</div><div class="l">Z6 调整分录</div></div>
+    <div class="stat warn"><div class="v">4,250</div><div class="l">Cell-level 追溯</div></div>
+    <div class="stat warn"><div class="v">5/9</div><div class="l">已填底稿/总底稿</div></div>
+    <div class="stat L3"><div class="v">29</div><div class="l">FillRule (v5 模板公式)</div></div>
+    <div class="stat L3"><div class="v">11</div><div class="l">真实 sheet 表头</div></div>
+  </div>
+
+  <h3>1.2 按 4 层分布</h3>
+  <table>
+    <tr><th style="width:14%">层</th><th>含义</th><th>OT 数</th><th>实例数</th></tr>
+    <tr>
+      <td><span class="pill L1">L1</span> 国际通用</td>
+      <td>ISA/IFRS — 跨国跨所通用</td>
+      <td>35</td>
+      <td>~17 (6 认定 + 11 ActionType)</td>
+    </tr>
+    <tr>
+      <td><span class="pill L2">L2</span> 中国本地</td>
+      <td>CSA/CAS/财政部/中注协 — 跨所通用</td>
+      <td>16</td>
+      <td>30 法规 + 5 公共规则</td>
+    </tr>
+    <tr>
+      <td><span class="pill L3">L3</span> 东林专有</td>
+      <td>事务所内规 + 442-sheet 模板 + 工作流</td>
+      <td>56</td>
+      <td>7 内规 + 9 项目治理</td>
+    </tr>
+    <tr>
+      <td><span class="pill L0">L0</span> 客户事实</td>
+      <td>江苏大王专属数据</td>
+      <td>(无独立 OT)</td>
+      <td>~150 (客户/担保/凭证/底稿)</td>
+    </tr>
+  </table>
+
+  <h3>1.3 真实能跑出来的产物</h3>
+  <ul>
+    <li>✅ <strong>5 张 demo 底稿已填</strong>: A1 / A6 / A9 / A24 / B1</li>
+    <li>✅ <strong>2 笔自动调整分录</strong>: Z6-AI-A6-01 (¥7.11M 重分类) / Z6-AI-A9-01 (¥430K 重分类)</li>
+    <li>✅ <strong>9 条结构化异常</strong> (按严重度分类)</li>
+    <li>✅ <strong>4,250 cell 级追溯</strong> (含 7 种 source_kind)</li>
+    <li>✅ <strong>真实 .xlsm 导出</strong> (27MB 保留 442 sheet + VBA)</li>
+    <li>✅ <strong>本体管理 / 底稿工作台 / 知识中心</strong> 3 个前端页面</li>
+  </ul>
+</section>
+
+<!-- ═══════════ §2 抽取流程实情 ═══════════ -->
+<section>
+  <h2>§2 当前"抽取"流程实际是怎么做的</h2>
+
+  <div class="callout danger">
+    <strong>⚠ 重要诚实声明</strong>
+    <p>我之前描述的"5 阶段抽取流程"里，<strong>真正"自动抽取"只有客户数据那一段</strong>。
+    其余 TBox、L3 规则、算法知识等都是<strong>我（Claude）手工写到 JSON / Python 字面量</strong>里的，
+    不是从材料"抽取"出来的。下面是实情。</p>
+  </div>
+
+  <h3>2.1 5 阶段流程 + 实情</h3>
+  <table>
+    <tr>
+      <th style="width:14%">阶段</th>
+      <th style="width:24%">声称做了什么</th>
+      <th style="width:24%">实际做了什么</th>
+      <th>差距</th>
+    </tr>
+    <tr>
+      <td><strong>1. TBox 设计</strong></td>
+      <td>用 LLM Prompt 从准则/模板抽 50+ ObjectType</td>
+      <td>Claude 手写 JSON (52 → 107 个 OT)</td>
+      <td><span class="pill bad">从未跑过抽取 prompt</span></td>
+    </tr>
+    <tr>
+      <td><strong>2. L3 规则</strong></td>
+      <td>用 LLM 从事务所内规手册抽形式化规则</td>
+      <td>Claude 看 442-sheet 模板形态<strong>反推</strong> 7 条规则, 贴 source="无锡东林" 标签</td>
+      <td><span class="pill bad">没有内规手册可抽</span></td>
+    </tr>
+    <tr>
+      <td><strong>3. L0 客户数据</strong></td>
+      <td>openpyxl 真扫 TB/Aux/Voucher</td>
+      <td><span class="pill good">真做了</span> (openpyxl 跑 input_*.xlsx → 12,620 凭证)</td>
+      <td><span class="pill good">基本一致</span></td>
+    </tr>
+    <tr>
+      <td><strong>4. Agent 填稿</strong></td>
+      <td>Python fill_X 函数 + Provenance 追溯</td>
+      <td><span class="pill good">真做了</span> (1573 行 Python, 5 张底稿 4,250 cell)</td>
+      <td><span class="pill good">一致</span></td>
+    </tr>
+    <tr>
+      <td><strong>5. 异常+复核</strong></td>
+      <td>seed_anomalies 注入 9 条 Anomaly</td>
+      <td><span class="pill good">真做了</span></td>
+      <td><span class="pill good">一致</span></td>
+    </tr>
+  </table>
+
+  <h3>2.2 公开法规库怎么来的</h3>
+  <p>30 条 CSA/CAS/法律实例 (CSA 1141 / CAS 22 等)：</p>
+  <ul>
+    <li><strong>来源</strong>：Claude 训练数据"知道"的中注协 + 财政部官方编号</li>
+    <li><strong>抽取方式</strong>：Claude 直接列举写到 Python 字面量 (`seed_regulations.py`)</li>
+    <li><strong>是否抽自真实材料</strong>：❌ 没有读官方 PDF / 没有 LLM prompt</li>
+    <li><strong>引用次数</strong>：14 条 AuditRule 中有 12 条带 references_standards 链接 ✅</li>
+  </ul>
+</section>
+
+<!-- ═══════════ §3 6 大根本问题 ═══════════ -->
+<section>
+  <h2>§3 当前设计 + 抽取的 6 大根本问题</h2>
+
+  <div class="problem-card">
+    <h4><span class="num">1</span>算法知识没建模 — 全在 Python 代码里</h4>
+    <p><strong>典型例</strong>：FIFO 账龄方法 / 无凭证降级规则 / 直线法折旧 / 加权平均利率 / CSA 1221 四级梯度判定</p>
+    <p>客户问"账龄怎么算的"，目前只能回答：① Python 代码 1573 行 ② 696 个 cell 例子 ③ 口头解释。
+    没有结构化 "AuditMethod 实例" 让客户能 review。</p>
+    <p><strong>根因</strong>：设计 TBox 时只建了 <code>AuditRule</code>（IF/THEN 业务规则），
+    没建 <code>AuditMethod</code>（HOW 算法）。算法被错归为"实现细节"而非"审计知识"。</p>
+    <div class="fix-block">
+      <strong>修复</strong>：新建 OT <code>AuditMethod</code>，注入 10+ 算法实例（FIFO / 无凭证降级 / CSA 1221 梯度 / 直线折旧 / BANK_MAP 等），
+      每个含算法描述 + 形式化逻辑 + 适用条件 + 降级方案 + 引用准则 + 源代码位置 + 审计师 sign-off 状态。
+    </div>
+  </div>
+
+  <div class="problem-card">
+    <h4><span class="num">2</span>通用判定规则缺失 — 简化代理判定代替了真规则</h4>
+    <p><strong>典型例</strong>：A1 银行明细的 <code>is_restricted</code> 字段。</p>
+    <p><strong>当前判定</strong>：<code>category == "其他货币资金"</code> 一行 Python。</p>
+    <p><strong>真实判定</strong>：CAS 22 + CAS 30 列了<strong>受限资金 8 类情形</strong>
+    (保证金/司法冻结/法定专款/期限/合同约定/外汇管制/客户押金/其他法定限制)，<strong>当前覆盖度 1/8 = 12.5%</strong>。</p>
+    <p><strong>根因</strong>：抽取知识时只抽了"客户场景见到的"，没抽"准则要求该有的"。</p>
+    <div class="fix-block">
+      <strong>修复</strong>：把"应该抽什么"作为<strong>清单驱动</strong>，由准则倒推：
+      CAS 22 → 受限资金 8 类 / CSA 1311 → 函证 5 类异常 / CSA 1221 → 重要性 4 梯度 / 等等。
+      每个准则条款都对应一条或多条 AuditRule + AuditMethod。
+    </div>
+  </div>
+
+  <div class="problem-card">
+    <h4><span class="num">3</span>概念实例是孤儿 — 6 个 Assertion 实例零引用</h4>
+    <p>6 个审计认定实例 (存在/完整性/准确性/截止/权利义务/列报) <strong>在 DB 里存着，但没有任何 LinkInstance 引用它们</strong>，
+    Agent 跑稿时也<strong>从未引用过</strong>认定。</p>
+    <p>等价于发了 6 张身份证但任何场景都不需要出示 — 装饰性知识。</p>
+    <p><strong>根因</strong>：① TBox 设计时建了类型 + 实例，但<strong>没建具体 LinkInstance</strong>
+    ② <code>AuditArea.primary_assertions</code> 写成<strong>字符串数组</strong>而不是真 LinkInstance
+    ③ agent_fill.py 完全没引用 Assertion</p>
+    <div class="fix-block">
+      <strong>修复</strong>：① 字符串改 LinkInstance (~30 条) ② 14 条 AuditRule + AuditProcedure 加 <code>addresses_assertions</code>
+      ③ Agent 跑稿时每个 cell trace 加 <code>🎯 Assertion::xxx</code> ref → 客户能反向查询"Existence 认定被哪些程序覆盖"
+    </div>
+  </div>
+
+  <div class="problem-card">
+    <h4><span class="num">4</span>ActionType 是 ETL 动词 — 不是审计业务操作</h4>
+    <p>11 个 ActionType 中 <strong>8 个的 target_type_code = "*"</strong>(适用所有 OT)。
+    所以任意 OT 在管理页打开看到的"操作"都是同一组：Read/Map/Standardize/Reconcile/Explain/Generate/SignOff。</p>
+    <p>这是 ETL pipeline 视角，不是审计业务视角。真正应该有的是：
+    <code>SubmitForReview</code> / <code>SignOffByPartner</code> / <code>TriggerAdjustment</code> /
+    <code>SendConfirmation</code> / <code>EscalateAnomaly</code> 这类业务专属动作。</p>
+    <p><strong>根因</strong>：照搬 Palantir Foundry 的通用 ETL 动词清单，没针对审计场景做特化。</p>
+    <div class="fix-block">
+      <strong>修复</strong>：保留 11 个通用动词 + 新增 ~20 个审计业务动作 (CreateDraftPaper / SubmitForReview /
+      SignOffByPartner / TriggerAdjustment / EvaluateRule / EscalateAnomaly / SendConfirmation / 等)，
+      每个绑定具体 <code>target_type_code</code> + 严格 <code>parameters_schema</code>。
+    </div>
+  </div>
+
+  <div class="problem-card">
+    <h4><span class="num">5</span>L3 "东林内规" 是 AI 推测，不是真实抽取</h4>
+    <p>7 条 source="无锡东林" 的规则 (AR-RULE-001 / GC-INDICATOR-001 等) 是 Claude
+    看 442-sheet 模板有"重分类"/"担保识别"等列后<strong>反推</strong>出来的，
+    <strong>不是从东林内规手册抽出来的</strong>。</p>
+    <p><strong>根因</strong>：没有真实的内规手册可抽，但又要让 demo "看起来完整"，所以贴了 "东林" 标签。</p>
+    <div class="fix-block">
+      <strong>修复</strong>：① demo 时<strong>诚实标 AI 推测</strong>（review_status="AI 推测，待审计师 review"）
+      ② 让审计师逐条 review 7 条规则的阈值和触发条件 ③ Review 后规则才能升级为 <code>review_status="审计师签字"</code>
+    </div>
+  </div>
+
+  <div class="problem-card">
+    <h4><span class="num">6</span>TBox/ABox 设计时重数据轻流程 — 全局问题</h4>
+    <p>上面 5 个问题的<strong>共同根因</strong>：
+    凡是"在 Python 里能 30 行写完的东西"我都不当作本体知识，
+    只当作代码实现。
+    所以算法（FIFO）/ 通用判定（受限资金）/ 业务动作（提交复核）/ 概念链接（认定）都<strong>被错误归类为实现细节</strong>。</p>
+    <div class="fix-block">
+      <strong>修复</strong>：重新设计 6 大本体模块（见 §4），把<strong>程序性知识</strong>（HOW）和
+      <strong>声明性知识</strong>（WHAT）<strong>都建模为一等公民</strong>。
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §4 理想设计 ═══════════ -->
+<section>
+  <h2>§4 更好的本体知识库应该长什么样（v6 重新设计）</h2>
+
+  <h3>4.1 6 大模块（一等公民）</h3>
+
+  <div class="module-grid">
+    <div class="module-card" style="border-color: var(--L1)">
+      <h4 style="color: var(--L1)">① 概念层 (Concept Layer)</h4>
+      <p><strong>是什么</strong>：当前的 107 OT + 4 层标签 (L1/L2/L3/L0)</p>
+      <p><strong>新增</strong>：每个 OT 强制 <code>_layer</code> + <code>_review_status</code>（待 review / 审计师签字 / 已废弃）</p>
+      <p><strong>包含</strong>：客户类/项目类/数据类/审计区域/认定/风险/程序/证据/底稿/报告/法规/<strong>方法</strong>/<strong>动作</strong></p>
+    </div>
+
+    <div class="module-card" style="border-color: var(--L2)">
+      <h4 style="color: var(--L2)">② 业务规则层 (Rule Layer) <span class="pill new">已有</span></h4>
+      <p><strong>是什么</strong>：14 条 AuditRule + formal_expression</p>
+      <p><strong>新增</strong>：每条规则强制 <code>references_standards</code> 链接到 §⑥ 法规库 +
+      <code>addresses_assertions</code> 链接到认定网络</p>
+      <p><strong>例</strong>：AR-RULE-001 → [CAS 22 第17条, CAS 30] + addresses=[Completeness, Presentation]</p>
+    </div>
+
+    <div class="module-card" style="border-color: #be185d">
+      <h4 style="color: #be185d">③ 算法方法层 (Method Layer) <span class="pill new">新增</span></h4>
+      <p><strong>是什么</strong>：新 OT <code>AuditMethod</code> + 10+ 算法实例</p>
+      <p><strong>覆盖</strong>：FIFO 账龄 / 无凭证降级 / CSA 1221 四级梯度 / 直线折旧 / BANK_MAP / 加权平均利率 等</p>
+      <p><strong>每个实例</strong>：算法描述 + 形式化逻辑 + 输入/输出 + 适用条件 + 降级方案 + 引用准则 + 源代码位置 + 审计师签字状态</p>
+    </div>
+
+    <div class="module-card" style="border-color: var(--L4)">
+      <h4 style="color: var(--L4)">④ 认定网络 (Assertion Mesh) <span class="pill warn">现状残缺</span></h4>
+      <p><strong>是什么</strong>：6 认定 + LinkInstance 真正连接到 AuditArea/Rule/Procedure</p>
+      <p><strong>核心 link</strong>：</p>
+      <ul style="font-size:11.5px">
+        <li>AreaAddressesAssertion (区域 → 认定)</li>
+        <li>RuleAddressesAssertion (规则 → 认定)</li>
+        <li>ProcedureAddressesAssertion (程序 → 认定)</li>
+        <li>EvidenceSupportsAssertion (证据 → 认定)</li>
+      </ul>
+      <p>客户能反查："Existence 认定被哪些程序/证据覆盖"</p>
+    </div>
+
+    <div class="module-card" style="border-color: var(--warn)">
+      <h4 style="color: var(--warn)">⑤ 业务动作目录 (Action Catalog) <span class="pill new">扩展</span></h4>
+      <p><strong>是什么</strong>：11 个 ETL 动词 + ~20 个审计业务动作</p>
+      <p><strong>新增业务动作</strong>：CreateDraftPaper / SubmitForReview / SignOffByPartner /
+      TriggerAdjustment / EvaluateRule / SendConfirmation / EscalateAnomaly / ProposeReclassification /
+      ApproveMateriality / DocumentExpectation / 等</p>
+      <p><strong>每个</strong>：具体 target_type_code + parameters_schema + triggers_links</p>
+    </div>
+
+    <div class="module-card" style="border-color: var(--L0)">
+      <h4 style="color: var(--L0)">⑥ 法规库 (Regulation Library) <span class="pill new">已有</span></h4>
+      <p><strong>是什么</strong>：25 CSA + 12 CAS + 5 法律 (~30 条)</p>
+      <p><strong>新增</strong>：每条法规带 <code>full_text_url</code> + <code>article_text</code> +
+      被哪些 Rule/Method 引用 (反向查询)</p>
+      <p>客户能查："CSA 1141 在我们项目里用了几次"</p>
+    </div>
+  </div>
+
+  <h3>4.2 v6 数据规模目标</h3>
+  <table>
+    <tr><th>模块</th><th>当前</th><th>v6 目标</th><th>增量</th></tr>
+    <tr><td>① ObjectType</td><td>107</td><td>~115 (+8 = AuditMethod + 业务 OT 等)</td><td>+8</td></tr>
+    <tr><td>② AuditRule</td><td>12</td><td>20+ (补受限资金 / 收入跨期 / 等)</td><td>+8</td></tr>
+    <tr><td>③ AuditMethod <span class="pill new">新</span></td><td>0</td><td>10+</td><td>+10</td></tr>
+    <tr><td>④ Assertion LinkInstance</td><td>0</td><td>~50</td><td>+50</td></tr>
+    <tr><td>⑤ ActionType</td><td>11</td><td>~30 (+20 业务动作)</td><td>+20</td></tr>
+    <tr><td>⑥ 法规库实例</td><td>30</td><td>50+ (扩到 CSA 全集 + CAS 41 个准则)</td><td>+20</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════ §5 理想抽取流程 ═══════════ -->
+<section>
+  <h2>§5 更好的知识抽取流程（7 阶段，可重跑）</h2>
+
+  <div class="pipeline">
+    <div class="step">
+      <span class="num">0</span><span class="name">准则文档抽取</span>
+      <div class="desc">PDF → AccountingStandard + LawArticle</div>
+    </div>
+    <div class="step">
+      <span class="num">1</span><span class="name">内规手册抽取</span>
+      <div class="desc">Word → AuditRule + 形式化</div>
+    </div>
+    <div class="step">
+      <span class="num">2</span><span class="name">算法/方法抽取</span>
+      <div class="desc">面谈 → AuditMethod</div>
+    </div>
+    <div class="step">
+      <span class="num">3</span><span class="name">业务动作设计</span>
+      <div class="desc">流程图 → ActionType</div>
+    </div>
+    <div class="step">
+      <span class="num">4</span><span class="name">模板结构抽取</span>
+      <div class="desc">xlsm → PaperTemplate</div>
+    </div>
+    <div class="step">
+      <span class="num">5</span><span class="name">客户数据 ETL</span>
+      <div class="desc">xlsx/PDF → 实例</div>
+    </div>
+    <div class="step">
+      <span class="num">6</span><span class="name">Agent 填稿 + 审计师 review</span>
+      <div class="desc">业务动作 + Provenance + L4 沉淀</div>
+    </div>
+  </div>
+
+  <h3>5.1 每阶段的输入/工具/输出</h3>
+  <table>
+    <tr>
+      <th style="width:6%">阶段</th>
+      <th style="width:22%">名称</th>
+      <th style="width:22%">输入</th>
+      <th style="width:18%">工具/方法</th>
+      <th>输出</th>
+    </tr>
+    <tr>
+      <td>0</td><td>准则文档抽取</td>
+      <td>中注协 CSA 全集 PDF + 财政部 CAS 全集</td>
+      <td>pdftotext + LLM Prompt (结构化抽取)</td>
+      <td>50+ AccountingStandard 实例 (含全文段落 + URL)</td>
+    </tr>
+    <tr>
+      <td>1</td><td>内规手册抽取</td>
+      <td>事务所内规 Word/PDF + 项目经理面谈录音</td>
+      <td>LLM Prompt (规则形式化) + 审计师 review</td>
+      <td>10-20 AuditRule (含 formal_expression + 来源 + 阈值)</td>
+    </tr>
+    <tr>
+      <td>2</td><td>算法/方法抽取</td>
+      <td>审计师工作底稿样例 + Excel 公式 + 决策树文档</td>
+      <td>LLM Prompt (算法形式化) + 现场演示录像</td>
+      <td>10-15 AuditMethod (FIFO/折旧/利率/受限判定等)</td>
+    </tr>
+    <tr>
+      <td>3</td><td>业务动作设计</td>
+      <td>事务所工作流图 + 操作手册 + 实际 demo 项目</td>
+      <td>事件风暴 + UML 用例图</td>
+      <td>20 业务 ActionType (绑定具体 OT + parameters)</td>
+    </tr>
+    <tr>
+      <td>4</td><td>模板结构抽取</td>
+      <td>该所 .xlsm 模板</td>
+      <td>extract_template_layout.py (openpyxl)</td>
+      <td>~50 sheet 的真实表头 + 起始行 + 公式</td>
+    </tr>
+    <tr>
+      <td>5</td><td>客户数据 ETL</td>
+      <td>客户 TB/Aux/Voucher.xlsx + 年报 PDF</td>
+      <td>build_instances.py (openpyxl + LLM PDF 抽)</td>
+      <td>~150 ObjectInstance (客户事实)</td>
+    </tr>
+    <tr>
+      <td>6</td><td>Agent + Review</td>
+      <td>上面所有阶段产物</td>
+      <td>fill_X.py + ProvenanceDrawer + LearningInbox</td>
+      <td>填好的底稿 + cell trace + Anomaly + L4 候选规则</td>
+    </tr>
+  </table>
+
+  <h3>5.2 关键 LLM Prompt 模板（可直接复用）</h3>
+
+<pre>
+<span class="c"># Phase 1 — 内规手册形式化 Prompt</span>
+<span class="k">你是审计准则形式化专家。下面这段文字是事务所内规手册的某一节。</span>
+
+【原文】{rule_paragraph}
+
+请输出 JSON:
+{
+  "code": "&lt;规则代号&gt;",
+  "name": "&lt;简短名&gt;",
+  "category": "&lt;应收应付 | 货币资金 | ...&gt;",
+  "expression": "&lt;IF...THEN... 人话&gt;",
+  "narrative": "&lt;详细业务说明&gt;",
+  "formal_expression": "&lt;Python 可 eval 的布尔表达式&gt;",
+  "severity": "&lt;high|medium|low&gt;",
+  "source": "本所",
+  "issuer": "&lt;本所名&gt;",
+  "effective": "YYYY-MM",
+  "references_standards": ["&lt;引用的 CSA/CAS 准则代号&gt;"],
+  "addresses_assertions": ["&lt;Existence|Completeness|Accuracy|Cutoff|...&gt;"],
+  "review_status": "AI 抽取候选, 待审计师 review"
+}
+
+【关键】formal_expression 必须是单行布尔表达式，引用的字段必须在
+ObjectType.properties_schema 里定义过。</pre>
+
+<pre>
+<span class="c"># Phase 2 — 算法形式化 Prompt</span>
+<span class="k">你是审计算法工程师。下面是审计师讲解的某个计算方法。</span>
+
+【面谈记录】{interview_transcript}
+【相关 Excel 公式】{excel_formulas}
+
+请输出 AuditMethod 实例 JSON:
+{
+  "code": "METHOD-XXX-001",
+  "name": "&lt;方法名&gt;",
+  "category": "&lt;账龄计算|折旧重算|利率重算|重要性梯度|关联方识别|降级处理&gt;",
+  "algorithm_description": "&lt;1-3 段自然语言描述算法步骤&gt;",
+  "formal_logic": "&lt;伪代码或 Python-like 公式&gt;",
+  "inputs": "&lt;输入参数列表&gt;",
+  "outputs": "&lt;输出格式&gt;",
+  "applicability": "&lt;什么情况下使用&gt;",
+  "fallback_method": "&lt;遇到边界情况的降级方法代号&gt;",
+  "references_standards": ["&lt;引用的准则&gt;"],
+  "firm_choice_rationale": "&lt;事务所为什么选这个算法而不是别的&gt;",
+  "review_severity": "&lt;关键|重要|辅助&gt;"
+}</pre>
+</section>
+
+<!-- ═══════════ §6 审计所材料清单 ═══════════ -->
+<section>
+  <h2>§6 新审计所对接需要提供的材料清单</h2>
+
+  <div class="callout info">
+    <strong>📋 给新审计所合伙人的清单</strong>
+    <p>要建一套<strong>真正属于贵所</strong>的本体知识库，请提供下列材料。
+    标 <span class="pill bad">必须</span> 的不给会严重影响抽取质量；标 <span class="pill warn">推荐</span> 的不给可以但效果打折；
+    标 <span class="pill good">可选</span> 的有则更好。</p>
+  </div>
+
+  <table>
+    <tr>
+      <th style="width:8%">阶段</th>
+      <th style="width:14%">材料</th>
+      <th style="width:10%">形式</th>
+      <th style="width:10%">必要性</th>
+      <th>用途 + 没有的影响</th>
+    </tr>
+
+    <!-- Phase 0 -->
+    <tr>
+      <td>0</td>
+      <td><strong>使用的准则版本声明</strong></td>
+      <td>简单文档/表格</td>
+      <td><span class="pill bad">必须</span></td>
+      <td>告诉我们用的是 CSA 哪一版 (2010/2019/2023) + 是否新旧准则双轨。<br>
+          没有 → 法规库可能用错版本</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>已订阅的官方 PDF / 链接</td>
+      <td>PDF/URL</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>抽 article_text 全文。<br>没有 → 法规只有编号 + 标题没有原文</td>
+    </tr>
+
+    <!-- Phase 1 -->
+    <tr>
+      <td>1</td>
+      <td><strong>事务所内规手册</strong></td>
+      <td>Word/PDF</td>
+      <td><span class="pill bad">必须</span></td>
+      <td>抽 AuditRule 的来源。<br>
+          没有 → 沿用 AI 推测的 L3 规则（当前问题）</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>项目经理面谈记录</td>
+      <td>录音 / 录像 / 整理后文档</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>抽内规手册没写的<strong>实操默契</strong>（如"小额客户怎么处理"）。<br>
+          没有 → 规则缺现场细节</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>历史 Z6 调整分录档</td>
+      <td>Excel</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>反推真实触发的阈值。<br>没有 → formal_expression 阈值靠猜</td>
+    </tr>
+
+    <!-- Phase 2 -->
+    <tr>
+      <td>2</td>
+      <td><strong>账龄/折旧/利率等算法说明</strong></td>
+      <td>Excel 公式 / 决策树文档 / 内部 SOP</td>
+      <td><span class="pill bad">必须</span></td>
+      <td>抽 AuditMethod 实例。<br>
+          没有 → 算法继续硬编码在 Python 里（当前问题）</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>现场审计师演示录像</td>
+      <td>录屏 30-60 分钟</td>
+      <td><span class="pill good">可选</span></td>
+      <td>抽业务工作流的真实顺序 + 决策点</td>
+    </tr>
+
+    <!-- Phase 3 -->
+    <tr>
+      <td>3</td>
+      <td><strong>底稿工作流图</strong></td>
+      <td>流程图 / Visio / 操作手册</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>设计业务 ActionType。<br>没有 → 沿用 11 个 ETL 动词</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>复核签字流程规定</td>
+      <td>制度文件</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>建 ReviewLevel + SignOff 动作</td>
+    </tr>
+
+    <!-- Phase 4 -->
+    <tr>
+      <td>4</td>
+      <td><strong>该所工作底稿模板</strong></td>
+      <td>.xlsm / .xlsx</td>
+      <td><span class="pill bad">必须</span></td>
+      <td>extract_template_layout.py 抽 sheet 表头 + 公式。<br>
+          没有 → 无法对齐到真实模板</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>模板字段定义书</td>
+      <td>Excel/Word</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>每个 cell 字段的业务含义。<br>没有 → 列名靠模板表头反推</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>VBA 源码（如有）</td>
+      <td>.xlsm 已含</td>
+      <td><span class="pill good">可选</span></td>
+      <td>抽 FillRule 自动化公式</td>
+    </tr>
+
+    <!-- Phase 5 -->
+    <tr>
+      <td>5</td>
+      <td><strong>1-3 个 demo 客户数据</strong></td>
+      <td>TB/Aux/Voucher.xlsx + 年报 PDF</td>
+      <td><span class="pill bad">必须</span></td>
+      <td>跑 Agent 填稿 demo + 验证规则。<br>
+          没有 → 没法演示</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>已完成的同类项目 demo</td>
+      <td>填好的 .xlsm</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>对比 Agent 填的 vs 审计师填的，识别差异</td>
+    </tr>
+
+    <!-- Phase 6 -->
+    <tr>
+      <td>6</td>
+      <td><strong>审计师 review 时间</strong></td>
+      <td>2 名审计师 × 2 周 / 每周 4 小时</td>
+      <td><span class="pill bad">必须</span></td>
+      <td>逐条 review AI 抽取的规则 + 算法 + 业务动作。<br>
+          没有 → 规则永远停留在 "AI 推测候选"</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>每月 L4 经验沉淀</td>
+      <td>审计师改写 Agent 结果时的反馈</td>
+      <td><span class="pill warn">推荐</span></td>
+      <td>累积 ≥ 3 次同类改写 → 自动升级为新规则候选</td>
+    </tr>
+  </table>
+
+  <h3>6.1 最小材料包（如果只能给一份）</h3>
+  <div class="callout">
+    <strong>「最小可抽取」材料组合（不给以下材料，抽取质量必然差）</strong>
+    <ol>
+      <li><strong>事务所内规手册</strong>（Word/PDF）— 抽 AuditRule</li>
+      <li><strong>该所工作底稿模板</strong>（.xlsm）— 对齐到真实表头</li>
+      <li><strong>1 个 demo 客户数据</strong>（TB/Aux/Voucher + 年报）— 跑 Agent</li>
+      <li><strong>2 个审计师面谈</strong>（项目经理 + 合伙人，各 2 小时）— 抽算法/动作</li>
+      <li><strong>项目经理 review 4 小时</strong>（逐条规则确认）— 把规则从 AI 推测升级到事务所认可</li>
+    </ol>
+    <p>给齐这 5 项 → <strong>4-6 周</strong>能给客户拿出可上线 demo。</p>
+  </div>
+</section>
+
+<!-- ═══════════ §7 给侯总的话 ═══════════ -->
+<section>
+  <h2>§7 给侯总（或新所合伙人）的诚实话术</h2>
+
+  <div class="callout success">
+    <p>"侯老师，我得诚实跟您说，<strong>当前 demo 里的本体知识库其实有 6 个根本问题</strong>：
+    <br><br>
+    ① 算法知识（FIFO 账龄等）<strong>没建模成本体</strong>，全在 Python 代码里；<br>
+    ② 通用判定规则有缺失（如受限资金 8 类情形只覆盖 1 类）；<br>
+    ③ 6 个审计认定实例<strong>零引用</strong> — 装饰性数据；<br>
+    ④ 11 个 ActionType 是 ETL 动词不是审计业务动作；<br>
+    ⑤ 7 条所谓"东林内规"其实是<strong>我从您模板反推</strong>的，<strong>没有抽自您所的内规手册</strong>；<br>
+    ⑥ 设计时<strong>重数据轻流程</strong>，凡是能 30 行 Python 写完的都没建本体。
+    <br><br>
+    <strong>修复方案</strong>是把本体重新组织成 6 大模块（概念/规则/算法/认定/动作/法规），每个模块都建一等公民实例。
+    需要您提供 5 份材料（清单见 §6.1）+ 审计师投入 4 小时 review，<strong>4-6 周</strong>能拿到真正属于贵所的本体知识库。
+    <br><br>
+    <strong>关键</strong>：当前 demo 仍然能跑能演示，问题是<strong>知识深度不够</strong>。
+    真正给客户用之前，必须做这一轮升级。"</p>
+  </div>
+
+  <hr>
+
+  <h3>7.1 现在 demo 的 3 个真正价值（不要被问题掩盖）</h3>
+  <ol>
+    <li><strong>4,250 cell 级别追溯</strong>是真实可用的 — 客户问任何数字都能查到来源</li>
+    <li><strong>9 条结构化异常 + 2 笔自动调整分录</strong>是真实跑出来的</li>
+    <li><strong>真实 .xlsm 导出</strong>(27MB 保留 442 sheet + VBA) — 审计师能直接用</li>
+  </ol>
+  <p>这三项是 v6 升级时<strong>不应该被丢掉</strong>的核心能力。</p>
+</section>
+
+<hr>
+
+<footer>
+  生成于 2026-05-25 · 本体知识库现状评估 + v6 重新设计<br>
+  代码: <code>https://github.com/ITSophiaXu/Audit-demo</code> ·
+  本文件: <code>backend/data/donglin/ontology_assessment_and_redesign.html</code>
+</footer>
+
+</main>
+</body>
+</html>

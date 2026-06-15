@@ -1,0 +1,681 @@
+[
+  [
+    "EngagementForEntity",
+    "项目 → 被审计单位",
+    "Engagement",
+    "AuditedEntity",
+    "one"
+  ],
+  [
+    "EngagementHasType",
+    "项目 → 审计类型",
+    "Engagement",
+    "AuditType",
+    "one"
+  ],
+  [
+    "EngagementForPeriod",
+    "项目 → 期间",
+    "Engagement",
+    "AuditPeriod",
+    "one"
+  ],
+  [
+    "EngagementByEngager",
+    "项目 → 委托方",
+    "Engagement",
+    "Engager",
+    "one"
+  ],
+  [
+    "EngagementHasTeam",
+    "项目 → 项目团队",
+    "Engagement",
+    "ProjectTeam",
+    "one"
+  ],
+  [
+    "EngagementHasTimeline",
+    "项目 → 时间线节点",
+    "Engagement",
+    "ProjectTimeline",
+    "many"
+  ],
+  [
+    "EngagementHasMateriality",
+    "项目 → 重要性",
+    "Engagement",
+    "MaterialityLevel",
+    "one"
+  ],
+  [
+    "EngagementHasReport",
+    "项目 → 报告",
+    "Engagement",
+    "AuditReport",
+    "one"
+  ],
+  [
+    "EngagementHasPaper",
+    "项目 → 底稿",
+    "Engagement",
+    "WorkingPaper",
+    "many"
+  ],
+  [
+    "EngagementHasAdjustment",
+    "项目 → 调整分录",
+    "Engagement",
+    "AuditAdjustment",
+    "many"
+  ],
+  [
+    "TeamHasAuditor",
+    "项目团队 → 审计师",
+    "ProjectTeam",
+    "Auditor",
+    "many"
+  ],
+  [
+    "TeamHasReviewLevel",
+    "项目团队 → 复核层级",
+    "ProjectTeam",
+    "ReviewLevel",
+    "many"
+  ],
+  [
+    "EntityBelongsToGroup",
+    "被审计单位 → 集团",
+    "AuditedEntity",
+    "ClientGroup",
+    "one"
+  ],
+  [
+    "EntityHasSubsidiary",
+    "被审计单位 → 子公司",
+    "AuditedEntity",
+    "Subsidiary",
+    "many"
+  ],
+  [
+    "EntityHasRelatedParty",
+    "被审计单位 → 关联方",
+    "AuditedEntity",
+    "RelatedParty",
+    "many"
+  ],
+  [
+    "EntityHasContact",
+    "被审计单位 → 联系人",
+    "AuditedEntity",
+    "Contact",
+    "many"
+  ],
+  [
+    "EntityHasAccountingPolicy",
+    "被审计单位 → 会计政策",
+    "AuditedEntity",
+    "AccountingPolicy",
+    "many"
+  ],
+  [
+    "EngagementHasGuarantee",
+    "项目 → 关联担保",
+    "Engagement",
+    "RelatedPartyGuarantee",
+    "many"
+  ],
+  [
+    "GuaranteeByParty",
+    "担保 ← 担保人",
+    "RelatedPartyGuarantee",
+    "RelatedParty",
+    "many"
+  ],
+  [
+    "EntityHasTrialBalance",
+    "被审计单位 → 科目余额表",
+    "AuditedEntity",
+    "TrialBalance",
+    "many"
+  ],
+  [
+    "EntityHasGeneralLedger",
+    "被审计单位 → 总账",
+    "AuditedEntity",
+    "GeneralLedger",
+    "many"
+  ],
+  [
+    "EntityHasSubLedger",
+    "被审计单位 → 明细账",
+    "AuditedEntity",
+    "SubLedger",
+    "many"
+  ],
+  [
+    "EntityHasFinancialStatement",
+    "被审计单位 → 财报",
+    "AuditedEntity",
+    "FinancialStatement",
+    "many"
+  ],
+  [
+    "EntityHasBankStatement",
+    "被审计单位 → 银行流水",
+    "AuditedEntity",
+    "BankStatement",
+    "many"
+  ],
+  [
+    "EntityHasVoucher",
+    "被审计单位 → 凭证",
+    "AuditedEntity",
+    "Voucher",
+    "many"
+  ],
+  [
+    "EntityHasContract",
+    "被审计单位 → 合同",
+    "AuditedEntity",
+    "Contract",
+    "many"
+  ],
+  [
+    "EntityHasInvoice",
+    "被审计单位 → 发票",
+    "AuditedEntity",
+    "Invoice",
+    "many"
+  ],
+  [
+    "EntityHasCountSheet",
+    "被审计单位 → 盘点表",
+    "AuditedEntity",
+    "CountSheet",
+    "many"
+  ],
+  [
+    "TrialBalanceHasAccount",
+    "科目余额表 → 科目",
+    "TrialBalance",
+    "Account",
+    "many"
+  ],
+  [
+    "SubLedgerForAccount",
+    "明细账 → 科目",
+    "SubLedger",
+    "Account",
+    "one"
+  ],
+  [
+    "VoucherTouchesAccount",
+    "凭证 → 科目",
+    "Voucher",
+    "Account",
+    "many"
+  ],
+  [
+    "InvoiceForVoucher",
+    "发票 → 凭证",
+    "Invoice",
+    "Voucher",
+    "one"
+  ],
+  [
+    "ContractForVoucher",
+    "合同 → 凭证",
+    "Contract",
+    "Voucher",
+    "many"
+  ],
+  [
+    "AccountInArea",
+    "科目 ∈ 审计区域",
+    "Account",
+    "AuditArea",
+    "one"
+  ],
+  [
+    "PaperUsesTemplate",
+    "底稿 → 模板",
+    "WorkingPaper",
+    "PaperTemplate",
+    "one"
+  ],
+  [
+    "PaperForArea",
+    "底稿 → 审计区域",
+    "WorkingPaper",
+    "AuditArea",
+    "one"
+  ],
+  [
+    "PaperConcernsAccount",
+    "底稿 → 涉及科目",
+    "WorkingPaper",
+    "Account",
+    "many"
+  ],
+  [
+    "PaperHasProcedure",
+    "底稿 → 程序",
+    "WorkingPaper",
+    "Sampling",
+    "many"
+  ],
+  [
+    "PaperHasConfirmation",
+    "底稿 → 函证程序",
+    "WorkingPaper",
+    "Confirmation",
+    "many"
+  ],
+  [
+    "PaperHasAnalytical",
+    "底稿 → 分析程序",
+    "WorkingPaper",
+    "AnalyticalProcedure",
+    "many"
+  ],
+  [
+    "PaperHasDetailTest",
+    "底稿 → 细节测试",
+    "WorkingPaper",
+    "DetailTest",
+    "many"
+  ],
+  [
+    "PaperHasCutoffTest",
+    "底稿 → 截止测试",
+    "WorkingPaper",
+    "CutoffTest",
+    "many"
+  ],
+  [
+    "PaperHasRecomputation",
+    "底稿 → 重新计算",
+    "WorkingPaper",
+    "Recomputation",
+    "many"
+  ],
+  [
+    "PaperHasEvidence",
+    "底稿 → 证据",
+    "WorkingPaper",
+    "Evidence",
+    "many"
+  ],
+  [
+    "PaperHasAdjustment",
+    "底稿 → 调整分录",
+    "WorkingPaper",
+    "AuditAdjustment",
+    "many"
+  ],
+  [
+    "PaperHasAbnormalTxn",
+    "底稿 → 异常交易",
+    "WorkingPaper",
+    "AbnormalTransaction",
+    "many"
+  ],
+  [
+    "PaperCrossRef",
+    "底稿 ↔ 底稿 (交叉引用)",
+    "WorkingPaper",
+    "WorkingPaper",
+    "many"
+  ],
+  [
+    "PaperReviewedAt",
+    "底稿 → 复核层级",
+    "WorkingPaper",
+    "ReviewLevel",
+    "many"
+  ],
+  [
+    "ProcedureAddressesAssertion",
+    "程序 → 应对认定",
+    "Sampling",
+    "Assertion",
+    "many"
+  ],
+  [
+    "ConfirmationAddressesAssertion",
+    "函证 → 应对认定",
+    "Confirmation",
+    "Assertion",
+    "many"
+  ],
+  [
+    "AnalyticalAddressesAssertion",
+    "分析程序 → 应对认定",
+    "AnalyticalProcedure",
+    "Assertion",
+    "many"
+  ],
+  [
+    "DetailTestAddressesAssertion",
+    "细节测试 → 应对认定",
+    "DetailTest",
+    "Assertion",
+    "many"
+  ],
+  [
+    "CutoffTestAddressesAssertion",
+    "截止测试 → 应对认定",
+    "CutoffTest",
+    "Assertion",
+    "many"
+  ],
+  [
+    "ConfirmationHasLetter",
+    "函证程序 → 函证文书",
+    "Confirmation",
+    "ConfirmationLetter",
+    "many"
+  ],
+  [
+    "SamplingProducesEvidence",
+    "抽样 → 证据",
+    "Sampling",
+    "Evidence",
+    "many"
+  ],
+  [
+    "RiskAffectsArea",
+    "风险 → 影响的审计区域",
+    "RiskOfMaterialMisstatement",
+    "AuditArea",
+    "many"
+  ],
+  [
+    "RiskAffectsAssertion",
+    "风险 → 影响的认定",
+    "RiskOfMaterialMisstatement",
+    "Assertion",
+    "many"
+  ],
+  [
+    "FraudRiskAffectsArea",
+    "舞弊风险 → 影响区域",
+    "FraudRisk",
+    "AuditArea",
+    "many"
+  ],
+  [
+    "RPRiskInvolvesParty",
+    "关联方风险 → 关联方",
+    "RelatedPartyRisk",
+    "RelatedParty",
+    "one"
+  ],
+  [
+    "AnomalyOnPaper",
+    "异常 → 底稿",
+    "AbnormalTransaction",
+    "WorkingPaper",
+    "one"
+  ],
+  [
+    "AnomalyForAccount",
+    "异常 → 科目",
+    "AbnormalTransaction",
+    "Account",
+    "one"
+  ],
+  [
+    "AnomalyTriggeredByRule",
+    "异常 → 触发规则",
+    "AbnormalTransaction",
+    "AuditRule",
+    "one"
+  ],
+  [
+    "AdjustmentDebitAccount",
+    "调整借方 → 科目",
+    "AuditAdjustment",
+    "Account",
+    "many"
+  ],
+  [
+    "AdjustmentCreditAccount",
+    "调整贷方 → 科目",
+    "AuditAdjustment",
+    "Account",
+    "many"
+  ],
+  [
+    "AdjustmentTriggeredByRule",
+    "调整 → 触发规则",
+    "AuditAdjustment",
+    "AuditRule",
+    "one"
+  ],
+  [
+    "ReportHasOpinion",
+    "报告 → 意见段",
+    "AuditReport",
+    "OpinionParagraph",
+    "many"
+  ],
+  [
+    "ReportHasExplanatory",
+    "报告 → 说明段",
+    "AuditReport",
+    "ExplanatoryParagraph",
+    "many"
+  ],
+  [
+    "ReportHasDisclosure",
+    "报告 → 附注披露",
+    "AuditReport",
+    "DisclosureNote",
+    "many"
+  ],
+  [
+    "ReportHasFinding",
+    "报告 → 专项发现",
+    "AuditReport",
+    "SpecialFinding",
+    "many"
+  ],
+  [
+    "ReportHasRecommendation",
+    "报告 → 建议",
+    "AuditReport",
+    "Recommendation",
+    "many"
+  ],
+  [
+    "ReportHasRemediation",
+    "报告 → 整改要求",
+    "AuditReport",
+    "RemediationRequirement",
+    "many"
+  ],
+  [
+    "EvidenceSupportsConclusion",
+    "证据 → 支持底稿结论",
+    "Evidence",
+    "WorkingPaper",
+    "many"
+  ],
+  [
+    "EvidenceForFinding",
+    "证据 → 支持专项发现",
+    "Evidence",
+    "SpecialFinding",
+    "many"
+  ],
+  [
+    "EngagementHasClient",
+    "EngagementHasClient",
+    "Engagement",
+    "Client",
+    "1:N"
+  ],
+  [
+    "PaperAppliesRule",
+    "PaperAppliesRule",
+    "WorkingPaper",
+    "AuditRule",
+    "1:N"
+  ],
+  [
+    "AccountInTrialBalance",
+    "AccountInTrialBalance",
+    "Account",
+    "TrialBalance",
+    "1:N"
+  ],
+  [
+    "CaseForClient",
+    "CaseForClient",
+    "SpecialAuditCase",
+    "Client",
+    "1:N"
+  ],
+  [
+    "CaseHasProcedure",
+    "CaseHasProcedure",
+    "SpecialAuditCase",
+    "AuditProcedure",
+    "1:N"
+  ],
+  [
+    "CaseAppliesRule",
+    "CaseAppliesRule",
+    "SpecialAuditCase",
+    "AuditRule",
+    "1:N"
+  ],
+  [
+    "v3_adjustsAccount",
+    "v3_adjustsAccount",
+    "AuditAdjustingEntry",
+    "Account",
+    "1:N"
+  ],
+  [
+    "v3_appliesToWorkpaper",
+    "v3_appliesToWorkpaper",
+    "FillRule",
+    "PaperTemplate",
+    "1:N"
+  ],
+  [
+    "v3_coversAccount",
+    "v3_coversAccount",
+    "PaperTemplate",
+    "Account",
+    "1:N"
+  ],
+  [
+    "v3_dependsOn",
+    "v3_dependsOn",
+    "AggregationSheet",
+    "DetailSheet",
+    "1:N"
+  ],
+  [
+    "v3_feedsBack",
+    "v3_feedsBack",
+    "AggregationSheet",
+    "DetailSheet",
+    "1:N"
+  ],
+  [
+    "v3_feedsIntoLine",
+    "v3_feedsIntoLine",
+    "SummarySheet",
+    "ReportLineItem",
+    "1:N"
+  ],
+  [
+    "v3_hasClient",
+    "v3_hasClient",
+    "Engagement",
+    "Client",
+    "1:N"
+  ],
+  [
+    "v3_inputField",
+    "v3_inputField",
+    "FillRule",
+    "WorkpaperField",
+    "1:N"
+  ],
+  [
+    "v3_outputField",
+    "v3_outputField",
+    "FillRule",
+    "WorkpaperField",
+    "1:N"
+  ],
+  [
+    "v3_rollsUpTo",
+    "v3_rollsUpTo",
+    "DetailSheet",
+    "SummarySheet",
+    "1:N"
+  ],
+  [
+    "v4_belongsToGroup",
+    "v4_belongsToGroup",
+    "Client",
+    "Group",
+    "1:N"
+  ],
+  [
+    "v4_hasMember",
+    "v4_hasMember",
+    "Group",
+    "Client",
+    "1:N"
+  ],
+  [
+    "v4_testsAssertion",
+    "v4_testsAssertion",
+    "AuditProcedure",
+    "AuditAssertion",
+    "1:N"
+  ],
+  [
+    "v4_hasPreparer",
+    "v4_hasPreparer",
+    "WorkingPaper",
+    "Person",
+    "1:N"
+  ],
+  [
+    "v4_hasReviewer",
+    "v4_hasReviewer",
+    "WorkingPaper",
+    "Person",
+    "1:N"
+  ],
+  [
+    "v4_hasPartner",
+    "v4_hasPartner",
+    "Engagement",
+    "Person",
+    "1:N"
+  ],
+  [
+    "v4_hasContact",
+    "v4_hasContact",
+    "Client",
+    "Person",
+    "1:N"
+  ],
+  [
+    "v4_hasRole",
+    "v4_hasRole",
+    "Person",
+    "AuditorRole",
+    "1:N"
+  ]
+]

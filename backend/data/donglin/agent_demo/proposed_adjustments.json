@@ -1,0 +1,52 @@
+[
+  {
+    "no": "Z6-AI-A6-01",
+    "reason": "应用 AR-RULE-001：153 个客户贷方合计 ¥7,114,390.40",
+    "kind": "重分类",
+    "entries": [
+      {
+        "side": "借",
+        "account_code": "1122",
+        "account_label": "应收账款",
+        "amount": 7114390.4,
+        "sub": "153 客户合计"
+      },
+      {
+        "side": "贷",
+        "account_code": "2203",
+        "account_label": "预收款项",
+        "amount": 7114390.4,
+        "sub": "153 客户合计"
+      }
+    ],
+    "total_amount": 7114390.4,
+    "profit_impact": 0,
+    "triggered_by_rule": "AR-RULE-001",
+    "approved_by_client": null
+  },
+  {
+    "no": "Z6-AI-A9-01",
+    "reason": "1133 应收出口退税款期末 ¥-430,610.14 (反向余额, 绝对值 ¥430,610.14 > TE ¥115,908.53)，实质为已退税未冲销。重分类至 22210106 应交税费-出口抵减。",
+    "kind": "重分类",
+    "entries": [
+      {
+        "side": "借",
+        "account_code": "1221",
+        "account_label": "其他应收款-1133 应收出口退税款",
+        "amount": 430610.14,
+        "sub": "冲销反向余额"
+      },
+      {
+        "side": "贷",
+        "account_code": "22210106",
+        "account_label": "应交税费-出口抵减内销产品应纳税额",
+        "amount": 430610.14,
+        "sub": "已退税款转出"
+      }
+    ],
+    "total_amount": 430610.14,
+    "profit_impact": 0,
+    "triggered_by_rule": "TAX-RECLASS-001",
+    "approved_by_client": null
+  }
+]

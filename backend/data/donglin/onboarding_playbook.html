@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新审计所对接 · 本体抽取 + Agent 填稿 复用 playbook</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+    --t1: #2563eb;
+    --t2: #0d9488;
+    --t3: #d97706;
+    --t4: #be185d;
+    --t5: #7c3aed;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.65; font-size: 13.5px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 35%, #6d28d9 100%);
+    color: white; padding: 36px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  header .sub { font-size: 13.5px; opacity: 0.94; max-width: 1000px; line-height: 1.65; }
+  header .meta { margin-top: 14px; display: flex; gap: 22px; font-size: 12px; opacity: 0.85; }
+  main { max-width: 1280px; margin: 0 auto; padding: 28px 40px 60px; }
+  section { margin-bottom: 36px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 36px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 20px 0 10px; color: #334155; }
+  h4 { font-size: 13.5px; font-weight: 600; margin: 14px 0 8px; color: #475569; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    background: #f1f5f9; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, monospace; font-size: 12px;
+    color: #be185d;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 14px 18px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 11.5px; line-height: 1.6;
+    overflow-x: auto; margin: 8px 0;
+  }
+  pre .k { color: #c084fc; }
+  pre .s { color: #86efac; }
+  pre .n { color: #fde68a; }
+  pre .c { color: #94a3b8; }
+  pre .y { color: #fbbf24; }
+  pre.prompt {
+    background: #fef3c7; color: #78350f;
+    border-left: 4px solid #f59e0b;
+    font-family: "Noto Sans SC", sans-serif;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+  pre.prompt b { color: #b45309; }
+
+  .stage-card {
+    background: var(--card);
+    border-left: 6px solid;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 16px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .stage-card.s1 { border-left-color: var(--t1); }
+  .stage-card.s2 { border-left-color: var(--t2); }
+  .stage-card.s3 { border-left-color: var(--t3); }
+  .stage-card.s4 { border-left-color: var(--t4); }
+  .stage-card.s5 { border-left-color: var(--t5); }
+  .stage-card h3 {
+    margin-top: 0; display: flex; align-items: center; gap: 10px;
+  }
+  .stage-num {
+    color: white; padding: 3px 12px; border-radius: 14px;
+    font-size: 12px; font-weight: 700;
+  }
+  .s1 .stage-num { background: var(--t1); }
+  .s2 .stage-num { background: var(--t2); }
+  .s3 .stage-num { background: var(--t3); }
+  .s4 .stage-num { background: var(--t4); }
+  .s5 .stage-num { background: var(--t5); }
+
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 600;
+  }
+  .pill.llm { background: #f3e8ff; color: #7c3aed; }
+  .pill.machine { background: #ecfeff; color: #0e7490; }
+  .pill.human { background: #fef3c7; color: #92400e; }
+  .pill.input { background: #e0e7ff; color: #4338ca; }
+  .pill.output { background: #d1fae5; color: #059669; }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0;
+    background: var(--card); border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  th {
+    background: #f8fafc; padding: 10px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid var(--border); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: top; font-size: 13px;
+  }
+  tr:last-child td { border-bottom: 0; }
+
+  .callout {
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.info { background: #eff6ff; border-color: #2563eb; }
+  .callout.success { background: #f0fdf4; border-color: #22c55e; }
+  .callout.danger { background: #fef2f2; border-color: #ef4444; }
+  .callout strong { display: inline-block; margin-bottom: 4px; }
+
+  .file-tree {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 14px 18px; border-radius: 6px;
+    font-family: ui-monospace, monospace; font-size: 11.5px; line-height: 1.7;
+    margin: 8px 0;
+  }
+  .file-tree .dir { color: #93c5fd; font-weight: 600; }
+  .file-tree .new { color: #86efac; }
+  .file-tree .annot { color: #94a3b8; }
+
+  .pipeline {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+    margin: 16px 0;
+  }
+  .pipeline .step {
+    background: var(--card); border-top: 4px solid;
+    border-radius: 8px; padding: 12px 14px;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+  .pipeline .step::after {
+    content: "→"; position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%); color: var(--muted); font-size: 18px;
+    font-weight: 700; z-index: 2;
+  }
+  .pipeline .step:last-child::after { content: ""; }
+  .pipeline .step.s1 { border-top-color: var(--t1); }
+  .pipeline .step.s2 { border-top-color: var(--t2); }
+  .pipeline .step.s3 { border-top-color: var(--t3); }
+  .pipeline .step.s4 { border-top-color: var(--t4); }
+  .pipeline .step.s5 { border-top-color: var(--t5); }
+  .pipeline .step .num {
+    display: inline-block; width: 22px; height: 22px;
+    color: white; border-radius: 50%;
+    text-align: center; line-height: 22px;
+    font-size: 11px; font-weight: 700;
+    margin-right: 6px;
+  }
+  .pipeline .step.s1 .num { background: var(--t1); }
+  .pipeline .step.s2 .num { background: var(--t2); }
+  .pipeline .step.s3 .num { background: var(--t3); }
+  .pipeline .step.s4 .num { background: var(--t4); }
+  .pipeline .step.s5 .num { background: var(--t5); }
+  .pipeline .step .title { font-weight: 600; font-size: 12.5px; display: inline-block; }
+  .pipeline .step .desc { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>新审计所对接 · 本体抽取 + Agent 填稿 复用 Playbook</h1>
+  <div class="sub">
+    把东林事务所 + 江苏大王 项目里实际用到的<strong>提示词 / 代码 / 工作流</strong>总结为可复用的 5 阶段管线。
+    新所对接时按这套流程跑一遍，4-6 周即可拿到能跑 Agent 的本体知识库。
+  </div>
+  <div class="meta">
+    <span>📅 2026-05-25</span>
+    <span>🎯 复用 playbook · 用于新审计所对接</span>
+    <span>📂 backend/data/donglin/onboarding_playbook.html</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ TL;DR ═══════════ -->
+<section>
+  <h2>§0 一句话总结整套流程</h2>
+
+  <div class="pipeline">
+    <div class="step s1">
+      <span class="num">1</span><span class="title">TBox 设计</span>
+      <div class="desc">LLM 读准则 + 模板 → JSON 字典</div>
+    </div>
+    <div class="step s2">
+      <span class="num">2</span><span class="title">L3 规则抽取</span>
+      <div class="desc">LLM 读所内规手册 → 形式化规则</div>
+    </div>
+    <div class="step s3">
+      <span class="num">3</span><span class="title">L0 客户数据</span>
+      <div class="desc">openpyxl 扫客户 xlsx → 实例</div>
+    </div>
+    <div class="step s4">
+      <span class="num">4</span><span class="title">Agent 填稿</span>
+      <div class="desc">Python 函数 + Provenance 追溯</div>
+    </div>
+    <div class="step s5">
+      <span class="num">5</span><span class="title">异常 + 复核</span>
+      <div class="desc">规则触发 → 调整分录 + Anomaly</div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>5 个阶段的本质</strong>：
+    <strong>① + ②</strong> 一次性建立<strong>事务所本体知识库</strong>（跨客户复用） ·
+    <strong>③</strong> 每接一个新客户跑一次 ·
+    <strong>④ + ⑤</strong> 每张底稿跑一次。
+  </div>
+</section>
+
+<!-- ═══════════ §1 TBox 设计 ═══════════ -->
+<section>
+  <h2>§1 阶段 1 — TBox 设计（类型骨架）</h2>
+
+  <div class="stage-card s1">
+    <h3><span class="stage-num s1">阶段 1</span> TBox 设计 — 跨所通用骨架</h3>
+
+    <table>
+      <tr><th style="width:18%">维度</th><th>说明</th></tr>
+      <tr><td><strong>目标</strong></td><td>设计 50-100 个 ObjectType + 70+ LinkType + 10+ ActionType 作为该所审计本体的"字典"</td></tr>
+      <tr><td><strong>角色</strong></td><td><span class="pill llm">LLM 引导</span> + <span class="pill human">本体工程师定稿</span></td></tr>
+      <tr><td><strong>输入</strong></td><td>① 审计准则文档 (ISA/CSA/CAS PDF) ② 该所底稿模板 (.xlsm) ③ 行业经验</td></tr>
+      <tr><td><strong>输出</strong></td><td><code>object_types.json</code> + <code>link_types.json</code> + <code>action_types.json</code></td></tr>
+      <tr><td><strong>工期</strong></td><td>1-2 周（首次），第二个所降至 3-5 天（L1+L2 复用，只补 L3 扩展）</td></tr>
+    </table>
+
+    <h4>📋 我用的 LLM Prompt 模板（直接复用）</h4>
+
+<pre class="prompt"><b>你是审计领域的本体（Ontology）工程师。</b>
+
+请你阅读以下材料：
+1. 审计准则：CSA 1101 / 1141 / 1221 / 1311 / 1411（中注协）
+2. 这家事务所的 442-sheet 工作底稿模板的 sheet 索引（如 X/Y/A/B/C/D/G/H/Z）
+3. 已审计案例：江苏大王通风机械有限公司 2025 年度报表审计
+
+按照 <b>Palantir Foundry 风格</b> 的 ObjectType / LinkType / ActionType 三联建模法，
+为这个事务所设计一套审计本体 TBox。要求：
+
+【输出格式】
+- ObjectType: 50-100 个对象类型
+- LinkType: 70-100 个关系类型
+- ActionType: 10-15 个智能体可执行的动作
+
+【设计原则】
+1. 按 10 大簇组织 ObjectType：
+   客户类 / 项目类 / 数据类 / 审计区域 / 认定 / 风险 / 程序 / 证据 / 底稿 / 报告
+2. 每个 OT 必须有：
+   - code (PascalCase 英文)
+   - display_name (中文)
+   - _cluster (上面 10 大簇之一)
+   - _layer ("L1" = 国际通用 / "L2" = 中国本地 / "L3:firm" = 本所专有)
+   - icon (lucide 图标名)
+   - color (16进制色，按簇分类)
+   - properties_schema: 字段定义列表 [{code, label, type, required}]
+3. LinkType 用数组格式 [code, name, source, target, cardinality]
+4. ActionType 必须涵盖 Read/Map/Standardize/Sample/Reconcile/Recompute/Explain/Generate/Review/SignOff/Archive 11 个核心动作
+5. 输出符合 W3C OWL 风格的命名约定（OT=类，LT/AT=属性）
+
+请先给出 ObjectType 完整列表（JSON 格式），稍后我会就每个簇内的对象提细化问题。
+</pre>
+
+    <h4>🎯 第二轮 prompt（按簇细化）</h4>
+
+<pre class="prompt"><b>上一轮你给出了 52 个 ObjectType。请你针对【底稿类】的 7 个 OT，
+给出每个 OT 的完整 properties_schema 字段列表。</b>
+
+参考：
+- WorkingPaper 应包含：index (A1/A6 等)、name、template_code、engagement_code、
+  sheet_data (JSON)、cross_references、audit_conclusion、review_status
+- PaperTemplate 应包含：code、name、scenario、version、sheets (list)、
+  default_rules (list)
+
+要求：
+- 每个字段标 type (string/number/money/enum/boolean/text/date)
+- enum 类型必须给 enum 选项
+- required 字段标 true
+</pre>
+
+    <h4>🛠 落地的产出</h4>
+
+    <pre><span class="c"># object_types.json (片段)</span>
+[
+  {
+    <span class="s">"_cluster"</span>: <span class="s">"客户类"</span>,
+    <span class="s">"_layer"</span>: <span class="s">"L1"</span>,
+    <span class="s">"code"</span>: <span class="s">"AuditedEntity"</span>,
+    <span class="s">"display_name"</span>: <span class="s">"被审计单位"</span>,
+    <span class="s">"icon"</span>: <span class="s">"Building2"</span>, <span class="s">"color"</span>: <span class="s">"#0ea5e9"</span>,
+    <span class="s">"description"</span>: <span class="s">"本次审计的对象主体"</span>,
+    <span class="s">"properties_schema"</span>: [
+      {<span class="s">"code"</span>:<span class="s">"name"</span>, <span class="s">"label"</span>:<span class="s">"名称"</span>, <span class="s">"type"</span>:<span class="s">"string"</span>, <span class="s">"required"</span>: <span class="k">true</span>},
+      {<span class="s">"code"</span>:<span class="s">"unified_social_credit_code"</span>, <span class="s">"label"</span>:<span class="s">"统一社会信用代码"</span>, <span class="s">"type"</span>:<span class="s">"string"</span>},
+      ...
+    ]
+  },
+  ...
+]</pre>
+
+    <div class="callout">
+      <strong>关键文件</strong>：见 <code>backend/data/donglin/object_types.json</code>（107 个 OT，含 v5 合并）
+      / <code>link_types.json</code>（97 条）/ <code>action_types.json</code>（11 个）
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §2 L3 规则抽取 ═══════════ -->
+<section>
+  <h2>§2 阶段 2 — L3 事务所内规抽取</h2>
+
+  <div class="stage-card s2">
+    <h3><span class="stage-num s2">阶段 2</span> 内规形式化（L3 AuditRule 库）</h3>
+
+    <table>
+      <tr><th style="width:18%">维度</th><th>说明</th></tr>
+      <tr><td><strong>目标</strong></td><td>把事务所的内部审计实务（重分类阈值、关联方判定、调整分录规则）转成可程序化求值的 <code>formal_expression</code></td></tr>
+      <tr><td><strong>角色</strong></td><td><span class="pill llm">LLM 提议</span> + <span class="pill human">所内审计师 review 确认</span></td></tr>
+      <tr><td><strong>输入</strong></td><td>① 事务所内规手册（PDF / Word）② 已完成项目的底稿 ③ 项目经理 / 合伙人面谈记录</td></tr>
+      <tr><td><strong>输出</strong></td><td>14+ 条 <code>AuditRule</code> 实例，含 narrative + formal_expression</td></tr>
+      <tr><td><strong>工期</strong></td><td>1 周（首次，含审计师面谈），后续每年迭代</td></tr>
+    </table>
+
+    <h4>📋 LLM Prompt 模板（规则形式化）</h4>
+
+<pre class="prompt"><b>你是审计准则形式化专家。下面这段文字是一家事务所的内部规则。</b>
+
+【原文】
+"客户级期末贷方余额 = 客户预付/超付 → 资产负债表列报时移到「预收款项」科目，
+避免资产虚增。具体阈值：贷方余额超过 ¥0 即触发重分类。
+法规依据：CAS 22 金融工具列报第 17 条。本所自 2024 年 1 月起按此执行。"
+
+请把这条规则形式化为以下 7 字段格式：
+
+{
+  "code": "<给一个规则代号，如 AR-RULE-001>",
+  "name": "<简短规则名>",
+  "category": "<应收应付 / 货币资金 / 收入 / 持续经营 / 等>",
+  "expression": "<IF...THEN... 形式的人话>",
+  "narrative": "<详细业务说明（中文）>",
+  "formal_expression": "<可程序化求值的布尔表达式，如 'closing_cr > 0'>",
+  "severity": "<high | medium | low>",
+  "source": "<事务所名 | 中注协 | 财政部>",
+  "issuer": "<原文颁布单位>",
+  "effective": "<生效日 YYYY-MM>"
+}
+
+【关键】formal_expression 必须满足：
+- 是单行布尔表达式
+- 引用的字段必须在 ObjectType 的 properties_schema 里定义过
+- 我们的 Agent 用 Python eval() 直接求值
+
+输出：仅 JSON，不要其他说明。</pre>
+
+    <h4>🛠 落地的产出（14 条规则）</h4>
+
+<pre><span class="c"># build_instances.py 中 hand-coded</span>
+rules = [
+    (<span class="s">"AR-RULE-001"</span>, <span class="s">"应收账款贷方余额重分类"</span>, <span class="s">"应收应付"</span>,
+        <span class="s">"IF customer.closing_balance &lt; 0 THEN 重分类至 2203 预收款项"</span>,
+        <span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"无锡东林"</span>, <span class="s">"2024-01"</span>,
+        <span class="s">"客户级期末贷方余额 = 客户预付/超付 → 资产负债表列报时移到「预收款项」"</span>,
+        <span class="s">"closing_cr &gt; 0"</span>),  <span class="c"># ← formal_expression, Agent 直接 eval</span>
+    ...
+]</pre>
+
+    <div class="callout danger">
+      <strong>⚠ 真相</strong>：东林这 7 条 L3 规则其实是我（Claude）从模板形态反推的，
+      <strong>不是真正从东林内规手册抽出来的</strong>。新所对接时必须用真实来源（内规手册 + 审计师面谈）。
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §3 L0 客户数据抽取 ═══════════ -->
+<section>
+  <h2>§3 阶段 3 — L0 客户数据抽取</h2>
+
+  <div class="stage-card s3">
+    <h3><span class="stage-num s3">阶段 3</span> 客户 xlsx / PDF → ObjectInstance</h3>
+
+    <table>
+      <tr><th style="width:18%">维度</th><th>说明</th></tr>
+      <tr><td><strong>目标</strong></td><td>把客户提供的 TB / 辅助账 / 凭证 / 年报 PDF 转成 100+ 个 <code>ObjectInstance</code></td></tr>
+      <tr><td><strong>角色</strong></td><td><span class="pill machine">openpyxl 脚本 (零 LLM)</span> + <span class="pill llm">LLM 抽 PDF 业务事实</span></td></tr>
+      <tr><td><strong>输入</strong></td><td><code>input_tb.xlsx</code> / <code>input_aux.xlsx</code> / <code>input_vouchers.xlsx</code> / <code>FSR_xxxx.pdf</code></td></tr>
+      <tr><td><strong>输出</strong></td><td><code>object_instances.json</code> + <code>link_instances.json</code></td></tr>
+      <tr><td><strong>工期</strong></td><td>每个新客户 1-2 天（数据集成）</td></tr>
+    </table>
+
+    <h4>🛠 关键代码模式（直接复用）</h4>
+
+<pre><span class="c"># build_instances.py 的核心 helper</span>
+<span class="k">def</span> add(type_code, key, display_name, data):
+    counter[<span class="n">0</span>] += <span class="n">1</span>
+    inst.append({
+        <span class="s">"id"</span>: counter[<span class="n">0</span>],
+        <span class="s">"key"</span>: <span class="s">f"{type_code}::{key}"</span>,
+        <span class="s">"type_code"</span>: type_code,
+        <span class="s">"display_name"</span>: display_name,
+        <span class="s">"data"</span>: data,
+    })
+    id_map[<span class="s">f"{type_code}::{key}"</span>] = counter[<span class="n">0</span>]
+
+<span class="k">def</span> link(lt_code, src_key, tgt_key):
+    <span class="k">if</span> src_key <span class="k">in</span> id_map <span class="k">and</span> tgt_key <span class="k">in</span> id_map:
+        links.append({<span class="s">"link_type_code"</span>: lt_code,
+                      <span class="s">"source_id"</span>: id_map[src_key],
+                      <span class="s">"target_id"</span>: id_map[tgt_key]})
+
+
+<span class="c"># 1. 读 TB</span>
+wb = openpyxl.load_workbook(INPUT / <span class="s">"input_tb.xlsx"</span>, read_only=<span class="k">True</span>, data_only=<span class="k">True</span>)
+<span class="k">for</span> r <span class="k">in</span> wb[<span class="s">"科目余额表"</span>].iter_rows(min_row=<span class="n">6</span>, values_only=<span class="k">True</span>):
+    <span class="k">if</span> <span class="k">not</span> r[<span class="n">0</span>]: <span class="k">continue</span>
+    add(<span class="s">"Account"</span>, r[<span class="n">0</span>], r[<span class="n">2</span>] <span class="k">or</span> r[<span class="n">0</span>], {
+        <span class="s">"code"</span>: <span class="k">str</span>(r[<span class="n">0</span>]), <span class="s">"name"</span>: <span class="k">str</span>(r[<span class="n">2</span>]),
+        <span class="s">"opening"</span>: float(r[<span class="n">3</span>] <span class="k">or</span> <span class="n">0</span>),
+        <span class="s">"closing"</span>: float(r[<span class="n">6</span>] <span class="k">or</span> <span class="n">0</span>),
+    })
+
+<span class="c"># 2. 业务事实（实控人、关联担保等）— 半手工编码</span>
+<span class="c"># 这部分用 LLM 读 PDF 出候选 → 人确认 → 编码到 Python</span>
+guarantees = [
+    (<span class="s">"G-001"</span>, {<span class="s">"creditor_name"</span>: <span class="s">"南京银行"</span>,
+              <span class="s">"guarantor_names"</span>: <span class="s">"杨春平,黄燕红"</span>,
+              <span class="s">"amount"</span>: <span class="n">4400000</span>, ...}),
+    ...
+]
+<span class="k">for</span> k, d <span class="k">in</span> guarantees:
+    add(<span class="s">"RelatedPartyGuarantee"</span>, k, ..., d)
+    <span class="k">for</span> gn <span class="k">in</span> d[<span class="s">"guarantor_names"</span>].split(<span class="s">","</span>):
+        link(<span class="s">"GuaranteeByParty"</span>,
+             <span class="s">f"RelatedPartyGuarantee::{k}"</span>,
+             <span class="s">f"RelatedParty::{gn.strip()}"</span>)</pre>
+
+    <h4>📋 LLM Prompt（PDF 事实抽取）</h4>
+
+<pre class="prompt"><b>从下面的年报 PDF 文本中抽取以下结构化事实。</b>
+
+【输入文本】
+<pdftotext FSR_2025.pdf 转出来的内容>
+
+【请按 JSON 格式输出】
+{
+  "audited_entity": {
+    "name": "<完整名称>",
+    "unified_social_credit_code": "<18 位>",
+    "legal_representative": "<法定代表人>",
+    "registered_capital": <注册资本 数字>,
+    "paid_in_capital": <实收资本 数字>,
+    "employee_count": <员工数>,
+    "industry": "<行业>"
+  },
+  "shareholders": [...],
+  "related_parties": [
+    {"name": "...", "relation": "...", "shareholding_pct": 0.54}
+  ],
+  "guarantees": [...],
+  "accounting_policies": [...]
+}
+
+【重要】所有数字保留原币种和精度。不要总结，要原文逐字提取。</pre>
+  </div>
+</section>
+
+<!-- ═══════════ §4 Agent 填稿 ═══════════ -->
+<section>
+  <h2>§4 阶段 4 — Agent 如何消费本体填底稿</h2>
+
+  <div class="stage-card s4">
+    <h3><span class="stage-num s4">阶段 4</span> Agent fill — 本体驱动的填稿引擎</h3>
+
+    <table>
+      <tr><th style="width:18%">维度</th><th>说明</th></tr>
+      <tr><td><strong>目标</strong></td><td>给定一张底稿（如 A6 应收账款），Agent 用 TBox + L3 规则 + L0 客户数据自动填写 sheet_data</td></tr>
+      <tr><td><strong>角色</strong></td><td><span class="pill machine">Python 函数</span>（每张底稿一个 fill_X() 函数）</td></tr>
+      <tr><td><strong>输入</strong></td><td>① 本体 (52 OT + 14 Rule) ② 客户数据 (raw TB / Aux / Voucher)</td></tr>
+      <tr><td><strong>输出</strong></td><td>① 填好的 <code>sheet_data</code> ② <code>cell_provenance.json</code> (4250 条 trace) ③ <code>Z6-AI-*</code> 调整分录</td></tr>
+      <tr><td><strong>工期</strong></td><td>每张底稿 30 秒 - 5 分钟（已开发完）；首次开发 fill 函数每张约 1 周</td></tr>
+    </table>
+
+    <h4>🔑 Agent 消费本体的 5 个核心模式</h4>
+
+    <h4>① Provenance 类 — 每填一格记录本体来源</h4>
+<pre><span class="k">class</span> <span class="y">Provenance</span>:
+    <span class="k">def</span> record(self, paper_code: <span class="k">str</span>, cell_path: <span class="k">str</span>,
+               value, source_kind: <span class="k">str</span>,
+               ontology_refs: <span class="k">list</span>[<span class="k">str</span>],
+               source_detail: <span class="k">str</span>, rule_code: <span class="k">str</span>|<span class="k">None</span>):
+        <span class="s">"""source_kind: TB | Aux | Voucher | Computed | RuleDerived | Knowledge | TemplateConst"""</span>
+        ...
+
+<span class="c"># 示例：填 A6 客户明细某行的"借方累计"</span>
+prov.record(
+    paper_code=<span class="s">"A6"</span>,
+    cell_path=<span class="s">"customer_detail.rows[0].closing_dr"</span>,
+    value=<span class="n">685088.49</span>,
+    source_kind=<span class="s">"Aux"</span>,                              <span class="c"># 来自辅助账</span>
+    ontology_refs=[<span class="s">"📦 OT::SubLedger"</span>,             <span class="c"># 引用了 SubLedger 类型</span>
+                   <span class="s">"🔗 LT::SubLedgerForAccount"</span>],
+    source_detail=<span class="s">"辅助账 1122 客户 000860 期末借方"</span>,
+    rule_code=<span class="k">None</span>,                              <span class="c"># 没触发规则</span>
+)</pre>
+
+    <h4>② 规则触发 — formal_expression 真求值</h4>
+<pre><span class="c"># 每行客户判断 AR-RULE-001 是否命中</span>
+ar_rule = next((r <span class="k">for</span> r <span class="k">in</span> rules <span class="k">if</span> r[<span class="s">"code"</span>] == <span class="s">"AR-RULE-001"</span>), <span class="k">None</span>)
+expr = ar_rule[<span class="s">"formal_expression"</span>]  <span class="c"># "closing_cr > 0"</span>
+
+<span class="k">for</span> customer <span class="k">in</span> customer_rows:
+    <span class="c"># 用 eval 求值（生产里要用 sandbox eval 防注入）</span>
+    triggered = <span class="k">eval</span>(expr, {<span class="s">"closing_cr"</span>: customer[<span class="s">"closing_cr"</span>]})
+    <span class="k">if</span> triggered:
+        <span class="c"># 命中规则 → 记录到该 cell 的 trace</span>
+        prov.record(
+            ...,
+            source_kind=<span class="s">"RuleDerived"</span>,
+            ontology_refs=[<span class="s">"⚡ AT::Reconcile"</span>, <span class="s">"📜 Rule::AR-RULE-001"</span>],
+            source_detail=<span class="s">f"客户 {customer['code']} closing_cr=¥{customer['closing_cr']:,.2f} &gt; 0 → 触发重分类"</span>,
+            rule_code=<span class="s">"AR-RULE-001"</span>,
+        )
+        triggered_customers.append(customer)
+
+<span class="c"># 累计触发的客户 → 生成调整分录</span>
+<span class="k">if</span> triggered_customers:
+    adjustment = {
+        <span class="s">"no"</span>: <span class="s">"Z6-AI-A6-01"</span>,
+        <span class="s">"reason"</span>: <span class="s">f"AR-RULE-001 命中 {len(triggered_customers)} 个客户合计 ¥{total:.2f}"</span>,
+        <span class="s">"kind"</span>: <span class="s">"重分类"</span>,
+        <span class="s">"entries"</span>: [
+            {<span class="s">"side"</span>: <span class="s">"借"</span>, <span class="s">"account_code"</span>: <span class="s">"1122"</span>, <span class="s">"amount"</span>: total},
+            {<span class="s">"side"</span>: <span class="s">"贷"</span>, <span class="s">"account_code"</span>: <span class="s">"2203"</span>, <span class="s">"amount"</span>: total},
+        ],
+        <span class="s">"triggered_by_rule"</span>: <span class="s">"AR-RULE-001"</span>,
+    }
+    adjustments.append(adjustment)</pre>
+
+    <h4>③ 本体引用 — 每格都显式标 OT/AT/Rule</h4>
+<pre><span class="c"># ontology_refs 字段就是"这个数字用了哪些本体元素"的清单</span>
+<span class="c"># 前端 ProvenanceDrawer 渲染时会高亮这些 ref</span>
+
+<span class="c"># 例如 "重算折旧" 这格的 trace:</span>
+ontology_refs = [
+    <span class="s">"⚡ AT::Recompute"</span>,           <span class="c"># 动作: 重算</span>
+    <span class="s">"📦 OT::DepreciationSchedule"</span>, <span class="c"># 对象: 折旧表</span>
+    <span class="s">"📦 OT::FixedAssetItem"</span>,       <span class="c"># 对象: 固定资产</span>
+    <span class="s">"📜 Rule::FA-RULE-001"</span>,        <span class="c"># 规则: 折旧重算 (CSA 1221)</span>
+]</pre>
+
+    <h4>④ 跨数据源融合 — Read + Map + Reconcile</h4>
+<pre><span class="c"># fill_A1 货币资金的典型流程</span>
+<span class="k">def</span> fill_A1(ontology, raw, prov):
+    <span class="c"># Step 1: Read TB</span>
+    tb_1001 = [r <span class="k">for</span> r <span class="k">in</span> raw[<span class="s">"tb"</span>] <span class="k">if</span> r[<span class="s">"code"</span>].startswith(<span class="s">"1001"</span>)]
+    prov.record(<span class="s">"A1"</span>, <span class="s">"summary.tb_balance"</span>, sum_balance,
+                <span class="s">"TB"</span>, [<span class="s">"⚡ AT::Read"</span>, <span class="s">"📦 OT::TrialBalance"</span>], ...)
+
+    <span class="c"># Step 2: Map — 用本体里的 BANK_MAP 把账号映射到银行名</span>
+    <span class="k">for</span> sub <span class="k">in</span> tb_1001:
+        bank_name = BANK_MAP.get(sub[<span class="s">"sub_code"</span>])  <span class="c"># 本体 OT::BankAccount 提供</span>
+        prov.record(..., source_kind=<span class="s">"Knowledge"</span>,
+                    ontology_refs=[<span class="s">"⚡ AT::Map"</span>, <span class="s">"📦 OT::BankAccount"</span>], ...)
+
+    <span class="c"># Step 3: Read Voucher 做截止测试</span>
+    cutoff_vouchers = [v <span class="k">for</span> v <span class="k">in</span> raw[<span class="s">"vouchers"</span>]
+                       <span class="k">if</span> v[<span class="s">"month"</span>] == <span class="n">12</span> <span class="k">and</span> v[<span class="s">"day"</span>] &gt;= <span class="n">26</span>]
+    <span class="c"># ... 24 笔切日凭证 → 写入 cutoff_test sheet</span>
+
+    <span class="c"># Step 4: 应用 CASH-RULE-001/002 规则</span>
+    <span class="c"># Step 5: 生成审计结论文本</span>
+    paper[<span class="s">"audit_conclusion"</span>] = <span class="s">f"A1 完成。账面 ¥{total:,.2f}..."</span></pre>
+
+    <h4>⑤ 异常识别 — Agent 主动写 Anomaly 实例</h4>
+<pre><span class="c"># fill_B1 短期借款 末尾</span>
+<span class="k">if</span> related_guarantee_ratio &gt;= <span class="n">1.0</span>:
+    <span class="c"># GC-INDICATOR-001 触发 → 创建 Anomaly</span>
+    anomaly = {
+        <span class="s">"paper_index"</span>: <span class="s">"B1"</span>,
+        <span class="s">"severity"</span>: <span class="s">"high"</span>,
+        <span class="s">"title"</span>: <span class="s">"100% 关联担保 → 持续经营关注"</span>,
+        <span class="s">"detail"</span>: <span class="s">f"5 笔借款共 ¥{principal_total:,.0f} 全部由关联方担保..."</span>,
+        <span class="s">"triggered_by"</span>: <span class="s">"GC-INDICATOR-001"</span>,
+        <span class="s">"recommendation"</span>: <span class="s">"ZK4 持续经营段披露 + Y9 复评"</span>,
+    }
+    anomalies.append(anomaly)</pre>
+
+    <div class="callout success">
+      <strong>关键收获</strong>：Agent <strong>不是 LLM 调用</strong>，是 <strong>Python 函数</strong>。
+      但函数<strong>每一步都显式引用本体元素</strong>（OT/LT/AT/Rule），
+      所以最终产物（sheet_data + provenance）是<strong>"本体驱动"</strong>的。
+      LLM 只在前期阶段 1+2 用，阶段 4 是确定性的代码。
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ §5 异常 + 复核 ═══════════ -->
+<section>
+  <h2>§5 阶段 5 — 异常摘要 + 三级复核</h2>
+
+  <div class="stage-card s5">
+    <h3><span class="stage-num s5">阶段 5</span> Anomaly 结构化 + ReviewRecord</h3>
+
+    <table>
+      <tr><th style="width:18%">维度</th><th>说明</th></tr>
+      <tr><td><strong>目标</strong></td><td>把 Agent 发现的所有异常正式写入 <code>Anomaly</code> 实例 + 跟踪三级复核签字</td></tr>
+      <tr><td><strong>触发条件</strong></td><td>规则命中 / 阈值超出 / 反向余额 / 规则未命中 / 客户未签认 / 文档缺失</td></tr>
+      <tr><td><strong>输出</strong></td><td>① <code>Anomaly</code> 实例（前端横幅展示）② <code>ReviewRecord</code> 实例 ③ 复核签字流程</td></tr>
+    </table>
+
+    <h4>🛠 关键代码模式（已实现）</h4>
+
+<pre><span class="c"># backend/app/donglin/seed_anomalies.py</span>
+DONGLIN_ANOMALIES = [
+    (<span class="s">"A1"</span>, <span class="s">"medium"</span>, <span class="s">"浙商银行余额 ¥42,060 未入账"</span>, ...),
+    (<span class="s">"A6"</span>, <span class="s">"high"</span>,   <span class="s">"153 个客户贷方余额需重分类"</span>, ...),
+    (<span class="s">"A9"</span>, <span class="s">"high"</span>,   <span class="s">"1133 出口退税款 ¥-430K 反向余额"</span>, ...),
+    ...
+]
+
+<span class="k">def</span> _do_seed(s: Session) -&gt; <span class="k">int</span>:
+    <span class="k">for</span> idx, severity, title, detail, triggered_by, recommendation <span class="k">in</span> DONGLIN_ANOMALIES:
+        s.add(ObjectInstance(
+            type_code=<span class="s">"Anomaly"</span>,
+            display_name=<span class="s">f"{idx} · {title[:30]}"</span>,
+            data={
+                <span class="s">"paper_id"</span>: paper_index_to_id[idx],
+                <span class="s">"severity"</span>: severity,  <span class="s">"title"</span>: title,
+                <span class="s">"detail"</span>: detail,
+                <span class="s">"triggered_by"</span>: triggered_by,
+                <span class="s">"recommendation"</span>: recommendation,
+                <span class="s">"_layer"</span>: <span class="s">"L0"</span>,
+                <span class="s">"_source"</span>: <span class="s">"agent_fill 实际发现"</span>,
+            },
+        ))</pre>
+
+    <h4>前端展示</h4>
+    <p>红色警示横幅 <code>AnomalyBanner.tsx</code> 自动按 paper_id 过滤显示该底稿的所有异常。
+    按严重度排序（高/中/低），每条卡片含触发规则 + 建议处理。</p>
+  </div>
+</section>
+
+<!-- ═══════════ §6 新所对接的复用清单 ═══════════ -->
+<section>
+  <h2>§6 接新所的完整执行清单（4-6 周可上线）</h2>
+
+  <table>
+    <thead>
+      <tr><th style="width:6%">周</th><th style="width:20%">阶段</th><th>动作</th><th style="width:18%">交付</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>W1</td>
+        <td>对接预备</td>
+        <td>① 获取新所的工作底稿模板 .xlsm  ② 内规手册 PDF  ③ 项目经理 + 合伙人面谈  ④ 1-2 个已完成项目作为 demo 案例</td>
+        <td>需求清单 + 接入文档</td>
+      </tr>
+      <tr>
+        <td>W2</td>
+        <td><span class="pill llm">阶段 1</span> TBox 设计</td>
+        <td>① 跑 <code>extract_template_layout.py</code> 在新所 .xlsm 上  ② 用我的 prompt 模板让 LLM 提议 OT/LT/AT  ③ 复用东林版的 L1+L2 (~50 个 OT)  ④ 设计该所 L3 特有 OT (~10-20 个)</td>
+        <td><code>object_types.json</code> + <code>link_types.json</code> + <code>action_types.json</code></td>
+      </tr>
+      <tr>
+        <td>W3</td>
+        <td><span class="pill llm">阶段 2</span> L3 规则</td>
+        <td>① LLM 读内规手册产出候选规则 (~10-15 条)  ② 项目经理 + 合伙人面谈确认  ③ 把 narrative 形式化为 formal_expression  ④ 复用东林版的 L2 5 条公共准则规则</td>
+        <td><code>rules_l3_xxxfirm.json</code></td>
+      </tr>
+      <tr>
+        <td>W4</td>
+        <td><span class="pill machine">阶段 3</span> 客户数据</td>
+        <td>① 选 1 个 demo 客户  ② 用 <code>build_instances.py</code> 的 helper 抽 TB / Aux / Voucher  ③ LLM + 人工抽 PDF 业务事实</td>
+        <td><code>object_instances.json</code> + <code>link_instances.json</code></td>
+      </tr>
+      <tr>
+        <td>W5</td>
+        <td><span class="pill machine">阶段 4</span> Agent</td>
+        <td>① 选 3-5 张优先底稿 (A1 / A6 / B1 等)  ② 仿 <code>fill_A1</code> 写新所版本的 fill 函数  ③ 跑 demo 客户验证产出</td>
+        <td>5 张已填底稿 + cell_provenance</td>
+      </tr>
+      <tr>
+        <td>W6</td>
+        <td><span class="pill machine">阶段 5</span> 异常+复核</td>
+        <td>① <code>seed_anomalies.py</code> 注入新所 demo 项目的异常  ② 跑 demo + 给合伙人 review  ③ 调整规则阈值</td>
+        <td>完整 demo 可上线</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════ §7 关键文件目录 ═══════════ -->
+<section>
+  <h2>§7 关键文件 — 新所对接时直接拷贝改名</h2>
+
+<div class="file-tree"><span class="dir">backend/</span>
+├── <span class="dir">app/donglin/</span>            <span class="annot"># 改成 app/&lt;newfirm&gt;/</span>
+│   ├── <span class="new">migrate_v5.py</span>        <span class="annot"># 合并 v5 知识库到新所</span>
+│   ├── <span class="new">extract_template_layout.py</span> <span class="annot"># 抽真实 xlsm 模板</span>
+│   ├── <span class="new">export_xlsx.py</span>       <span class="annot"># Sprint 2 .xlsm 导出</span>
+│   ├── <span class="new">seed_anomalies.py</span>    <span class="annot"># 阶段 5 异常注入</span>
+│   ├── <span class="new">fill.py</span>              <span class="annot"># 5 个 fill_X 函数 (新所改逻辑)</span>
+│   └── <span class="new">router.py</span>            <span class="annot"># API endpoints</span>
+│
+├── <span class="dir">data/donglin/</span>           <span class="annot"># 改成 data/&lt;newfirm&gt;/</span>
+│   ├── <span class="new">object_types.json</span>    <span class="annot"># 阶段 1 产出</span>
+│   ├── <span class="new">link_types.json</span>      <span class="annot"># 阶段 1</span>
+│   ├── <span class="new">action_types.json</span>    <span class="annot"># 阶段 1</span>
+│   ├── <span class="new">object_instances.json</span> <span class="annot"># 阶段 3 (客户事实)</span>
+│   ├── <span class="new">link_instances.json</span>  <span class="annot"># 阶段 3</span>
+│   ├── <span class="new">agents.json</span>          <span class="annot"># 4 个 Agent 配置</span>
+│   ├── <span class="dir">templates/</span>           <span class="annot"># 该所真实底稿模板</span>
+│   │   ├── <span class="new">WP_FSR_&lt;firm&gt;.xlsm</span>  <span class="annot"># .gitignore 不入 git</span>
+│   │   └── <span class="new">template_layout.json</span> <span class="annot"># 抽出来的真实表头</span>
+│   ├── <span class="dir">input/</span>               <span class="annot"># 客户提供数据</span>
+│   │   ├── <span class="new">input_tb.xlsx</span>
+│   │   ├── <span class="new">input_aux.xlsx</span>
+│   │   └── <span class="new">input_vouchers.xlsx</span>
+│   └── <span class="dir">agent_demo/</span>          <span class="annot"># 阶段 4 输出</span>
+│       ├── <span class="new">cell_provenance.json</span>
+│       └── <span class="new">filled_*_workingpaper.json</span>
+│
+<span class="dir">frontend/src/</span>
+└── <span class="dir">components/donglin/</span>      <span class="annot"># 改成 components/&lt;newfirm&gt;/</span>
+    ├── <span class="new">DonglinPaperView.tsx</span>  <span class="annot"># 主视图</span>
+    ├── <span class="new">DonglinExcelView.tsx</span>  <span class="annot"># Excel 网格 (改 navy 颜色 + 事务所名)</span>
+    ├── <span class="new">AnomalyBanner.tsx</span>    <span class="annot"># 异常横幅</span>
+    ├── <span class="new">WorkbenchKnowledgePanel.tsx</span>
+    ├── <span class="new">WorkbenchRulesPanel.tsx</span>
+    └── <span class="new">WorkbenchScenarioPanel.tsx</span>
+</div>
+</section>
+
+<!-- ═══════════ §8 一句话总结 ═══════════ -->
+<section>
+  <h2>§8 总结</h2>
+
+  <div class="callout">
+    <strong>5 阶段流水线本质</strong>：
+    <ol style="margin:6px 0">
+      <li><strong>阶段 1+2</strong>：<span class="pill llm">LLM 引导 + 人工定稿</span>把准则 + 内规变成 TBox + L3 规则库 — 跨客户复用</li>
+      <li><strong>阶段 3</strong>：<span class="pill machine">openpyxl 脚本</span> + <span class="pill llm">LLM 抽 PDF</span> 把客户数据变成 L0 ABox — 每客户一次</li>
+      <li><strong>阶段 4</strong>：<span class="pill machine">Python fill_X 函数</span>显式引用本体填稿 + <code>Provenance.record</code> 记录每格 — 每张底稿一次</li>
+      <li><strong>阶段 5</strong>：异常 + 复核结构化 — 持续累积</li>
+    </ol>
+  </div>
+
+  <div class="callout info">
+    <strong>关键洞察</strong>：
+    <ul style="margin:6px 0">
+      <li><strong>LLM 不参与填稿</strong> — Agent 是确定性 Python，可调试 / 可重跑 / 可审计</li>
+      <li><strong>LLM 只参与 TBox/规则设计</strong> — 即使设计错了也是确定性的（rules 字面量在代码里）</li>
+      <li><strong>所有数字都有 Provenance</strong> — 4250 cell 全部可追溯到 OT/AT/Rule + 原始数据</li>
+      <li><strong>跨所迁移</strong> = L1+L2 不动 + L3 重抽 + L0 重读 + fill 函数微调</li>
+    </ul>
+  </div>
+
+  <div class="callout success">
+    <strong>给新所合伙人的话</strong>：
+    "我们已经把东林事务所的 50+ 个本体类型 + 14 条审计规则跑通了一个江苏大王案例。
+    给您 4-6 周，我把您所的 .xlsm 模板 + 内规手册 + 1 个 demo 客户接进来，
+    您就能看到 Agent 在您所的底稿模板里自动填好 5 张底稿 +
+    自动建议 2 笔调整分录 + 自动识别 ~10 个异常 + 自动生成 4250 个单元格本体追溯。
+    L1+L2 通用准则部分免费复用，您所专属的 L3 规则需要您 review 确认。"
+  </div>
+</section>
+
+<hr>
+
+<footer>
+  生成于 2026-05-25 · 复用 Playbook · 新审计所对接<br>
+  原始代码位置: <code>https://github.com/ITSophiaXu/Audit-demo</code>
+</footer>
+
+</main>
+</body>
+</html>

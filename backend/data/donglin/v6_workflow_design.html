@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>v5 分析 + v6 工作流引擎设计 · 用本体支持年审业务流</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+    --L0: #64748b; --L0-bg: #f1f5f9;
+    --L1: #2563eb; --L1-bg: #dbeafe;
+    --L2: #0d9488; --L2-bg: #ccfbf1;
+    --L3: #d97706; --L3-bg: #fed7aa;
+    --L4: #7c3aed; --L4-bg: #ede9fe;
+    --rev: #7c3aed;   /* review 版紫 */
+    --v5: #0d9488;    /* v5 青 */
+    --v6: #be185d;    /* v6 玫红 */
+    --plan: #2563eb;
+    --exec: #0d9488;
+    --rep: #be185d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; font-size: 13.5px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 30%, #be185d 65%, #b45309 100%);
+    color: white; padding: 36px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  header .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 16px;
+    background: rgba(255,255,255,0.22); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.05em; margin-bottom: 10px;
+  }
+  header .sub { font-size: 13.5px; opacity: 0.94; max-width: 1000px; line-height: 1.65; }
+  header .meta { margin-top: 14px; display: flex; gap: 22px; font-size: 12px; opacity: 0.85; }
+  main { max-width: 1320px; margin: 0 auto; padding: 28px 40px 60px; }
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 36px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 22px 0 10px; color: #334155; }
+  h4 { font-size: 13.5px; font-weight: 600; margin: 14px 0 8px; color: #475569; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    background: #f1f5f9; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, monospace; font-size: 12px;
+    color: #be185d;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 14px 18px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 11.5px; line-height: 1.55;
+    overflow-x: auto; margin: 8px 0;
+  }
+  pre .k { color: #c084fc; }
+  pre .s { color: #86efac; }
+  pre .n { color: #fde68a; }
+  pre .c { color: #94a3b8; }
+  pre .y { color: #fbbf24; }
+
+  /* —— pill —— */
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 10.5px; font-weight: 600;
+  }
+  .pill.L0 { background: var(--L0-bg); color: var(--L0); }
+  .pill.L1 { background: var(--L1-bg); color: var(--L1); }
+  .pill.L2 { background: var(--L2-bg); color: var(--L2); }
+  .pill.L3 { background: var(--L3-bg); color: var(--L3); }
+  .pill.L4 { background: var(--L4-bg); color: var(--L4); }
+  .pill.rev { background: #f3e8ff; color: var(--rev); }
+  .pill.v5  { background: #ccfbf1; color: var(--v5); }
+  .pill.v6  { background: #fce7f3; color: var(--v6); }
+  .pill.yes  { background: #dcfce7; color: #166534; }
+  .pill.no   { background: #ffe4e6; color: #be123c; }
+  .pill.warn { background: #fef3c7; color: #92400e; }
+
+  /* —— TL;DR 卡 —— */
+  .tldr {
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 50%, #f9a8d4 100%);
+    padding: 20px 24px; border-radius: 12px; margin: 20px 0;
+    border: 2px solid var(--v6); box-shadow: 0 4px 12px rgba(190,24,93,0.15);
+  }
+  .tldr h3 { color: #831843; margin: 0 0 8px; font-size: 16px; }
+  .tldr p { color: #831843; font-size: 13.5px; margin: 6px 0; line-height: 1.7; }
+
+  /* —— 表格 —— */
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0;
+    background: var(--card); border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  th {
+    background: #f8fafc; padding: 10px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid var(--border); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: top; font-size: 13px;
+  }
+  tr:last-child td { border-bottom: 0; }
+  td.code { font-family: ui-monospace, monospace; font-size: 11.5px; color: #be185d; }
+  td.center { text-align: center; }
+
+  /* —— 6 层架构图 —— */
+  .arch-cake { max-width: 900px; margin: 24px auto; }
+  .arch-layer {
+    border-radius: 10px; padding: 14px 20px; margin-bottom: 6px;
+    color: white; font-weight: 500; position: relative;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .arch-layer .tag {
+    display: inline-block; background: rgba(255,255,255,0.25);
+    padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    font-weight: 700; margin-right: 10px;
+  }
+  .arch-layer .name { font-size: 16px; font-weight: 600; }
+  .arch-layer .desc { font-size: 12px; opacity: 0.94; margin-top: 4px; font-weight: 400; }
+  .arch-layer .src {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; padding: 3px 10px; background: rgba(255,255,255,0.2);
+    border-radius: 4px; font-weight: 600;
+  }
+  .arch-layer.l6 { background: linear-gradient(90deg, var(--v6), #ec4899); }
+  .arch-layer.l5 { background: linear-gradient(90deg, #d97706, #f59e0b); }
+  .arch-layer.l4 { background: linear-gradient(90deg, var(--rev), #a78bfa); }
+  .arch-layer.l3 { background: linear-gradient(90deg, var(--v5), #14b8a6); }
+  .arch-layer.l2 { background: linear-gradient(90deg, #0284c7, #0ea5e9); }
+  .arch-layer.l1 { background: linear-gradient(90deg, #475569, #64748b); }
+
+  /* —— v6 创新卡 —— */
+  .innov-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    margin: 14px 0;
+  }
+  .innov-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px;
+    border-left: 5px solid var(--v6);
+  }
+  .innov-card h5 {
+    margin: 0 0 8px; font-size: 13.5px; color: var(--v6);
+  }
+
+  /* —— 三阶段年审流程 —— */
+  .workflow-phases {
+    display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 14px;
+    margin: 16px 0;
+  }
+  .wf-phase {
+    border-radius: 10px; padding: 14px 18px;
+    border-top: 5px solid;
+  }
+  .wf-phase.plan {
+    background: #eff6ff; border-top-color: var(--plan);
+  }
+  .wf-phase.exec {
+    background: #f0fdfa; border-top-color: var(--exec);
+  }
+  .wf-phase.rep {
+    background: #fdf2f8; border-top-color: var(--rep);
+  }
+  .wf-phase h4 {
+    margin: 0 0 10px; font-size: 14px; font-weight: 600;
+  }
+  .wf-phase.plan h4 { color: var(--plan); }
+  .wf-phase.exec h4 { color: var(--exec); }
+  .wf-phase.rep h4 { color: var(--rep); }
+  .wf-step {
+    background: white; border: 1px solid var(--border);
+    border-radius: 5px; padding: 6px 10px; margin: 4px 0;
+    font-size: 12px; display: flex; align-items: baseline; gap: 8px;
+  }
+  .wf-step .id {
+    font-family: ui-monospace, monospace; font-size: 10px;
+    color: var(--muted); min-width: 28px;
+  }
+  .wf-step .name { flex: 1; }
+  .wf-step .papers {
+    font-size: 10px; color: var(--muted);
+    font-family: ui-monospace, monospace;
+  }
+
+  /* —— callout —— */
+  .callout {
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.danger { background: #fef2f2; border-color: #ef4444; }
+  .callout.info { background: #eff6ff; border-color: #2563eb; }
+  .callout.success { background: #f0fdf4; border-color: #22c55e; }
+  .callout strong { display: inline-block; margin-bottom: 4px; }
+
+  /* —— 业务场景流程图 —— */
+  .scenario-flow {
+    background: var(--card); border: 2px solid var(--v6);
+    border-radius: 10px; padding: 20px 24px; margin: 16px 0;
+  }
+  .scenario-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 12px;
+    color: var(--v6);
+    padding-bottom: 8px; border-bottom: 2px dashed var(--v6);
+  }
+  .flow-step {
+    background: #fdf2f8; border-left: 3px solid var(--v6);
+    padding: 8px 12px; margin: 6px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .flow-step .head {
+    display: flex; align-items: center; gap: 8px; font-weight: 600;
+    font-size: 12.5px;
+  }
+  .flow-step .head .num {
+    display: inline-block; background: var(--v6); color: white;
+    width: 22px; height: 22px; border-radius: 50%;
+    text-align: center; line-height: 22px;
+    font-size: 11px; font-weight: 700;
+  }
+  .flow-step .uses {
+    font-size: 11px; color: var(--muted);
+    margin-top: 4px; line-height: 1.5;
+  }
+  .flow-step .uses code {
+    background: white; padding: 1px 5px; border-radius: 3px;
+    font-size: 10.5px;
+  }
+
+  .layer-stats {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+    margin: 14px 0;
+  }
+  .ls-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px; text-align: center;
+  }
+  .ls-card .v { font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .ls-card .l { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+  .ls-card.l1 .v { color: var(--L1); }
+  .ls-card.l2 .v { color: var(--L2); }
+  .ls-card.l3 .v { color: var(--L3); }
+  .ls-card.l4 .v { color: var(--L4); }
+  .ls-card.l6 .v { color: var(--v6); }
+  .ls-card.l1 { border-top: 3px solid var(--L1); }
+  .ls-card.l2 { border-top: 3px solid var(--L2); }
+  .ls-card.l3 { border-top: 3px solid var(--L3); }
+  .ls-card.l4 { border-top: 3px solid var(--L4); }
+  .ls-card.l6 { border-top: 3px solid var(--v6); }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="tag">分析报告 + v6 设计提议</span>
+  <h1>v5 分析 + v6 工作流引擎设计</h1>
+  <div class="sub">
+    把 v5 的 <strong>96 Class 字典</strong> + 我们 review 版的 <strong>14 条业务规则</strong> + v4 设计的 <strong>4 层标签 / 经验沉淀</strong>
+    合并为统一的 v6 引擎，最终<strong>目标是让本体知识库直接驱动东林事务所的年审业务工作流</strong> ——
+    从计划、执行到报告，一条工作流串起 60+ 张底稿 / 14 条规则 / 4 个 Agent / 三级复核。
+  </div>
+  <div class="meta">
+    <span>📅 2026-05-25</span>
+    <span>📂 backend/data/donglin/v6_workflow_design.html</span>
+    <span>🎯 目标：本体驱动业务工作流</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ TL;DR ═══════════ -->
+<section>
+  <div class="tldr">
+    <h3>📋 TL;DR — 一句话说清</h3>
+    <p>
+      <strong>v5 的强项</strong>是把 TBox 字典扩展到 96 Class（业务覆盖完整），<strong>弱项</strong>是没有
+      AuditRule.formal_expression / `_layer` / `layer_chain` / L4 经验沉淀。<br>
+      <strong>review 版（我们方法 A）的强项</strong>是 14 条业务规则带形式化表达式、4,250 cell 追溯能跑通 5 张底稿；<strong>弱项</strong>是 TBox 只有 52 Class、ABox 人工字面量、不可重跑。<br>
+      <strong>v6 提议</strong>：在 v5 的 96 Class + 我们 14 规则的基础上，<strong>新增 Layer 6 工作流编排</strong> ——
+      用 WorkflowDefinition / WorkflowStep / WorkflowExecution 等新 OT，把年审"计划→执行→报告"
+      的 ~20 步流程结构化，每步绑定底稿 + 规则 + Agent + 复核，让本体直接驱动业务流。
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════ §1 v5 vs Review 版 ═══════════ -->
+<section>
+  <h2>§1 v5 vs Review 版（方法 A）·  详细分析</h2>
+
+  <h3>1.1 数量对比</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>维度</th>
+        <th><span class="pill rev">Review 版（我们）</span></th>
+        <th><span class="pill v5">v5（侯总最新）</span></th>
+        <th>差异</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>ObjectType / Class 数</td><td>52</td><td><strong>96</strong></td><td>+44 (+85%)</td></tr>
+      <tr><td><span class="pill L1">L1</span> 国际通用</td><td>~18</td><td><strong>~32</strong></td><td>+14 (+78%)</td></tr>
+      <tr><td><span class="pill L2">L2</span> 中国本地</td><td>~12</td><td><strong>~18</strong></td><td>+6 (+50%)</td></tr>
+      <tr><td><span class="pill L3">L3</span> 事务所专有</td><td>~22</td><td><strong>~46</strong></td><td>+24 (+109%)</td></tr>
+      <tr><td>审计认定 Class</td><td>1 + 6 实例</td><td><strong>1 基类 + 10 子类</strong></td><td>+4 子类</td></tr>
+      <tr><td>AuditRule 业务规则</td><td><strong>14 条（含 formal_expression）</strong></td><td>0</td><td>-14</td></tr>
+      <tr><td>FillRule 模板规则</td><td>0</td><td><strong>42 条</strong></td><td>+42</td></tr>
+      <tr><td>Cell 级别数据</td><td>4,250 provenance trace</td><td><strong>188,955 cell_values</strong></td><td>+184K</td></tr>
+      <tr><td>调整分录建议</td><td><strong>2 笔 Z6-AI-*</strong></td><td>0</td><td>-2</td></tr>
+      <tr><td>能跑 Agent 填稿</td><td><span class="pill yes">✓ 5 张端到端</span></td><td><span class="pill no">✗ 静态查看</span></td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.2 v5 在 L1+L2 的关键扩展（业务建模更细颗粒）</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:14%">业务领域</th>
+        <th style="width:22%">v5 新增 Class</th>
+        <th>业务含义</th>
+        <th style="width:12%">层级</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>凭证 / 单据</td>
+        <td><code>Invoice</code> · <code>JournalEntry</code> · <code>Contract</code> · <code>EngagementLetter</code> · <code>LoanContract</code> · <code>ConfirmationLetter</code></td>
+        <td>把每种文档建一等公民，原来只有 Voucher</td>
+        <td><span class="pill L1">L1</span></td>
+      </tr>
+      <tr>
+        <td>内控</td>
+        <td><code>ControlActivity</code> · <code>Walkthrough</code> · <code>ControlDeficiency</code></td>
+        <td>内控测试 / 穿行测试 / 控制缺陷一等公民</td>
+        <td><span class="pill L1">L1</span></td>
+      </tr>
+      <tr>
+        <td>报告深化</td>
+        <td><code>FinancialStatement</code> · <code>ReportLineItem</code> · <code>NoteSection</code> · <code>EmphasisOfMatterParagraph</code></td>
+        <td>报告拆到行项 + 附注段一等公民</td>
+        <td><span class="pill L1">L1</span></td>
+      </tr>
+      <tr>
+        <td>认定细分</td>
+        <td>新增 4 个：<code>Occurrence</code> · <code>Valuation</code> · <code>Allocation</code> · <code>Classification</code></td>
+        <td>从 6 种细化到 10 种认定（更接近 ISA 全集）</td>
+        <td><span class="pill L1">L1</span></td>
+      </tr>
+      <tr>
+        <td>会计框架</td>
+        <td><code>AccountingFramework</code></td>
+        <td>中国老准则 vs 新准则双轨判定</td>
+        <td><span class="pill L2">L2</span></td>
+      </tr>
+      <tr>
+        <td>重要性</td>
+        <td><code>MaterialityBenchmark</code> 单建</td>
+        <td>CSA 1221 五种基准（资产/净资/收入/费用/利润）</td>
+        <td><span class="pill L2">L2</span></td>
+      </tr>
+      <tr>
+        <td>舞弊与持续经营</td>
+        <td><code>FraudRisk</code> · <code>GoingConcernAssessment</code></td>
+        <td>CSA 1141 舞弊默认 + CSA 1324 持续经营</td>
+        <td><span class="pill L2">L2</span></td>
+      </tr>
+      <tr>
+        <td>资产明细 (L3)</td>
+        <td><code>FixedAssetItem</code> · <code>DepreciationSchedule</code> · <code>InventoryItem</code> · <code>InventorySheet</code></td>
+        <td>每个具体资产 / 折旧计算表都建模</td>
+        <td><span class="pill L3">L3</span></td>
+      </tr>
+      <tr>
+        <td>往来 / 税务 / 薪酬 (L3)</td>
+        <td><code>CounterpartyUnit</code> · <code>TaxItem</code> · <code>SalaryRoster</code></td>
+        <td>东林模板的具体业务对象</td>
+        <td><span class="pill L3">L3</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 v5 缺失的关键业务知识层</h3>
+
+  <div class="innov-grid">
+    <div class="innov-card" style="border-left-color:#ef4444">
+      <h5 style="color:#ef4444">❌ 1. 没有 AuditRule.formal_expression</h5>
+      <p style="font-size:12.5px">v5 的 42 条 FillRule 只有 Excel 公式（"C11 取自 F824"），<strong>没有一条业务规则</strong>（"应收贷方应该重分类"、"5 笔贷款 100% 关联担保触发持续经营关注"）。</p>
+      <p style="font-size:12.5px">而我们 review 版的 14 条 AuditRule 每条都有 <code>formal_expression</code>（如 <code>closing_cr &gt; 0</code>），<strong>Agent 直接可求值触发</strong>。</p>
+    </div>
+
+    <div class="innov-card" style="border-left-color:#ef4444">
+      <h5 style="color:#ef4444">❌ 2. 没有 4 层标签 <code>_layer</code></h5>
+      <p style="font-size:12.5px">v5 的 96 个 Class 全在同一 namespace，<strong>没区分 L1/L2/L3</strong>。新所部署时不知道哪些可一字不改、哪些必须重抽。</p>
+      <p style="font-size:12.5px">侯老师 review 时也无法快速识别"哪些是国际通用、哪些是东林自定"。</p>
+    </div>
+
+    <div class="innov-card" style="border-left-color:#ef4444">
+      <h5 style="color:#ef4444">❌ 3. 没有 cell 级业务追溯链 <code>layer_chain</code></h5>
+      <p style="font-size:12.5px">v5 的 188,955 cell_values 只记录"这格当时是什么数值"，<strong>没记录为什么填这个</strong>。</p>
+      <p style="font-size:12.5px">我们的 4,250 provenance 每格带 source_kind + ontology_refs + rule_code，能完整追到准则 → 内规 → 客户数据。</p>
+    </div>
+
+    <div class="innov-card" style="border-left-color:#ef4444">
+      <h5 style="color:#ef4444">❌ 4. 没有自动调整分录建议</h5>
+      <p style="font-size:12.5px">v5 有 <code>Z6AdjustmentEntry</code> Class，但<strong>没有任何实例</strong>（因为没有 AuditRule 触发机制）。</p>
+      <p style="font-size:12.5px">我们 review 版已经自动建议了 <strong>2 笔调整</strong>：Z6-AI-A6-01 应收贷方 ¥7.11M + Z6-AI-A9-01 出口退税 ¥430K。</p>
+    </div>
+
+    <div class="innov-card" style="border-left-color:#ef4444">
+      <h5 style="color:#ef4444">❌ 5. 没有 L4 审计师经验沉淀</h5>
+      <p style="font-size:12.5px">v5 没有从 ChatPanel / VBA 个性化模式收集审计师经验的管道。</p>
+      <p style="font-size:12.5px">侯总跳槽 / 退休带走的经验**永远沉淀不到事务所知识库**。</p>
+    </div>
+
+    <div class="innov-card" style="border-left-color:#ef4444">
+      <h5 style="color:#ef4444">❌ 6. 没有业务工作流编排层（最致命）</h5>
+      <p style="font-size:12.5px">v5 / Review 版都没有 <strong>"年审从计划到报告的工作流"</strong> 这一层。底稿 / 规则 / Agent 都各自独立，没有总指挥告诉你"现在该做哪一步、上一步完成后下一步是什么、跨底稿的依赖关系是什么"。</p>
+      <p style="font-size:12.5px"><strong>这正是 v6 要补的核心。</strong></p>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <strong>分析结论一句话</strong>
+    <p style="margin:6px 0 0">
+      <strong>v5 是一本超详尽的「审计本体词典」</strong>（96 Class，但只是描述"世界上有什么"）；
+      <strong>Review 版是一本「能跑的审计操作手册」</strong>（52 Class + 14 规则 + 5 张能跑的底稿）；
+      但<strong>两者都不是一条「年审业务流水线」</strong> ——
+      没有"从承接到出报告"的工作流编排。v6 要做的正是<strong>把字典和操作手册装到一条流水线里</strong>。
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════ §2 v6 设计目标 ═══════════ -->
+<section>
+  <h2>§2 v6 设计目标</h2>
+
+  <h3>2.1 终极目标</h3>
+  <p style="font-size:14px">
+    <strong>让东林事务所的审计师能在 v6 引擎上完成一次完整的年审项目</strong>：
+    从承接客户开始，按工作流逐步推进，每一步都由本体知识自动驱动 ——
+    告诉审计师"现在做什么、用哪张底稿、跑哪条规则、调用哪个 Agent、达到什么条件可签字"。
+  </p>
+
+  <h3>2.2 三个具体目标</h3>
+  <ol>
+    <li>
+      <strong>合并 v5 字典 + Review 版规则</strong> ——
+      v6 TBox = v5 的 96 Class + 我们的 14 条 AuditRule (含 formal_expression)
+    </li>
+    <li>
+      <strong>引入 v4 设计的 4 层标签 + 经验沉淀</strong> ——
+      每个 Class 标 <code>_layer</code>，cell trace 带 <code>layer_chain</code>，L4 双管道
+    </li>
+    <li>
+      <strong>新增 Layer 6 业务工作流编排</strong>（v6 核心创新）——
+      用 5 个新 OT 描述年审流程：WorkflowDefinition / WorkflowStep / WorkflowExecution / StepResult / Gate
+    </li>
+  </ol>
+
+  <h3>2.3 验证标准</h3>
+  <div class="callout info">
+    <strong>v6 成功标准</strong>：
+    <ul style="margin:6px 0">
+      <li>审计师在前端选"江苏大王 2025 年审" → 系统自动展开 ~20 步工作流</li>
+      <li>每步显示"输入底稿 + 触发规则 + 绑定 Agent + 完成条件"</li>
+      <li>Agent 跑稿后自动 mark 该步完成，触发下一步</li>
+      <li>三级复核签字后该步进入"已完成"状态</li>
+      <li>整个项目完成时自动生成 AuditReport + Z6 调整分录汇总 + 报告披露段</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════ §3 v6 6 层架构 ═══════════ -->
+<section>
+  <h2>§3 v6 六层架构</h2>
+
+  <div class="arch-cake">
+    <div class="arch-layer l6">
+      <span class="tag">L6</span>
+      <span class="name">业务工作流编排</span>
+      <span class="src">v6 NEW</span>
+      <div class="desc">WorkflowDefinition / Step / Execution / Gate · 年审 ~20 步流程</div>
+    </div>
+    <div class="arch-layer l5">
+      <span class="tag">L5</span>
+      <span class="name">Agent 执行引擎</span>
+      <span class="src">复用 Review 版</span>
+      <div class="desc">填稿 / 重算 / 核对 / 调整建议 / 三级复核 → 5 个 jsdw_* Agent</div>
+    </div>
+    <div class="arch-layer l4">
+      <span class="tag">L4</span>
+      <span class="name">业务规则 + 4 层追溯</span>
+      <span class="src">合并 Review + v4</span>
+      <div class="desc">14 条 AuditRule.formal_expression · cell_provenance 含 layer_chain</div>
+    </div>
+    <div class="arch-layer l3">
+      <span class="tag">L3</span>
+      <span class="name">本体 TBox (96 + _layer 标签)</span>
+      <span class="src">v5 + v4 标签</span>
+      <div class="desc">96 Class · 18 ObjectProperty · 80 DataProperty · 每个带 L1/L2/L3 标签</div>
+    </div>
+    <div class="arch-layer l2">
+      <span class="tag">L2</span>
+      <span class="name">证据自动抽取 (7 类 extractor)</span>
+      <span class="src">v5 强项</span>
+      <div class="desc">Excel/VBA/PDF/DOC/DOCX/HTML/cell_values · 188K cell_values · 0 ghost type</div>
+    </div>
+    <div class="arch-layer l1">
+      <span class="tag">L1</span>
+      <span class="name">原始材料</span>
+      <span class="src">data sources</span>
+      <div class="desc">442-sheet .xlsm · 年报 PDF · 客户 TB/Aux/Voucher · 审计准则文档</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>层次依赖</strong>：上层每一层都依赖下层 ——
+    L6 工作流引用 L4 规则 + L5 Agent，L4 规则操作 L3 TBox 实例，L3 实例来自 L2 抽取，L2 抽取来自 L1 原料。
+    <strong>v6 在不动 L1-L5 现有产物的前提下新加 L6 工作流引擎</strong>。
+  </div>
+</section>
+
+<!-- ═══════════ §4 v6 新增 Class ═══════════ -->
+<section>
+  <h2>§4 v6 新增 — 5 个工作流 Class</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:18%">Class</th>
+        <th style="width:8%">层级</th>
+        <th style="width:32%">关键 DataProperty</th>
+        <th>业务作用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>WorkflowDefinition</code></td>
+        <td><span class="pill L3">L3</span></td>
+        <td>name / version / phases[] / total_steps</td>
+        <td><strong>工作流模板</strong>（东林标准年审、特殊审计、高新专项…），定义"应该做什么"</td>
+      </tr>
+      <tr>
+        <td><code>WorkflowStep</code></td>
+        <td><span class="pill L3">L3</span></td>
+        <td>step_no / phase / depends_on[] / required_papers[] / required_rules[] / bound_agent / completion_criteria</td>
+        <td><strong>步骤定义</strong>，描述每步的输入/规则/Agent/完成条件</td>
+      </tr>
+      <tr>
+        <td><code>WorkflowExecution</code></td>
+        <td><span class="pill L0">L0</span></td>
+        <td>execution_id / project_id / started_at / current_step / overall_status</td>
+        <td><strong>执行实例</strong>（如 "ENG-JSDW-2025 当前进度 = 步骤 12/20"），跟踪一次年审的实际进展</td>
+      </tr>
+      <tr>
+        <td><code>StepResult</code></td>
+        <td><span class="pill L0">L0</span></td>
+        <td>step_id / status / produced_papers[] / triggered_adjustments[] / reviewer_signoffs[] / completed_at</td>
+        <td><strong>步骤产物记录</strong>，含产出底稿、调整分录、复核签字、时间戳</td>
+      </tr>
+      <tr>
+        <td><code>WorkflowGate</code></td>
+        <td><span class="pill L3">L3</span></td>
+        <td>gate_id / blocks_step / condition / required_signoff_role</td>
+        <td><strong>关键控制点</strong>（如"三级复核未签字不能进报告阶段"），保证流程合规</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>新增 ObjectProperty (~6 个)</h3>
+  <ul>
+    <li><code>workflowAppliesTo</code>: WorkflowExecution → Engagement</li>
+    <li><code>workflowUsesDefinition</code>: WorkflowExecution → WorkflowDefinition</li>
+    <li><code>stepRequiresPaper</code>: WorkflowStep → WorkingPaper</li>
+    <li><code>stepRequiresRule</code>: WorkflowStep → AuditRule</li>
+    <li><code>stepBindsAgent</code>: WorkflowStep → AgentConfig</li>
+    <li><code>stepProducesResult</code>: WorkflowStep → StepResult</li>
+  </ul>
+
+  <h3>合并后总规模</h3>
+  <div class="layer-stats">
+    <div class="ls-card l1"><div class="v">~32</div><div class="l">L1 类型</div></div>
+    <div class="ls-card l2"><div class="v">~18</div><div class="l">L2 类型</div></div>
+    <div class="ls-card l3"><div class="v">~46 + 5</div><div class="l">L3 类型 (+ v6 工作流)</div></div>
+    <div class="ls-card l4"><div class="v">14</div><div class="l">AuditRule 形式化</div></div>
+    <div class="ls-card l6"><div class="v">~20</div><div class="l">年审 WorkflowStep</div></div>
+  </div>
+</section>
+
+<!-- ═══════════ §5 年审工作流（具体 20 步） ═══════════ -->
+<section>
+  <h2>§5 v6 年审工作流定义 (东林标准, 3 阶段 × ~20 步)</h2>
+
+  <div class="workflow-phases">
+    <div class="wf-phase plan">
+      <h4>📋 Phase A · 计划 (~7 步)</h4>
+      <div class="wf-step">
+        <span class="id">A1</span>
+        <span class="name">承接评价</span>
+        <span class="papers">→ X11</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">A2</span>
+        <span class="name">业务约定书签订</span>
+        <span class="papers">→ X11 / EngagementLetter</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">A3</span>
+        <span class="name">客户基本情况调查</span>
+        <span class="papers">→ X1 / BusinessRegistration</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">A4</span>
+        <span class="name">重要性测算</span>
+        <span class="papers">→ Y3 / MaterialityLevel</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">A5</span>
+        <span class="name">整体风险评估</span>
+        <span class="papers">→ Y8 / RMM / FraudRisk</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">A6</span>
+        <span class="name">内控调查 + 穿行</span>
+        <span class="papers">→ X4 / Y2 / Walkthrough</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">A7</span>
+        <span class="name">制定审计计划</span>
+        <span class="papers">→ X3 (gate: 一级复核)</span>
+      </div>
+    </div>
+
+    <div class="wf-phase exec">
+      <h4>⚙ Phase B · 执行 (~10 步)</h4>
+      <div class="wf-step">
+        <span class="id">B1</span>
+        <span class="name">数据集成（TB / Aux / Voucher）</span>
+        <span class="papers">→ TB1 / TB3 / KM</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B2</span>
+        <span class="name">实质性测试 · 资产 14 张</span>
+        <span class="papers">→ A1-A33</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B3</span>
+        <span class="name">实质性测试 · 负债 9 张</span>
+        <span class="papers">→ B1-B15</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B4</span>
+        <span class="name">实质性测试 · 权益 2 张</span>
+        <span class="papers">→ C1-C2</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B5</span>
+        <span class="name">实质性测试 · 损益 9 张</span>
+        <span class="papers">→ D1-D16</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B6</span>
+        <span class="name">税务专项 7 张</span>
+        <span class="papers">→ G / H1 / G500</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B7</span>
+        <span class="name">关联方 / 持续经营专项</span>
+        <span class="papers">→ ZK5 / GoingConcern (gate)</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B8</span>
+        <span class="name">调整分录汇总</span>
+        <span class="papers">→ Z6 / UnadjustedMisstatement</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B9</span>
+        <span class="name">异常项目沟通客户</span>
+        <span class="papers">→ Z11 (gate: 客户确认)</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">B10</span>
+        <span class="name">外勤结束（gate: 二级复核）</span>
+        <span class="papers">→ Z5 / ReviewRecord</span>
+      </div>
+    </div>
+
+    <div class="wf-phase rep">
+      <h4>📕 Phase C · 报告 (~5 步)</h4>
+      <div class="wf-step">
+        <span class="id">C1</span>
+        <span class="name">试算平衡</span>
+        <span class="papers">→ Z9 / Z9.2</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">C2</span>
+        <span class="name">三级复核签字 (gate)</span>
+        <span class="papers">→ Z1 / ReviewRecord ×3</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">C3</span>
+        <span class="name">报告披露段</span>
+        <span class="papers">→ ZK3.1 / ZK3.2 / ZK4 / NoteSection</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">C4</span>
+        <span class="name">管理建议书</span>
+        <span class="papers">→ Z11 / ManagementLetter</span>
+      </div>
+      <div class="wf-step">
+        <span class="id">C5</span>
+        <span class="name">报告签发 (gate: 签字合伙人)</span>
+        <span class="papers">→ Z0 / AuditReport</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>5.1 单步定义示例（Turtle）</h3>
+
+<pre><span class="c"># Step A4 - 重要性测算</span>
+:step-a4-materiality a :WorkflowStep ;
+    :stepNo <span class="s">"A4"</span> ;
+    :phase <span class="s">"planning"</span> ;
+    :label <span class="s">"重要性测算"</span>@zh ;
+    :dependsOn :step-a3-client-survey ;
+    :requiresPaper :paper-y3 ;
+    :requiresRule :rule-csa-1221-pm-formula ;
+    :bindsAgent :agent-materiality-calc ;
+    :completionCriteria <span class="s">"materiality.PM and materiality.TE and materiality.SUM populated"</span> ;
+    :reviewRequired <span class="s">"项目经理"</span> ;
+    :_layer <span class="s">"L3:donglin"</span> ;
+    :_layerBasis <span class="s">"东林标准年审工作流 v2025X04A · 基于 CSA 1221"</span> .
+
+<span class="c"># Step B2 - 应收账款 (A6) 实质性测试</span>
+:step-b2-receivables a :WorkflowStep ;
+    :stepNo <span class="s">"B2.A6"</span> ;
+    :phase <span class="s">"execution"</span> ;
+    :label <span class="s">"应收账款实质性测试"</span>@zh ;
+    :dependsOn :step-b1-data-integration ;
+    :requiresPaper :paper-a6 ;
+    :requiresRule :rule-ar-001 ,                <span class="c"># 应收贷方重分类</span>
+                  :rule-rp-001 ,                 <span class="c"># 关联方资金占用</span>
+                  :rule-csa-1311-ar-confirmation ;
+    :bindsAgent :agent-jsdw-paper-fill ;
+    :triggersAction :action-read-tb-1122 ,
+                    :action-read-aux-1122 ,
+                    :action-recompute-aging ,
+                    :action-sample-top5 ,
+                    :action-generate-adjustment-if-rule-hits ;
+    :completionCriteria <span class="s">"A6.sheet_data complete AND all rules evaluated"</span> ;
+    :_layer <span class="s">"L3:donglin"</span> .</pre>
+</section>
+
+<!-- ═══════════ §6 业务场景 ═══════════ -->
+<section>
+  <h2>§6 完整业务场景演示 — A6 应收账款审计在 v6 里怎么跑</h2>
+
+  <div class="scenario-flow">
+    <div class="scenario-title">🎬 场景：江苏大王 2025 年审 · A6 应收账款（v6 工作流引擎驱动）</div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">1</span>审计师在前端选 "ENG-JSDW-2025 年审"</div>
+      <div class="uses">
+        v6 创建 <code>:WorkflowExecution</code> 实例，绑定 <code>:WorkflowDefinition donglin-annual-audit-v2025X04A</code>，初始 current_step = A1
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">2</span>工作流推进到 Step B2.A6（应收账款实质性测试）</div>
+      <div class="uses">
+        v6 查询 <code>:step-b2-receivables.dependsOn</code> = B1 数据集成 → 已完成 ✓<br>
+        v6 显示该步需要：📄 paper-a6 · 📜 AR-RULE-001 + RP-RULE-001 + CSA 1311 · 🤖 jsdw_paper_fill Agent
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">3</span>审计师点 "执行该步" → v6 调用 jsdw_paper_fill Agent</div>
+      <div class="uses">
+        Agent 跑 <code>:triggersAction</code> 中的 5 个动作（Read TB → Read Aux → Recompute Aging → Sample Top5 → Apply Rules）<br>
+        Agent 把 458 客户、305 账龄分析、3,978 个 cell 填入 A6.sheet_data
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">4</span>Agent 评估 AR-RULE-001（<code>closing_cr &gt; 0</code>）</div>
+      <div class="uses">
+        153 客户命中 → Agent 自动创建 <code>:Z6AdjustmentEntry</code> 实例：<br>
+        <code>:adj-z6-ai-a6-01 a :Z6AdjustmentEntry ; :amount 7114390.40 ; :debit "1122 应收账款" ; :credit "2203 预收款项" ; :triggeredByRule :rule-ar-001 .</code>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">5</span>每填一格记录 layer_chain provenance</div>
+      <div class="uses">
+        <code>:cell-a6-customer-detail-row42-closing_dr</code> 带 layer_chain = [L1 ISA 530 抽样, L2 CSA 1101, L3 东林 AR-RULE-001, L0 江苏大王客户 000860]
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">6</span>StepResult 写回 — 步骤完成</div>
+      <div class="uses">
+        <code>:result-b2-a6 a :StepResult ; :status "AI 初稿"; :producedPapers :paper-a6 ; :triggeredAdjustments :adj-z6-ai-a6-01 ; :completedAt "2026-03-02T14:23"</code>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">7</span>v6 自动推进到 next step (B2.A9 其他应收款)</div>
+      <div class="uses">
+        v6 查询 <code>:WorkflowStep WHERE dependsOn = :step-b2-a6 AND status = "pending"</code> → 找到 B2.A9 → 自动启动
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">8</span>三级复核 Gate</div>
+      <div class="uses">
+        所有 B 阶段步骤完成后，v6 检查 <code>:WorkflowGate gate-l3-review</code> → 等待 童中国 签字<br>
+        签字后才能进 Phase C 报告阶段
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">9</span>L4 经验沉淀</div>
+      <div class="uses">
+        过程中侯佳成手动改了 5 个客户的金额（理由："按客户已签认调整"）<br>
+        v6 的 L4 双管道捕获 → 累积 ≥ 3 次 → 提议新规则 <code>rule-ar-001-v2: closing_cr &gt; 5000</code> 待 sign-off
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="head"><span class="num">10</span>报告自动生成</div>
+      <div class="uses">
+        到 C5 报告签发：v6 查询本 Engagement 下所有 <code>:Z6AdjustmentEntry</code>（2 笔自动 + N 笔人工）<br>
+        + 查询 <code>:GoingConcernAssessment</code> = 触发<br>
+        + 查询所有 <code>:NoteSection</code> 披露段<br>
+        → 自动组装成 <code>:AuditReport</code> 实例
+      </div>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <strong>v6 的核心价值在这个场景里展现</strong>：
+    <ul style="margin:6px 0">
+      <li>审计师<strong>不用记得</strong>"A6 后面该做什么" — 工作流告诉他</li>
+      <li>Agent <strong>不用人工调度</strong> — 工作流绑定了具体 Agent</li>
+      <li>规则<strong>自动触发</strong> — 工作流知道 A6 该应用哪 3 条规则</li>
+      <li>复核<strong>不会漏</strong> — Gate 强制三级签字才能往下走</li>
+      <li>经验<strong>自动沉淀</strong> — 改写事件累积成下一版规则</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════ §7 落地路线图 ═══════════ -->
+<section>
+  <h2>§7 v6 落地路线图（基于 v5 + Review 版合并）</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:7%">阶段</th>
+        <th style="width:28%">动作</th>
+        <th style="width:16%">依赖</th>
+        <th style="width:12%">工期</th>
+        <th>产物 / 接收标准</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Sprint M1</strong></td>
+        <td>合并 v5 TBox (96 Class) + 我们 14 条 AuditRule 到统一 tbox.json</td>
+        <td>v5 zip 解压</td>
+        <td>3-5 天</td>
+        <td>tbox.json 含 110+ Class（v5 的 96 + 我们独有的 + 5 个 v6 新工作流）<br>每个 Class 带 <code>_layer</code></td>
+      </tr>
+      <tr>
+        <td><strong>Sprint M2</strong></td>
+        <td>给现有 4,250 cell_provenance 补 layer_chain 字段</td>
+        <td>M1</td>
+        <td>3 天</td>
+        <td>ProvenanceDrawer 前端显示 4 层链路</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint W1</strong></td>
+        <td>设计 5 个新工作流 Class + 6 个 ObjectProperty</td>
+        <td>M1</td>
+        <td>3 天</td>
+        <td>v6 schema.md, 含 WorkflowDefinition 等 5 个 Class 定义</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint W2</strong></td>
+        <td>编写东林标准年审工作流定义 (Turtle + JSON, ~20 步)</td>
+        <td>W1</td>
+        <td>1 周</td>
+        <td>workflow-donglin-annual-v2025X04A.ttl<br>每步绑定 paper / rule / agent</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint W3</strong></td>
+        <td>实现工作流引擎运行时（python WorkflowExecutor）</td>
+        <td>W2</td>
+        <td>1 周</td>
+        <td>支持 start / advance / gate / signoff 4 个 API</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint W4</strong></td>
+        <td>前端工作流页：年审进度看板 + 当前步骤 + 下一步推荐</td>
+        <td>W3</td>
+        <td>1 周</td>
+        <td>WorkflowDashboard.tsx 加到 React 前端</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint L4</strong></td>
+        <td>L4 双管道（ChatPanel 改写 + VBA 模式检测）+ LearningInbox</td>
+        <td>W4</td>
+        <td>1-2 周</td>
+        <td>chat_change_events.jsonl + ProposedRule 升级 sign-off 流程</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint E2E</strong></td>
+        <td>江苏大王 2025 完整端到端跑通 ~20 步年审</td>
+        <td>L4</td>
+        <td>1 周</td>
+        <td>能从 A1 跑到 C5，每步 Agent 输出 + 三级复核签字 + 报告生成</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint PoC</strong></td>
+        <td>跨所 PoC：换立信审计的一家客户跑同套工作流</td>
+        <td>E2E</td>
+        <td>1 周</td>
+        <td>L1+L2 零改动；L3 + 工作流定义重新写一份给立信</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:14px;font-size:13px">
+    <strong>共计</strong>: 7-9 周 ·
+    <strong>关键里程碑</strong>:
+    Sprint E2E (江苏大王跑通 20 步) = 给侯佳成 demo 节点 ·
+    Sprint PoC = 跨所商业里程碑
+  </p>
+</section>
+
+<!-- ═══════════ §8 给侯总 + 工程团队 ═══════════ -->
+<section>
+  <h2>§8 给侯总 + 工程团队的下一步</h2>
+
+  <h3>📨 给侯总的话</h3>
+  <div class="callout info">
+    <p style="font-size:13.5px;margin:0">
+      "侯老师，<strong>v5 这版本体词典做得很扎实</strong>（96 Class + 188K cell_values + 0 ghost type），
+      但缺<strong>业务规则形式化</strong>和<strong>工作流编排</strong>这两层。
+      <br><br>
+      我提议 <strong>v6 = v5 字典 + 我们的 14 条业务规则 + 新增工作流编排层（5 个新 Class）</strong>。
+      最终效果是审计师能在前端选"江苏大王 2025 年审"，
+      系统自动展开 ~20 步年审流程（计划 → 执行 → 报告），
+      每步告诉审计师"用哪张底稿、跑哪条规则、调用哪个 Agent、达到什么条件可签字"，
+      Agent 自动填稿、自动建议调整分录、自动累积你的经验成新规则。
+      <br><br>
+      <strong>请你 review 三件事</strong>：
+      <ol>
+        <li><strong>v5 的 96 Class 完整性</strong> — 还有哪些东林业务场景没覆盖？（如 IT 审计、舞弊调查）</li>
+        <li><strong>东林标准年审工作流 ~20 步的颗粒度</strong> — 我画的 §5 阶段分解是否符合你们实际？</li>
+        <li><strong>三级复核 / 客户确认 / 签字合伙人</strong> 这些 Gate 的具体规则 — 触发条件正确吗？</li>
+      </ol>
+      <br>
+      Sprint E2E 完成（~6 周）后我们给你完整 demo：从 A1 跑到 C5，生成完整审计报告。"
+    </p>
+  </div>
+
+  <h3>🛠 给工程团队的清单</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:14%">优先级</th>
+        <th>任务</th>
+        <th style="width:14%">依赖</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>P0</strong></td><td>解压 v5 的 tbox.ttl + abox.ttl，导入到我们 backend SQLite</td><td>无</td></tr>
+      <tr><td><strong>P0</strong></td><td>给每个 Class 加 <code>_layer</code> 字段（L1/L2/L3，参考我们之前的标签策略）</td><td>P0-1</td></tr>
+      <tr><td><strong>P0</strong></td><td>合并 v5 的 96 Class + 我们 14 条 AuditRule</td><td>P0-2</td></tr>
+      <tr><td><strong>P1</strong></td><td>新增 5 个工作流 Class 到 TBox（WorkflowDefinition 等）</td><td>P0</td></tr>
+      <tr><td><strong>P1</strong></td><td>用 Turtle 写东林标准年审工作流（20 步 × 每步约 8 个属性）</td><td>P1-1</td></tr>
+      <tr><td><strong>P1</strong></td><td>实现 WorkflowExecutor 运行时（python，支持 start/advance/gate/signoff）</td><td>P1-2</td></tr>
+      <tr><td><strong>P2</strong></td><td>给 cell_provenance 加 layer_chain 字段</td><td>P0</td></tr>
+      <tr><td><strong>P2</strong></td><td>前端加 WorkflowDashboard.tsx 看板</td><td>P1</td></tr>
+      <tr><td><strong>P3</strong></td><td>L4 双管道：ChatPanel 改写监听 + VBA 模式检测</td><td>P2</td></tr>
+      <tr><td><strong>P3</strong></td><td>LearningInbox 候选规则 sign-off 流程</td><td>P3-1</td></tr>
+    </tbody>
+  </table>
+
+  <h3>🎯 验收门槛（v6 sign-off 才能发布）</h3>
+  <ul>
+    <li>✅ 江苏大王 2025 年审能从 A1 跑到 C5（20 步全过）</li>
+    <li>✅ 每步 Agent 自动产出 ≥ 80% cell；剩 ≤ 20% 留人工补</li>
+    <li>✅ 自动建议 ≥ 2 笔 Z6 调整分录</li>
+    <li>✅ 自动触发 GoingConcernAssessment（江苏大王 100% 关联担保场景）</li>
+    <li>✅ 三级复核 Gate 在前端可见 + 签字操作可记录</li>
+    <li>✅ 跨所部署立信 PoC 在 ≤ 1 周内完成</li>
+  </ul>
+</section>
+
+<hr>
+
+<footer>
+  生成于 2026-05-25 · v5 分析 + v6 工作流引擎设计<br>
+  目标：让本体知识库直接驱动东林事务所的年审业务工作流（从承接到出报告）
+</footer>
+
+</main>
+</body>
+</html>

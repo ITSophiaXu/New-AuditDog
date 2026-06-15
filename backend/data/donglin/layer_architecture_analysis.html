@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>审计本体的 4 层架构 — 跨所复用策略</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+    --L1: #2563eb;   /* 国际 blue */
+    --L1-bg: #dbeafe;
+    --L1-soft: #eff6ff;
+    --L2: #0d9488;   /* 中国 teal */
+    --L2-bg: #ccfbf1;
+    --L2-soft: #f0fdfa;
+    --L3: #d97706;   /* 东林 amber */
+    --L3-bg: #fed7aa;
+    --L3-soft: #fffbeb;
+    --L4: #7c3aed;   /* 经验 violet */
+    --L4-bg: #ede9fe;
+    --L4-soft: #faf5ff;
+    --method-a: #7c3aed;
+    --method-b: #0d9488;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.65; font-size: 14px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 35%, #6d28d9 70%, #7c2d12 100%);
+    color: white; padding: 36px 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  header .sub { font-size: 14px; opacity: 0.92; max-width: 900px; line-height: 1.6; }
+  header .meta { margin-top: 16px; display: flex; gap: 24px; font-size: 12px; }
+  header .meta span { opacity: 0.85; }
+  main { max-width: 1280px; margin: 0 auto; padding: 28px 40px 60px; }
+  section { margin-bottom: 36px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 36px 0 14px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+    color: #1e293b;
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 22px 0 10px; color: #334155; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    background: #f1f5f9; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, monospace; font-size: 12px;
+    color: #be185d;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 14px 18px; border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 12px; line-height: 1.55;
+    overflow-x: auto; margin: 8px 0;
+  }
+  pre .k { color: #c084fc; }   /* keyword */
+  pre .s { color: #86efac; }   /* string */
+  pre .n { color: #fde68a; }   /* number */
+  pre .c { color: #94a3b8; }   /* comment */
+
+  /* —— 4 层蛋糕 —— */
+  .cake { max-width: 720px; margin: 24px auto; }
+  .layer {
+    border-radius: 8px; padding: 14px 18px; margin-bottom: 6px;
+    color: white; font-weight: 500; position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .layer .tag {
+    display: inline-block; background: rgba(255,255,255,0.25);
+    padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    font-weight: 700; margin-right: 8px;
+  }
+  .layer .name { font-size: 16px; font-weight: 600; }
+  .layer .desc { font-size: 12px; opacity: 0.92; margin-top: 4px; font-weight: 400; }
+  .layer .pct {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    font-size: 20px; font-weight: 700; opacity: 0.9;
+  }
+  .layer.L1 { background: linear-gradient(90deg, var(--L1), #3b82f6); }
+  .layer.L2 { background: linear-gradient(90deg, var(--L2), #14b8a6); }
+  .layer.L3 { background: linear-gradient(90deg, var(--L3), #f59e0b); }
+  .layer.L4 { background: linear-gradient(90deg, var(--L4), #a78bfa); opacity: 0.75; }
+
+  /* —— 层级卡片 —— */
+  .layer-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    margin: 16px 0;
+  }
+  .layer-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px; border-top: 4px solid;
+  }
+  .layer-card.L1 { border-top-color: var(--L1); }
+  .layer-card.L2 { border-top-color: var(--L2); }
+  .layer-card.L3 { border-top-color: var(--L3); }
+  .layer-card.L4 { border-top-color: var(--L4); }
+  .layer-card .head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    font-weight: 600; font-size: 15px;
+  }
+  .layer-card.L1 .head { color: var(--L1); }
+  .layer-card.L2 .head { color: var(--L2); }
+  .layer-card.L3 .head { color: var(--L3); }
+  .layer-card.L4 .head { color: var(--L4); }
+  .layer-card .head .num {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-size: 13px; font-weight: 700;
+  }
+  .layer-card.L1 .head .num { background: var(--L1); }
+  .layer-card.L2 .head .num { background: var(--L2); }
+  .layer-card.L3 .head .num { background: var(--L3); }
+  .layer-card.L4 .head .num { background: var(--L4); }
+
+  /* —— pill —— */
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; font-weight: 600; margin-right: 4px;
+  }
+  .pill.L1 { background: var(--L1-bg); color: var(--L1); }
+  .pill.L2 { background: var(--L2-bg); color: var(--L2); }
+  .pill.L3 { background: var(--L3-bg); color: var(--L3); }
+  .pill.L4 { background: var(--L4-bg); color: var(--L4); }
+  .pill.A { background: #ede9fe; color: var(--method-a); }
+  .pill.B { background: #ccfbf1; color: var(--method-b); }
+  .pill.gray { background: #f1f5f9; color: var(--muted); }
+
+  /* —— 表格 —— */
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0;
+    background: var(--card); border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  th {
+    background: #f8fafc; padding: 10px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid var(--border); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: top; font-size: 13px;
+  }
+  tr:last-child td { border-bottom: 0; }
+  td.code { font-family: ui-monospace, monospace; font-size: 12px; color: #be185d; }
+
+  /* —— 方法映射 2 栏 —— */
+  .method-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin: 14px 0;
+  }
+  .method-col {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px; border-top: 4px solid;
+  }
+  .method-col.A { border-top-color: var(--method-a); }
+  .method-col.B { border-top-color: var(--method-b); }
+  .method-col h4 {
+    margin: 0 0 10px; font-size: 14px; font-weight: 600;
+  }
+  .method-col.A h4 { color: var(--method-a); }
+  .method-col.B h4 { color: var(--method-b); }
+  .bar {
+    display: flex; height: 22px; border-radius: 4px; overflow: hidden;
+    margin: 8px 0; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .bar > div {
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 11px; font-weight: 600;
+  }
+  .bar .L1 { background: var(--L1); }
+  .bar .L2 { background: var(--L2); }
+  .bar .L3 { background: var(--L3); }
+  .bar .L4 { background: var(--L4); opacity: 0.4; }
+  .bar-legend {
+    display: flex; gap: 12px; font-size: 11px; color: var(--muted);
+    margin-top: 4px;
+  }
+  .bar-legend .dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    margin-right: 4px; vertical-align: middle;
+  }
+
+  /* —— callout —— */
+  .callout {
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    padding: 12px 16px; border-radius: 4px; margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.info { background: #eff6ff; border-color: var(--L1); }
+  .callout.success { background: #f0fdf4; border-color: #22c55e; }
+  .callout.firm { background: var(--L3-soft); border-color: var(--L3); }
+  .callout strong { display: block; margin-bottom: 4px; }
+
+  /* —— 流程 —— */
+  .flow {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 8px; margin: 14px 0;
+  }
+  .flow .step {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 12px; font-size: 12px;
+    position: relative;
+  }
+  .flow .step::after {
+    content: "→"; position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%); color: var(--muted); font-size: 14px;
+  }
+  .flow .step:last-child::after { content: ""; }
+  .flow .step .num {
+    background: var(--L1); color: white; border-radius: 50%;
+    width: 20px; height: 20px; display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; margin-right: 4px;
+  }
+  .flow .step .name { font-weight: 600; }
+  .flow .step .detail { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+  /* —— 统计 —— */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0; }
+  .stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px; text-align: center;
+  }
+  .stat .v { font-size: 26px; font-weight: 700; line-height: 1.1; }
+  .stat .l { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .stat.L1 { border-top: 3px solid var(--L1); }
+  .stat.L1 .v { color: var(--L1); }
+  .stat.L2 { border-top: 3px solid var(--L2); }
+  .stat.L2 .v { color: var(--L2); }
+  .stat.L3 { border-top: 3px solid var(--L3); }
+  .stat.L3 .v { color: var(--L3); }
+  .stat.L4 { border-top: 3px solid var(--L4); }
+  .stat.L4 .v { color: var(--L4); }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>审计本体的 4 层架构 · 跨所复用与差异化策略</h1>
+  <div class="sub">基于你的分层思路：把本体知识库按「国际准则 → 中国本地化 → 事务所内规 → 审计师经验」四层组织，TBox 来自上面两层（跨所通用），ABox / Rule / Action 参数来自下面两层（差异化资产）。本文档把现有 2 套抽取方法映射到 4 层模型，并给出 v4 演进路径。</div>
+  <div class="meta">
+    <span>📅 2026-05-24</span>
+    <span>🎯 给侯佳成 review 的策略文档</span>
+    <span>📂 backend/data/donglin/layer_architecture_analysis.html</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ §1 模型 ═══════════ -->
+<section>
+  <h2>§1 4 层模型 — 标准的审计知识分层</h2>
+  <p>你提出的 4 层模型本质是经典的 <strong>Reference Architecture for Audit Knowledge</strong>，国际上 Big 4（PwC Aura / Deloitte EMS / EY Helix / KPMG Clara）都是这套思路：</p>
+
+  <div class="cake">
+    <div class="layer L1">
+      <span class="tag">L1</span>
+      <span class="name">国际通用准则</span> · ISA / IFRS / IFAC
+      <span class="pct">~30%</span>
+      <div class="desc">全球任何 Big 4 + 国内 8 大都遵守。例：6 种认定 / 审计动作分类 / 工作底稿概念</div>
+    </div>
+    <div class="layer L2">
+      <span class="tag">L2</span>
+      <span class="name">中国本地化准则</span> · CSA / CAS / 中注协 / 财政部
+      <span class="pct">~20%</span>
+      <div class="desc">所有中国所通用。例：CSA 1221 重要性梯度 / CAS 36 关联方 / 中国 4 类审计意见</div>
+    </div>
+    <div class="layer L3">
+      <span class="tag">L3</span>
+      <span class="name">事务所内规</span> · Firm-Specific Methodology
+      <span class="pct">~35%</span>
+      <div class="desc">东林 vs 立信 vs 信永中和 不同。例：东林的三级复核 / Z6 调整分录编号 / AR-RULE-001 应收贷方重分类</div>
+    </div>
+    <div class="layer L4">
+      <span class="tag">L4</span>
+      <span class="name">审计师个人经验</span> · Tacit Knowledge
+      <span class="pct">~15% (现在=0)</span>
+      <div class="desc">最难捕获也最值钱。资深审计师的"直觉判断"、"特殊客户怎么处理"。现在数据为零，未来从 ChatPanel 对话日志累积。</div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>核心论断 — 你提的对：</strong>
+    <ul>
+      <li><strong>TBox（对象类型骨架）来自 L1+L2</strong> — 这层每个所大概率一样，做一次跨所复用</li>
+      <li><strong>ABox（实例值）+ Rule formal_expression + Action 参数来自 L3</strong> — 这是事务所差异化资产</li>
+      <li><strong>L3 偶尔触发新 OT</strong>（如东林强调"关联担保" → 单独建 RelatedPartyGuarantee）</li>
+      <li><strong>L4 通过 Agent 交互逐步累积</strong> — 复核批注 / 对话日志 / 手动修改 Agent 填的内容</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════ §2 当前本体按层归位 ═══════════ -->
+<section>
+  <h2>§2 现有本体按 4 层归位</h2>
+
+  <div class="stats">
+    <div class="stat L1"><div class="v">~18</div><div class="l">L1 国际通用 OT</div></div>
+    <div class="stat L2"><div class="v">~12</div><div class="l">L2 中国本地化 OT</div></div>
+    <div class="stat L3"><div class="v">~22</div><div class="l">L3 东林专有 OT</div></div>
+    <div class="stat L4"><div class="v">0</div><div class="l">L4 审计师经验 OT</div></div>
+  </div>
+
+  <h3>2.1 ObjectType 归位</h3>
+
+  <div class="layer-grid">
+    <div class="layer-card L1">
+      <div class="head"><span class="num">1</span>L1 国际通用 (~18 个)</div>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 8px">ISA / IFRS 框架，跨所跨国通用</p>
+      <ul style="font-size:12.5px">
+        <li><code>AuditedEntity / ClientGroup / RelatedParty / Contact</code></li>
+        <li><code>Engagement / AuditType / AuditPeriod / Engager</code></li>
+        <li><code>ProjectTeam / Auditor / ProjectTimeline</code></li>
+        <li><code>TrialBalance / Account / SubLedger / Voucher</code></li>
+        <li><code>WorkingPaper / PaperTemplate / AuditReport</code></li>
+        <li><code>Assertion</code> (Existence / Completeness / Accuracy / Cutoff / RightsObligations / Presentation)</li>
+        <li><code>AuditProcedure / AuditEvidence / Anomaly</code></li>
+        <li><strong>11 个 ActionType</strong> (Read / Map / Standardize / Sample / Reconcile / Recompute / Explain / Generate / Review / SignOff / Archive)</li>
+      </ul>
+    </div>
+
+    <div class="layer-card L2">
+      <div class="head"><span class="num">2</span>L2 中国本地化 (~12 个)</div>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 8px">CSA / CAS / 国家法律强制</p>
+      <ul style="font-size:12.5px">
+        <li><code>MaterialityLevel</code> 含 PM/TE/SUM 三级 → CSA 1221 中国版</li>
+        <li><code>RiskOfMaterialMisstatement</code> → CSA 1141 中国对 RMM 的特殊要求</li>
+        <li><code>RelatedPartyRisk</code> → CAS 36 关联方判定（比 IAS 24 更严）</li>
+        <li><code>AccountingPolicy</code> → 中国"企业会计制度" + "企业会计准则" 双轨</li>
+        <li><code>AuditOpinion</code> → 中国 4 种意见类型</li>
+        <li><code>ReviewLevel</code> → 中注协要求三级复核体系</li>
+        <li><code>AuditedEntity.is_high_tech / is_small_micro / 老准则/新准则</code> 等中国特有字段</li>
+      </ul>
+    </div>
+
+    <div class="layer-card L3">
+      <div class="head"><span class="num">3</span>L3 东林事务所专有 (~22 个)</div>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 8px">从 WP_FSR.xlsm 442-sheet 模板抽出</p>
+      <ul style="font-size:12.5px">
+        <li><code>AuditArea</code> (按 A/B/C/D/G/H 字母分组 9 大区域) — 东林习惯</li>
+        <li><code>PaperTemplate.sheets</code> 6 个固定子表 — 东林模板结构</li>
+        <li><code>RelatedPartyGuarantee</code> — 东林单独建类 (其他所可能合并到 RelatedParty)</li>
+        <li><code>ProjectTimeline</code> 5 个里程碑 — 东林项目治理</li>
+        <li><code>Z6 调整分录编号体系</code> (Z6-AI-* 前缀) — 东林底稿规范</li>
+        <li><strong>规则层 7 条事务所内规</strong>：AR-RULE-001 / AP-RULE-001 / RP-RULE-001 / INV-RULE-001 / TAX-RECLASS-001 / GC-INDICATOR-001 / DL-RULE-001</li>
+      </ul>
+    </div>
+
+    <div class="layer-card L4">
+      <div class="head"><span class="num">4</span>L4 审计师个人经验 (0 个)</div>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 8px">现在没有数据，但已有捕获管道</p>
+      <ul style="font-size:12.5px;opacity:0.7">
+        <li>资深审计师的"直觉判断"</li>
+        <li>特殊客户的处理偏好</li>
+        <li>对低风险事项的简化做法</li>
+        <li>跨所跳槽时能"带走"的经验资产</li>
+      </ul>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:8px;font-style:italic">
+        🔮 未来管道：ChatPanel 对话日志 → 提取"审计师手动修改 Agent 填的内容" → 累积成 ProposedRule → ≥ 3 次 → 推荐升级为 L3 规则
+      </p>
+    </div>
+  </div>
+
+  <h3>2.2 14 条审计规则按层归位</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:18%">规则代码</th>
+        <th style="width:30%">规则名</th>
+        <th style="width:13%">层级</th>
+        <th style="width:18%">来源 (source 字段)</th>
+        <th>归位依据</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="code">TAX-RULE-001</td><td>业务招待费 5‰/60% 孰低</td><td><span class="pill L2">L2</span></td><td>财政部 2008-01</td><td>企业所得税法实施条例第 43 条，全国适用</td></tr>
+      <tr><td class="code">CASH-RULE-001</td><td>银行存款账面 vs 询证函</td><td><span class="pill L2">L2</span></td><td>中注协 2023-12</td><td>CSA 1411 银行函证准则</td></tr>
+      <tr><td class="code">CASH-RULE-002</td><td>大额现金审批</td><td><span class="pill L2">L2</span></td><td>中注协 2023-12</td><td>内控基本规范</td></tr>
+      <tr><td class="code">REV-RULE-001</td><td>收入截止性核查</td><td><span class="pill L2">L2</span></td><td>中注协 2023-12</td><td>CSA 1141 收入舞弊风险默认假设</td></tr>
+      <tr><td class="code">FA-RULE-001</td><td>固定资产折旧重算 (CSA 1221 四级梯度)</td><td><span class="pill L2">L2</span></td><td>中注协 2023-12</td><td>CSA 1221 重要性梯度框架</td></tr>
+      <tr><td class="code">AR-RULE-001</td><td>应收账款贷方余额重分类</td><td><span class="pill L3">L3</span></td><td>无锡东林 2024-01</td><td>东林事务所内规（其他所可能不强制阈值）</td></tr>
+      <tr><td class="code">AP-RULE-001</td><td>应付账款借方余额重分类</td><td><span class="pill L3">L3</span></td><td>无锡东林 2024-01</td><td>东林事务所内规</td></tr>
+      <tr><td class="code">RP-RULE-001</td><td>关联方资金占用披露 (&gt; PM 触发)</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>CAS 36 在东林的形式化阈值版</td></tr>
+      <tr><td class="code">INV-RULE-001</td><td>存货归零异常检测</td><td><span class="pill L3">L3</span></td><td>无锡东林 2024-01</td><td>东林反舞弊关注</td></tr>
+      <tr><td class="code">TAX-RECLASS-001</td><td>出口退税款反向余额重分类</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>东林针对出口业务公司沉淀</td></tr>
+      <tr><td class="code">GC-INDICATOR-001</td><td>关联担保集中度 → 持续经营</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>东林对民营企业风险关注</td></tr>
+      <tr><td class="code">DL-RULE-001</td><td>三级复核签字完整性</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>东林项目治理</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:14px;font-size:13px">
+    <span class="pill L2">L2</span> <strong>5 条</strong>（中注协/财政部）·
+    <span class="pill L3">L3</span> <strong>7 条</strong>（无锡东林）·
+    <span class="pill gray">合计</span> 12 条
+    <span style="color:var(--muted);font-size:12px">（其余 2 条为占位，未发布）</span>
+  </p>
+</section>
+
+<!-- ═══════════ §3 两种方法的映射 ═══════════ -->
+<section>
+  <h2>§3 两种抽取方法在 4 层模型中的位置</h2>
+
+  <div class="method-cols">
+    <div class="method-col A">
+      <h4><span class="pill A">方法 A · 我们</span> 「Top-down 自上而下」</h4>
+      <p style="font-size:12.5px;color:var(--muted);margin:0 0 10px">
+        先按 L1+L2 准则手工设计 TBox 骨架，再用 L3 东林内规填 ABox + Rule
+      </p>
+      <div class="bar">
+        <div class="L1" style="width:35%">L1 35%</div>
+        <div class="L2" style="width:25%">L2 25%</div>
+        <div class="L3" style="width:40%">L3 40%</div>
+      </div>
+      <div class="bar-legend">
+        <span><span class="dot" style="background:var(--L1)"></span>国际</span>
+        <span><span class="dot" style="background:var(--L2)"></span>中国</span>
+        <span><span class="dot" style="background:var(--L3)"></span>东林</span>
+      </div>
+      <ul style="font-size:12.5px;margin-top:10px">
+        <li><strong>L1+L2 TBox 设计</strong>：手工 + LLM 候选 + Palantir 范式 → 52 OT</li>
+        <li><strong>L3 ABox + Rule</strong>：人工读 10 个 markdown 知识卡，编码到 build_instances.py</li>
+        <li><strong>已显式标 source 字段</strong>：14 条规则区分"中注协" vs "无锡东林" → 已在做 L2/L3 区分</li>
+        <li><strong>L4 缺位</strong>：无捕获管道</li>
+      </ul>
+    </div>
+
+    <div class="method-col B">
+      <h4><span class="pill B">方法 B · v3</span> 「Bottom-up 自下而上」</h4>
+      <p style="font-size:12.5px;color:var(--muted);margin:0 0 10px">
+        从东林 .xlsm 公式 + VBA 自动抽证据，反推应该有哪些 TBox + FillRule
+      </p>
+      <div class="bar">
+        <div class="L1" style="width:20%">L1 20%</div>
+        <div class="L2" style="width:10%">L2 10%</div>
+        <div class="L3" style="width:70%">L3 70%</div>
+      </div>
+      <div class="bar-legend">
+        <span><span class="dot" style="background:var(--L1)"></span>国际</span>
+        <span><span class="dot" style="background:var(--L2)"></span>中国</span>
+        <span><span class="dot" style="background:var(--L3)"></span>东林</span>
+      </div>
+      <ul style="font-size:12.5px;margin-top:10px">
+        <li><strong>L1+L2 TBox</strong>：弱 — 20 Class 是从 442-sheet 反推的，不是从准则开始</li>
+        <li><strong>L3 ABox + FillRule</strong>：超强 — 106,614 公式 + 369 VBA 全自动抽，每条带 jsonl 行号</li>
+        <li><strong>没有 source 区分</strong>：FillRule 只有 hasRuleKind (cross-sheet / vba-copy / manual)，不区分 L1/L2/L3</li>
+        <li><strong>L4 缺位</strong>：同 A</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>3.1 映射到分层策略的具体角色</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:24%">你的分层策略</th>
+        <th style="width:38%"><span class="pill A">A</span> 怎么处理</th>
+        <th style="width:38%"><span class="pill B">B</span> 怎么处理</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>L1+L2 定义 TBox</strong></td>
+        <td>✅ 主力工具 — 手工设计 + LLM 候选生成 + 专家校对</td>
+        <td>⚠️ 通过反推得到 — 看 .xlsm 公式存在性 → 反推该有什么 Class</td>
+      </tr>
+      <tr>
+        <td><strong>L3 填 ABox + Rule</strong></td>
+        <td>✅ 显式标 <code>source="无锡东林"</code> 7 条内规</td>
+        <td>✅ 每条都有 <code>evidenceRef: jsonl#L&lt;n&gt;</code></td>
+      </tr>
+      <tr>
+        <td><strong>L3 触发新 OT</strong></td>
+        <td>⚠️ 靠人工 review，没机器告警机制</td>
+        <td>✅ 公式扫不出来的 sheet 模式 → 不建对应 Class（机器约束）</td>
+      </tr>
+      <tr>
+        <td><strong>L1+L2/L3 区分标签</strong></td>
+        <td>⚠️ 规则有 source 字段，但 OT 没有 _layer 字段</td>
+        <td>❌ 全是平的 — 不区分通用 vs 事务所</td>
+      </tr>
+      <tr>
+        <td><strong>L4 经验捕获</strong></td>
+        <td>❌ 无管道（但 ChatPanel 是潜在入口）</td>
+        <td>❌ 无管道</td>
+      </tr>
+      <tr>
+        <td><strong>跨所迁移</strong></td>
+        <td>⚠️ 需手工挑出 L3 重新编码</td>
+        <td>✅ 跑同一套 extract_excel.py 在新所 .xlsm 上即可</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout success">
+    <strong>洞察：两种方法在 4 层模型里是"互补的"，不是"竞争的"</strong>
+    <ul>
+      <li><strong>方法 A 强在 L1+L2 设计</strong> — 准则映射、形式化规则、Agent 业务逻辑</li>
+      <li><strong>方法 B 强在 L3 抽取</strong> — 真实模板沉淀、可重跑、证据链可追</li>
+      <li><strong>理想 v4 = A 的 TBox 设计 + B 的 L3 抽取管线 + 新增 L4 经验捕获</strong></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════ §4 v4 演进路径 ═══════════ -->
+<section>
+  <h2>§4 v4 演进路径 — 把分层策略落到产品</h2>
+
+  <h3>4.1 给每个 OT / Rule 加 <code>_layer</code> 字段</h3>
+<pre><span class="c">// object_types.json — 加 _layer 字段，表明跨所通用还是事务所专有</span>
+{
+  <span class="s">"code"</span>: <span class="s">"AuditedEntity"</span>,
+  <span class="s">"_layer"</span>: <span class="s">"L1"</span>,                  <span class="c">// 国际通用</span>
+  <span class="s">"_cluster"</span>: <span class="s">"客户类"</span>
+},
+{
+  <span class="s">"code"</span>: <span class="s">"MaterialityLevel"</span>,
+  <span class="s">"_layer"</span>: <span class="s">"L2"</span>,                  <span class="c">// 中国本地化 — CSA 1221 PM/TE/SUM</span>
+  <span class="s">"_cluster"</span>: <span class="s">"风险"</span>
+},
+{
+  <span class="s">"code"</span>: <span class="s">"AuditArea"</span>,
+  <span class="s">"_layer"</span>: <span class="s">"L3:donglin"</span>,         <span class="c">// 东林按字母分组 9 大区域</span>
+  <span class="s">"_cluster"</span>: <span class="s">"审计区域"</span>
+}
+
+<span class="c">// 规则同样</span>
+{
+  <span class="s">"code"</span>: <span class="s">"AR-RULE-001"</span>,
+  <span class="s">"_layer"</span>: <span class="s">"L3:donglin"</span>,
+  <span class="s">"_layer_basis"</span>: <span class="s">"CAS 22 金融工具列报 (L2 底层) + 东林 2024-01 形式化阈值 (L3)"</span>,
+  <span class="s">"source"</span>: <span class="s">"无锡东林"</span>
+}</pre>
+
+  <h3>4.2 前端按层级过滤</h3>
+  <p>本体管理页加 <strong>「来源层级」过滤胶囊条</strong>：
+    <span class="pill L1">L1 国际</span>
+    <span class="pill L2">L2 中国</span>
+    <span class="pill L3">L3 东林</span>
+    <span class="pill L4">L4 经验</span>
+    审计师一眼看清"哪些是通用知识/哪些是我们专有"。</p>
+
+  <h3>4.3 跨所迁移流程</h3>
+  <div class="flow">
+    <div class="step">
+      <div><span class="num">1</span><span class="name">复用 L1+L2</span></div>
+      <div class="detail">一字不改 — 准则不变</div>
+    </div>
+    <div class="step">
+      <div><span class="num">2</span><span class="name">替换 L3</span></div>
+      <div class="detail">东林 7 内规 → 新所 N 内规</div>
+    </div>
+    <div class="step">
+      <div><span class="num">3</span><span class="name">跑方法 B 抽取</span></div>
+      <div class="detail">新所 .xlsm 扫公式 + VBA</div>
+    </div>
+    <div class="step">
+      <div><span class="num">4</span><span class="name">证据对账</span></div>
+      <div class="detail">L3 OT 在新所 .xlsm 找不到证据 → 标"未沉淀"</div>
+    </div>
+    <div class="step">
+      <div><span class="num">5</span><span class="name">机器推荐</span></div>
+      <div class="detail">高频模式但 L3 没覆盖 → 建议新建</div>
+    </div>
+  </div>
+
+  <h3>4.4 L4 经验捕获管道 (创新点)</h3>
+<pre>ChatPanel 对话 → 审计师手动改 Agent 填的格
+       ↓
+   提取 <span class="s">"用户改写事件"</span> + 改写理由 (从对话上下文 LLM 抽)
+       ↓
+   累积成 ProposedRule 候选 (写到 LearningInbox)
+       ↓
+   累积 ≥ <span class="n">3</span> 次类似改写
+       ↓
+   推荐升级为 L3 规则 (审计师 sign-off)
+       ↓
+   写入 AuditRule (source=<span class="s">"审计师 X 经验"</span>, _layer=<span class="s">"L3 → L4 沉淀"</span>)</pre>
+
+  <p>这个管道把 <strong>"审计师脑子里的隐性知识"</strong> 变成 <strong>"事务所可继承的本体资产"</strong>。审计师跳槽时是否能带走这部分 — 也成为事务所人才战略的议题。</p>
+</section>
+
+<!-- ═══════════ §5 给侯佳成的话术 ═══════════ -->
+<section>
+  <h2>§5 给侯佳成的 review 话术</h2>
+
+  <div class="callout firm">
+    <strong>📢 跟侯佳成开场白</strong>
+    <p style="margin-top:8px">
+      "侯老师，我抽出来的本体不是平面清单，是 <strong>4 层结构</strong>：
+    </p>
+    <p>
+      ① <strong>L1 国际通用</strong> (~30%) — ISA / IFRS 框架，跨所跨国都适用。包括 6 种认定、审计动作分类、底稿概念。<br>
+      ② <strong>L2 中国本地化</strong> (~20%) — CSA / CAS / 中注协 / 财政部。包括 PM/TE/SUM 重要性梯度、关联方判定、4 类审计意见。<br>
+      ③ <strong>L3 东林事务所内规</strong> (~35%) — <span style="color:var(--L3);font-weight:600">这是从你给我的 WP_FSR.xlsm + 5 张已填底稿抽出来的，请你重点 review 这部分</span>。包括三级复核、Z6 调整分录编号、7 条事务所内规（AR-RULE-001 应收贷方重分类 / GC-INDICATOR-001 关联担保识别等）。<br>
+      ④ <strong>L4 审计师个人经验</strong> (~0%) — 现在还没有，但 Agent 对话面板能捕获你每次的修改。<strong>等你用上一段时间，你的判断会自动累积成新的 L3 规则候选</strong>。这是事务所专属的"AI 老审计师大脑"。"
+    </p>
+  </div>
+
+  <div class="callout info">
+    <strong>📢 跟侯佳成讲价值</strong>
+    <ul style="margin-top:8px">
+      <li><strong>L1+L2 是复用资产</strong> — 我做了一次，下次给立信、信永中和也能用，不重复开发</li>
+      <li><strong>L3 是事务所差异化</strong> — 你的核心 IP，是东林对外服务的护城河</li>
+      <li><strong>L4 是审计师个人资产</strong> — 跳槽都能带走（如果你愿意），但你愿意把它沉淀到本体里 → 事务所就拥有了"人走茶不凉"</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <strong>📢 请侯佳成 review 的 3 个问题</strong>
+    <ol style="margin-top:8px">
+      <li><strong>L2 通用准则版本</strong> — 我用的中注协 2023-12 / 财政部条文等是不是最新？有没有更新过的？</li>
+      <li><strong>L3 东林 7 条内规</strong> — AR-RULE-001 / RP-RULE-001 / GC-INDICATOR-001 / DL-RULE-001 等是不是东林 2024-2025 的实操版本？阈值对不对？narrative 描述准不准？</li>
+      <li><strong>L3 OT 是否缺漏</strong> — 我从 442-sheet 索引体系抽出了 22 个东林专有 OT，是不是还有"应该建模但没建"的？（举例：函证流程是否需要单独建 OT？）</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════ §6 下一步 ═══════════ -->
+<section>
+  <h2>§6 下一步行动</h2>
+  <ol>
+    <li>给 <code>data/donglin/object_types.json</code> 每个 OT 加 <code>_layer</code> 字段 (~1 小时)</li>
+    <li>给 <code>build_instances.py</code> 14 条 AuditRule 加 <code>_layer</code> 字段 (~30 分钟)</li>
+    <li>给 OntologyManager 加「按层级过滤」胶囊条 (~1 小时)</li>
+    <li>给 Rules 面板每条规则显示层级徽章 (~30 分钟)</li>
+    <li>给 ChatPanel 加"用户改写事件"捕获 (~半天)</li>
+    <li>设计 LearningInbox 的 ProposedRule 流程 (~半天)</li>
+    <li>把 v3 的 <code>extract_excel.py</code> + <code>extract_vba.py</code> 拉进 backend，跑一遍东林 442-sheet (~1 天)</li>
+    <li>用 v3 抽出来的 evidence 给现有 14 条规则补 <code>evidenceRef</code> 字段 (~半天)</li>
+  </ol>
+
+  <p style="margin-top:16px">
+    <strong>1-4 项做完即可给侯佳成 demo 这套分层架构</strong>；5-6 项实现 L4 经验沉淀；7-8 项把方法 A 和方法 B 真正打通。
+  </p>
+</section>
+
+<hr>
+
+<footer>
+  生成于 2026-05-24 · 江苏大王案例 + 东林事务所样式 · 4 层架构策略文档<br>
+  本文档基于用户提出的「国际准则 / 中国本地化 / 事务所内规 / 审计师经验」4 层分层思路展开
+</footer>
+
+</main>
+</body>
+</html>

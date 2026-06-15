@@ -1,0 +1,130 @@
+{
+  "id": 97,
+  "key": "WorkingPaper::WP-A24-2025",
+  "type_code": "WorkingPaper",
+  "display_name": "A24 固定资产",
+  "data": {
+    "index": "A24",
+    "name": "固定资产",
+    "template_code": "TPL-DL-FY2025",
+    "engagement_code": "ENG-JSDW-2025",
+    "sheet_data": {
+      "summary": {
+        "tb_cost_opening": 3798888.61,
+        "tb_cost_closing": 3777740.02,
+        "tb_cost_dr": 900247.79,
+        "tb_cost_cr": 921396.38,
+        "tb_accum_opening": -2658464.93,
+        "tb_accum_closing": -2489309.31,
+        "tb_dep_current_period": 511385.09,
+        "net_book_value_opening": 1140423.68,
+        "net_book_value_closing": 1288430.71,
+        "avg_cost": 3788314.31,
+        "recomputed_dep": 636405.24,
+        "diff": -125020.15,
+        "diff_pct": -24.45,
+        "diff_vs_te": -107.86,
+        "te": 115908.53,
+        "sum_threshold": 7727.24,
+        "pm": 154544.7,
+        "test_level": "NEEDS_DETAIL_TEST",
+        "test_label": "⚠ 粗算不充分 (TE ≤ 差异 < PM)",
+        "next_action": "建议进一步程序：(1) 获取固资明细账逐项重算；(2) 复核资产构成假设是否与实际一致；(3) 检查是否有减值/已提足资产",
+        "passes_test": false,
+        "policy_applied": "直线法；残值率 5%；房屋 20 年 / 机器 10 年 / 运输 4 年 / 办公 5 年 / 电子 3 年。",
+        "preparer": "jsdw_paper_fill (AI)",
+        "prepared_at": "2026-05-26"
+      },
+      "recompute_detail": {
+        "rows": [
+          {
+            "category": "机器设备 (10年)",
+            "weight": 0.51,
+            "estimated_cost": 1932040.3,
+            "salvage_rate": 0.05,
+            "useful_life": 10,
+            "recomputed_dep": 183543.83,
+            "annual_rate": 9.5
+          },
+          {
+            "category": "运输工具 (4年)",
+            "weight": 0.45,
+            "estimated_cost": 1704741.44,
+            "salvage_rate": 0.05,
+            "useful_life": 4,
+            "recomputed_dep": 404876.09,
+            "annual_rate": 23.75
+          },
+          {
+            "category": "电子设备 (3年)",
+            "weight": 0.04,
+            "estimated_cost": 151532.57,
+            "salvage_rate": 0.05,
+            "useful_life": 3,
+            "recomputed_dep": 47985.31,
+            "annual_rate": 31.67
+          }
+        ],
+        "total": 636405.24
+      },
+      "movement": {
+        "rows": [
+          {
+            "item": "期初原值",
+            "amount": 3798888.61,
+            "source": "TB 1601 期初"
+          },
+          {
+            "item": "本期增加 (新购)",
+            "amount": 900247.79,
+            "source": "TB 1601 借方"
+          },
+          {
+            "item": "本期减少 (处置)",
+            "amount": -921396.38,
+            "source": "TB 1601 贷方"
+          },
+          {
+            "item": "期末原值",
+            "amount": 3777740.02,
+            "source": "TB 1601 期末"
+          },
+          {
+            "item": "期初累计折旧",
+            "amount": -2658464.93,
+            "source": "TB 1602 期初"
+          },
+          {
+            "item": "本期处置冲销折旧",
+            "amount": 680540.71,
+            "source": "TB 1602 借方"
+          },
+          {
+            "item": "本期计提折旧",
+            "amount": -511385.09,
+            "source": "TB 1602 贷方"
+          },
+          {
+            "item": "期末累计折旧",
+            "amount": -2489309.31,
+            "source": "TB 1602 期末"
+          },
+          {
+            "item": "期末净值",
+            "amount": 1288430.71,
+            "source": "原值 + 累计折旧"
+          }
+        ]
+      }
+    },
+    "cross_references": [
+      "TB:1601/1602",
+      "AccountingPolicy:固定资产折旧",
+      "D5:管理费用-折旧"
+    ],
+    "audit_conclusion": "读取 TB 1601/1602/1606 + 客户 X5 折旧政策（直线法 / 残值 5% / 年限按类别）。恒等式校验通过（期初+借-贷=期末）。按本体知识假设资产构成（机器 51% + 运输 45% + 电子 4%）对平均原值 ¥3,788,314.31 重算本期折旧：¥636,405.24，账面 ¥511,385.09，差异 ¥-125,020.15 (-24.45%)。差异 ¥125,020.15 超 TE ¥115,908.53 但未达 PM ¥154,544.70 → 粗算合理性测试未通过，需升级为细节测试（获取固资明细账逐项重算）。 建议动作：建议进一步程序：(1) 获取固资明细账逐项重算；(2) 复核资产构成假设是否与实际一致；(3) 检查是否有减值/已提足资产。本期净值由 ¥1,140,423.68 变为 ¥1,288,430.71；处置净值 ¥240,855.67（与营业外收入 ¥207,478.65 处置收益需核对）。",
+    "review_status": "AI 初稿",
+    "filled_by": "jsdw_paper_fill",
+    "filled_at": "2026-05-26T10:05:52"
+  }
+}

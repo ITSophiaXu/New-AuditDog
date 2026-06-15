@@ -875,68 +875,6 @@ def _seed_qcc_mcp(s: Session) -> None:
     s.commit()
 
 
-def _seed_banmu_engagement(s: Session) -> None:
-    """Seed 无锡斑目信息技术有限公司 engagement + skeleton working papers."""
-    existing = s.exec(
-        select(ObjectInstance).where(ObjectInstance.type_code == "Engagement")
-    ).all()
-    codes = [e.data.get("code", "") for e in existing if isinstance(e.data, dict)]
-    if "ENG-BANMU-2024" in codes:
-        return  # already seeded
-
-    eng = ObjectInstance(
-        type_code="Engagement",
-        display_name="无锡斑目信息技术有限公司 2024年报审计",
-        data={
-            "code": "ENG-BANMU-2024",
-            "status": "进行中",
-            "period": "2024-12-31",
-            "partner": "东林合伙人",
-            "industry": "软件信息服务",
-            "planned_fee": 30000.0,
-            "company_name": "无锡斑目信息技术有限公司",
-            "short_name": "斑目科技",
-        },
-    )
-    s.add(eng)
-    s.commit()
-
-    BANMU_PAPERS = [
-        ("Y3", "重要性水平"),
-        ("Y5", "企业规模与审计策略"),
-        ("Y8", "风险评估与应对"),
-        ("X1", "企业基本情况"),
-        ("X4", "内控了解"),
-        ("X8", "内控有效性"),
-        ("A1", "货币资金"),
-        ("A6", "应收账款"),
-        ("A9", "其他应收款"),
-        ("A10", "存货"),
-        ("A24", "固定资产"),
-        ("B1", "短期借款"),
-        ("B9", "应付职工薪酬"),
-        ("D1", "主营业务收入"),
-        ("Z5", "审计报告"),
-        ("Z6", "审计调整"),
-        ("Z7", "管理层声明书"),
-        ("Z12", "未更正错报汇总"),
-        ("ZS", "附注核查"),
-    ]
-    for idx, name in BANMU_PAPERS:
-        s.add(ObjectInstance(
-            type_code="WorkingPaper",
-            display_name=f"{idx} {name}",
-            data={
-                "index": idx,
-                "name": name,
-                "engagement_code": "ENG-BANMU-2024",
-                "review_status": "未启动",
-                "template_code": "TPL-DL-FY2025",
-            },
-        ))
-    s.commit()
-    print("[banmu] Seeded ENG-BANMU-2024 engagement + working papers")
-
 
 # ---------- Entry ----------
 
@@ -992,7 +930,13 @@ def seed() -> None:
     # ─── QCC MCP servers (always seed, independent of pilot-demo flag) ────
     with Session(engine) as s:
         _seed_qcc_mcp(s)
-        _seed_banmu_engagement(s)
+
+    # ─── 斑目项目 (无锡斑目信息技术有限公司 2024 案例) ────────────────────
+    try:
+        from .seed_banmu import seed_banmu
+        seed_banmu()
+    except Exception as e:
+        print(f"[banmu] seed skipped due to error: {e}")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-/** 东林事务所样式底稿 — 客户端工具与类型。 */
+/** 甲会计师事务所样式底稿 — 客户端工具与类型。 */
 
 export const DONGLIN_PAPER_CODES = ['A1', 'A6', 'A9', 'A24', 'B1'] as const
 export type DonglinPaperCode = (typeof DONGLIN_PAPER_CODES)[number]
@@ -36,7 +36,7 @@ export interface DonglinPaperMeta {
   has_sheet_data: boolean
 }
 
-/** 判断一个 WorkingPaper instance 是否为东林（江苏大王）填稿。 */
+/** 判断一个 WorkingPaper instance 是否为甲所（甲公司）填稿。 */
 export function isDonglinPaper(data: any): boolean {
   if (!data) return false
   if (data.engagement_code === DONGLIN_ENGAGEMENT) return true

@@ -54,7 +54,7 @@ LAYER_MAP = {
     'BadDebtProvision': 'L1', 'UnadjustedMisstatement': 'L1',
     'MergeAdjustment': 'L1', 'ReclassificationEntry': 'L1',
     'CutoffTest': 'L1', 'ConfirmationReconciliation': 'L1',
-    # L3 东林专有
+    # L3 甲所专有
     'AuditArea': 'L2:donglin',
     'PaperPhase': 'L2:donglin',
     'SummarySheet': 'L2:donglin', 'DetailSheet': 'L2:donglin',

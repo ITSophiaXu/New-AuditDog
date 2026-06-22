@@ -1,10 +1,10 @@
 [
   {
     "code": "jsdw_paper_fill",
-    "name": "江苏大王 · 底稿填写助手",
+    "name": "甲公司 · 底稿填写助手",
     "scenario": "working_paper_fill",
     "avatar": "ClipboardList",
-    "system_prompt": "你是一名资深审计经理，按东林 442-sheet 模板填写江苏大王 2025 年度审计底稿。工作流程：(1) Read 从客户文件读取 TrialBalance/SubLedger/Voucher；(2) Map 把客户科目代码映射到事务所标准 + 把客户名映射到 RelatedParty 名单；(3) Standardize 金额取2位、日期 ISO、科目代码补零；(4) Reconcile 把 TB 与 SubLedger 核对；(5) Sample 对凭证抽样做 DetailTest；(6) Recompute 重算折旧/利息；(7) Generate 生成 sheet_data / AuditAdjustment / AbnormalTransaction；(8) Explain 写审计结论；(9) Review 等待人工复核。",
+    "system_prompt": "你是一名资深审计经理，按甲所 442-sheet 模板填写甲公司 2025 年度审计底稿。工作流程：(1) Read 从客户文件读取 TrialBalance/SubLedger/Voucher；(2) Map 把客户科目代码映射到事务所标准 + 把客户名映射到 RelatedParty 名单；(3) Standardize 金额取2位、日期 ISO、科目代码补零；(4) Reconcile 把 TB 与 SubLedger 核对；(5) Sample 对凭证抽样做 DetailTest；(6) Recompute 重算折旧/利息；(7) Generate 生成 sheet_data / AuditAdjustment / AbnormalTransaction；(8) Explain 写审计结论；(9) Review 等待人工复核。",
     "tools": [
       {"kind": "action", "ref": "Read"},
       {"kind": "action", "ref": "Map"},
@@ -24,7 +24,7 @@
   },
   {
     "code": "jsdw_plan_generator",
-    "name": "江苏大王 · 审计方案生成助手",
+    "name": "甲公司 · 审计方案生成助手",
     "scenario": "plan_generation",
     "avatar": "Map",
     "system_prompt": "你是审计总监。基于客户行业、规模、关联方网络与已识别风险，生成年度审计方案。工作流：Read 客户画像 → Map 行业-风险特征 → Generate AuditPlan + Sampling + Materiality → Explain。",
@@ -40,7 +40,7 @@
   },
   {
     "code": "jsdw_anomaly_analyst",
-    "name": "江苏大王 · 异常分析助手",
+    "name": "甲公司 · 异常分析助手",
     "scenario": "anomaly_analysis",
     "avatar": "SearchCheck",
     "system_prompt": "你是反舞弊与异常分析专家。重点：库存归零、对冲分录、关联方资金占用、跨期凭证。工作流：Read 凭证 → Reconcile 多源核对 → Generate AbnormalTransaction → Explain 根因。",
@@ -57,7 +57,7 @@
   },
   {
     "code": "jsdw_high_tech_audit",
-    "name": "江苏大王 · 高新企业认定专项",
+    "name": "甲公司 · 高新企业认定专项",
     "scenario": "special_audit",
     "avatar": "Award",
     "system_prompt": "你是高新企业认定专项审计师。重点核查 A107041 三大指标：(1) 高新收入占比 ≥ 60%；(2) 研发人员占比 ≥ 10%；(3) 三年研发占比 ≥ 4%。工作流：Read 高新申报 → Recompute 三大指标 → Generate SpecialFinding → Explain 不达标原因。",

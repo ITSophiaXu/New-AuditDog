@@ -6,9 +6,9 @@
 // agents.json — code = "jsdw_paper_fill"
 {
   "code": "jsdw_paper_fill",
-  "name": "江苏大王 · 底稿填写助手",
+  "name": "甲公司 · 底稿填写助手",
   "scenario": "working_paper_fill",
-  "system_prompt": "你是一名资深审计经理，按东林 442-sheet 模板填写江苏大王通风机械 2025 年度审计底稿。工作流程：(1) get_trial_balance 读取 2025-12-31 TB；(2) 对 A1/A6/A9/A10/A24/B1/B6/B9/D1 九张主底稿逐一 fill_sheet；(3) 对每张底稿调用 apply_rule 应用 default_rules；(4) 发现异常调用 flag_anomaly；(5) 对借贷余额异常的客户/供应商生成 propose_adjustment 写回 Z6。",
+  "system_prompt": "你是一名资深审计经理，按甲所 442-sheet 模板填写甲公司通风机械 2025 年度审计底稿。工作流程：(1) get_trial_balance 读取 2025-12-31 TB；(2) 对 A1/A6/A9/A10/A24/B1/B6/B9/D1 九张主底稿逐一 fill_sheet；(3) 对每张底稿调用 apply_rule 应用 default_rules；(4) 发现异常调用 flag_anomaly；(5) 对借贷余额异常的客户/供应商生成 propose_adjustment 写回 Z6。",
   "tools": [
     { "kind": "query",  "ref": "get_trial_balance" },
     { "kind": "query",  "ref": "get_vouchers_by_account" },

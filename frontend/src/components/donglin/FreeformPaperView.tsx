@@ -46,7 +46,7 @@ export default function FreeformPaperView({ paperData, paperId }: Props) {
         <div className="ml-auto flex items-center gap-2">
           <a
             href="/api/donglin/freeform-xlsx"
-            download="货币资金A1_自由底稿_江苏大王2025.xlsx"
+            download="货币资金A1_自由底稿_甲公司2025.xlsx"
             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium bg-emerald-600 hover:bg-emerald-700 text-white"
             title="下载 Agent 自由生成的 A1 底稿 (.xlsx)"
           >

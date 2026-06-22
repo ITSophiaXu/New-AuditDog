@@ -1,9 +1,9 @@
-"""无锡斑目信息技术有限公司 — Mock accounting data for demo purposes."""
+"""己公司（信息技术） — Mock accounting data for demo purposes."""
 from __future__ import annotations
 
 COMPANY_INFO: dict = {
-    "name": "无锡斑目信息技术有限公司",
-    "short_name": "斑目科技",
+    "name": "己公司（信息技术）",
+    "short_name": "己公司",
     "eng_code": "ENG-BANMU-2024",
     "year_end": "2024-12-31",
     "industry": "软件信息服务",
@@ -14,7 +14,7 @@ COMPANY_INFO: dict = {
     "address": "无锡市高新技术产业开发区软件园A座1201",
     "business_scope": "软件开发、信息系统集成、数据处理及存储服务",
     "employees": 68,
-    "auditor": "东林会计师事务所",
+    "auditor": "甲会计师事务所",
 }
 
 # 试算平衡表 (year-end balances; debit=positive, credit=negative)

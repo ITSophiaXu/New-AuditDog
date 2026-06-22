@@ -108,7 +108,7 @@ def _do(s: Session) -> dict[str, int]:
         new_ots.append(ObjectType(
             code="AccountingStandard",
             display_name="会计/审计准则",
-            description="[L1] [东林·法规] 中注协 CSA / 财政部 CAS / IFRS / ISA 等通用准则",
+            description="[L1] [甲所·法规] 中注协 CSA / 财政部 CAS / IFRS / ISA 等通用准则",
             icon="BookOpen", color="#0d9488", is_seed=True,
             properties_schema=[
                 {"code": "code", "label": "准则编号", "type": "string", "required": True},
@@ -123,7 +123,7 @@ def _do(s: Session) -> dict[str, int]:
         new_ots.append(ObjectType(
             code="LawArticle",
             display_name="法律法规条款",
-            description="[L1] [东林·法规] 国务院/财政部/税务总局 法律法规具体条款",
+            description="[L1] [甲所·法规] 国务院/财政部/税务总局 法律法规具体条款",
             icon="Scale", color="#be185d", is_seed=True,
             properties_schema=[
                 {"code": "code", "label": "条款编号", "type": "string", "required": True},

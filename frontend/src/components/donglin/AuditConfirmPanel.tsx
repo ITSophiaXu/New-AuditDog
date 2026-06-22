@@ -61,14 +61,14 @@ const TYPE_COLOR: Record<ItemType, string> = {
   approval:   'text-rose-600   bg-rose-50   border-rose-200',
 }
 
-// ─── 江苏大王通风机械 检查点（ENG-JSDW-2025）─────────────────────
+// ─── 甲公司通风机械 检查点（ENG-JSDW-2025）─────────────────────
 export const AUDIT_CHECKPOINTS_JSDW: Checkpoint[] = [
   // ── 计划阶段 ──────────────────────────────────────────────────
   {
     id: 'Y3-basis', stage: '计划', index: 'Y3', type: 'analytical',
     label: '重要性水平：基准指标选择',
     desc: 'AI已计算4种基准（总资产/净资产/营业收入/利润），需确认选哪个及对应比率',
-    prompt: '请说明Y3重要性水平基准指标选择建议。江苏大王为通风机械制造业，净资产仅约46万（实收资本200万-未分配亏损153万），利润为负，哪个基准最合适？参考CSA 1221。',
+    prompt: '请说明Y3重要性水平基准指标选择建议。甲公司为通风机械制造业，净资产仅约46万（实收资本200万-未分配亏损153万），利润为负，哪个基准最合适？参考CSA 1221。',
     recommendation: {
       selected: '营业收入',
       reason: '公司为通风机械制造商，营业收入约¥25,000,000是最稳定代表性基准。净资产仅¥467,000（过小，不代表规模），利润为负已排除。总资产¥22,770,000可作备选。',
@@ -89,7 +89,7 @@ export const AUDIT_CHECKPOINTS_JSDW: Checkpoint[] = [
     prompt: '请确认Y3中PM、TE（PM×75%）、SUM（PM×5%）三个重要性金额。基准：营业收入¥25,000,000×0.5%=¥125,000。',
     recommendation: {
       selected: 'PM=125,000 / TE=93,750 / SUM=6,250',
-      reason: '以营业收入 ¥25,000,000 × 0.5% = ¥125,000 为 PM；TE 取 PM × 75% = ¥93,750；SUM 取 PM × 5% = ¥6,250。符合东林所规范，制造业比率合理。',
+      reason: '以营业收入 ¥25,000,000 × 0.5% = ¥125,000 为 PM；TE 取 PM × 75% = ¥93,750；SUM 取 PM × 5% = ¥6,250。符合甲所规范，制造业比率合理。',
       amount: 'PM ¥125,000',
       options: [
         { label: 'PM（整体重要性）', value: 'PM', amount: '¥125,000', ratio: '营业收入×0.5%', note: 'AI计算' },
@@ -114,7 +114,7 @@ export const AUDIT_CHECKPOINTS_JSDW: Checkpoint[] = [
     id: 'Y5-going', stage: '计划', index: 'Y5/Y8', type: 'judgment',
     label: '持续经营风险评估（特别关注）',
     desc: '净资产仅46.7万，短期借款1,240万，利润亏损，资产负债率极高',
-    prompt: '江苏大王净资产仅约¥467,000但短期借款高达¥12,400,000，且本年利润亏损。是否需要将持续经营识别为特别风险？',
+    prompt: '甲公司净资产仅约¥467,000但短期借款高达¥12,400,000，且本年利润亏损。是否需要将持续经营识别为特别风险？',
     recommendation: {
       selected: '识别为特别风险：持续经营假设存在重大不确定性',
       reason: '短期借款1,240万 vs 净资产46.7万，杠杆率极高。若银行不续贷，公司难以为继。建议在Y8中明确识别持续经营为特别风险，并取得管理层书面意见及银行续贷证明。',
@@ -125,7 +125,7 @@ export const AUDIT_CHECKPOINTS_JSDW: Checkpoint[] = [
     id: 'Y5-strategy', stage: '计划', index: 'Y5', type: 'approval',
     label: '审计策略：是否执行内控测试',
     desc: '制造企业，内控基础待评估，采用纯实质性程序需合伙人确认',
-    prompt: '请确认是否对江苏大王采用纯实质性审计策略，不进行内控测试，理由是否充分？',
+    prompt: '请确认是否对甲公司采用纯实质性审计策略，不进行内控测试，理由是否充分？',
     recommendation: {
       selected: '不执行内控测试，采用纯实质性程序',
       reason: '公司规模较小，内控基础有限，且外销出口退税等特殊业务占比不高，执行控制测试的收益低于成本。建议直接用实质性程序覆盖所有重要科目，加强截止测试和分析性程序。',
@@ -138,7 +138,7 @@ export const AUDIT_CHECKPOINTS_JSDW: Checkpoint[] = [
     prompt: '收入截止测试是否识别了内外销跨期风险？Y8.3舞弊特别风险是否完整记录？',
     recommendation: {
       selected: '应识别为特别风险并记录于Y8.3',
-      reason: 'CSA 1141第26条要求收入确认默认识别为舞弊导致特别风险。江苏大王有内销（发货确认）和外销（装运/验收确认）两种收入，期末截止风险需专项测试。Y8.3不可留空。',
+      reason: 'CSA 1141第26条要求收入确认默认识别为舞弊导致特别风险。甲公司有内销（发货确认）和外销（装运/验收确认）两种收入，期末截止风险需专项测试。Y8.3不可留空。',
       warning: 'Y8.3若留空，不符合CSA 1141要求',
     },
   },
@@ -279,7 +279,7 @@ export const AUDIT_CHECKPOINTS_JSDW: Checkpoint[] = [
   },
 ]
 
-// ─── 无锡斑目信息技术 检查点（ENG-BANMU-2024）────────────────────
+// ─── 无锡己公司信息技术 检查点（ENG-BANMU-2024）────────────────────
 export const AUDIT_CHECKPOINTS_BANMU: Checkpoint[] = [
   // ── 计划阶段 ──────────────────────────────────────────────────
   {
@@ -307,7 +307,7 @@ export const AUDIT_CHECKPOINTS_BANMU: Checkpoint[] = [
     prompt: '请确认Y3中PM、TE（PM×75%）、SUM（PM×5%）三个重要性金额是否合适？TE采用75%系数是否恰当？',
     recommendation: {
       selected: 'PM=133,071 / TE=99,803 / SUM=6,654',
-      reason: '以营业收入 ¥26,614,264 × 0.5% = ¥133,071 为 PM；TE 取 PM × 75% = ¥99,803；SUM 取 PM × 5% = ¥6,654。系数选取符合东林所规范。',
+      reason: '以营业收入 ¥26,614,264 × 0.5% = ¥133,071 为 PM；TE 取 PM × 75% = ¥99,803；SUM 取 PM × 5% = ¥6,654。系数选取符合甲所规范。',
       amount: 'PM ¥133,071',
       options: [
         { label: 'PM（整体重要性）', value: 'PM', amount: '¥133,071', ratio: '营业收入×0.5%', note: 'AI计算' },
@@ -552,7 +552,7 @@ export default function AuditConfirmPanel({
     try { localStorage.setItem(`${lsKey}-adj5-dismissed`, '1') } catch {}
   }
 
-  // ── FillDecision（斑目项目人工判断点）──────────────────────────
+  // ── FillDecision（己公司项目人工判断点）──────────────────────────
   type FillDecisionData = {
     paper_id: number; paper_index: string; key: string; cell_path: string
     question: string; context: string
@@ -679,7 +679,7 @@ export default function AuditConfirmPanel({
   const totalOpen = checkpointsToShow.length + (!isBanmu ? pendingAnomalies.length + pendingDecisions.length : 0)
 
   // 待确认事项卡片 — 渲染到 ChatPanel 的 pinnedCards 区域（消息流顶部）
-  // 斑目项目的 FillDecision / Anomaly 卡片已移至 BanmuTaskPanel，此处不再重复显示
+  // 己公司项目的 FillDecision / Anomaly 卡片已移至 BanmuTaskPanel，此处不再重复显示
   const pinnedCards = (checkpointsToShow.length > 0 || (!isBanmu && (pendingAnomalies.length > 0 || pendingDecisions.length > 0))) ? (
     <div className="space-y-2 mb-2">
       {/* 标题 */}
@@ -689,7 +689,7 @@ export default function AuditConfirmPanel({
         <span className="ml-auto bg-amber-500 text-white rounded-full px-1.5 py-px text-[9px] font-bold">{totalOpen}</span>
       </div>
 
-      {/* AI 填稿判断点（FillDecision）— 仅非斑目项目显示，斑目项目已移至 BanmuTaskPanel */}
+      {/* AI 填稿判断点（FillDecision）— 仅非己公司项目显示，己公司项目已移至 BanmuTaskPanel */}
       {!isBanmu && pendingDecisions.map(o => {
         const d = o.data as FillDecisionData
         const isBusy = confirmingDecId === o.id
@@ -758,7 +758,7 @@ export default function AuditConfirmPanel({
         )
       })}
 
-      {/* AI 识别的异常 — 仅非斑目项目显示 */}
+      {/* AI 识别的异常 — 仅非己公司项目显示 */}
       {!isBanmu && pendingAnomalies.map(a => {
         const d = a.data as AnomalyData
         const isBusy = confirmingId === a.id

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>东林审计本体 · 可展开思维导图</title>
+<title>甲所审计本体 · 可展开思维导图</title>
 <style>
   :root {
     --bg: #f8fafc;
@@ -103,10 +103,10 @@
 <body>
 
 <header>
-  <h1>东林审计本体 · 可展开思维导图</h1>
+  <h1>甲所审计本体 · 可展开思维导图</h1>
   <div class="sub">
     点击节点旁的 ⊕ / ⊖ 圆圈展开 / 折叠子节点 · 鼠标拖拽平移 · 滚轮缩放
-    · 颜色编码：<strong>L0</strong> 客户事实 / <strong>L1</strong> 国际通用 / <strong>L2</strong> 中国本地 / <strong>L3</strong> 东林专有
+    · 颜色编码：<strong>L0</strong> 客户事实 / <strong>L1</strong> 国际通用 / <strong>L2</strong> 中国本地 / <strong>L3</strong> 甲所专有
   </div>
 </header>
 
@@ -141,7 +141,7 @@ markmap:
   spacingHorizontal: 100
 ---
 
-# 东林审计本体<br>(江苏大王 2025 案例)
+# 甲所审计本体<br>(甲公司 2025 案例)
 
 ## 📐 TBox 类型骨架<br>(跨所通用)
 
@@ -152,7 +152,7 @@ markmap:
 - ClientGroup `L1` 集团
 - RelatedParty `L1` 关联方
 - Contact `L1` 联系人
-- ⭐ RelatedPartyGuarantee `L3` 关联担保 (东林专有)
+- ⭐ RelatedPartyGuarantee `L3` 关联担保 (甲所专有)
 
 #### 项目类 (7)
 - Engagement `L1` 审计项目
@@ -175,7 +175,7 @@ markmap:
 - DataMap `L1` 数据映射
 
 #### 审计区域 (1)
-- ⭐ AuditArea `L3` 9 大审计区域 (东林按字母分组)
+- ⭐ AuditArea `L3` 9 大审计区域 (甲所按字母分组)
 
 #### 认定类 (1)
 - Assertion `L1` 审计认定 (含 6 子认定实例)
@@ -291,10 +291,10 @@ markmap:
 
 ## 📋 ABox 具体实例<br>(跨客户差异化)
 
-### L0 江苏大王专有 (~90 实例)
+### L0 甲公司专有 (~90 实例)
 
 #### 客户与人物 (5)
-- 江苏大王通风机械有限公司
+- 甲公司（通风机械）
 - 杨春平 `54% 直接持股 / 80% 穿透`
 - 黄燕红 `财务负责人 + 担保人`
 - 朱洋红 `关联自然人`
@@ -308,8 +308,8 @@ markmap:
 - G-005 中国农业银行 ¥300 万 `2025-12-24 ~ 2026-01-24`
 
 #### 项目治理 (16)
-- ENG-JSDW-2025 锡东林内审〔2026〕号
-- 江苏大王项目组 (东林五部)
+- ENG-JSDW-2025 甲所内审〔2026〕号
+- 甲公司项目组 (甲所五部)
 - 童中国 `签字合伙人`
 - 侯佳成 `项目经理 + 二级复核`
 - 王叙超 `审核经理 + 编制`
@@ -378,7 +378,7 @@ markmap:
 - RMM R-001 应收账款大量贷方 → 资产虚增 `high`
 - RMM R-002 资产负债率 98.98% + 全关联担保 → 持续经营 `high · 报表层次`
 - RPR-001 黄燕红其他应收 ¥811,739.84 占 PM 5.25 倍
-- AuditReport 锡东林内审〔2026〕号 `无保留意见 · 2026-03-03`
+- AuditReport 甲所内审〔2026〕号 `无保留意见 · 2026-03-03`
 
 ### L1 国际通用 ABox (17 实例)
 
@@ -418,52 +418,52 @@ markmap:
   - source `财政部 2008-01`
   - formal `deductible = min(revenue * 0.005, actual * 0.6)`
 
-### L3 东林专有 ABox · AuditRule (7 条)
+### L3 甲所专有 ABox · AuditRule (7 条)
 
 #### 应收应付 (3)
 - ⭐ AR-RULE-001 应收账款贷方余额重分类
-  - source `无锡东林 2024-01`
+  - source `甲所 2024-01`
   - formal `closing_cr > 0`
   - 本案命中 `153 客户 ¥7.11M`
   - 触发 Z6-AI-A6-01 重分类至 2203
 - ⭐ AP-RULE-001 应付账款借方余额重分类
-  - source `无锡东林 2024-01`
+  - source `甲所 2024-01`
   - formal `closing_dr > 0`
   - 重分类至 1123 预付款项
 - ⭐ RP-RULE-001 关联方资金占用披露
-  - source `无锡东林 2025-01`
+  - source `甲所 2025-01`
   - formal `is_related_party AND |balance| > PM`
   - 触发 ZK5 单独披露段
 
 #### 存货 (1)
 - ⭐ INV-RULE-001 存货归零异常检测
-  - source `无锡东林 2024-01`
+  - source `甲所 2024-01`
   - formal `(year_dr + year_cr > 5M) AND abs(closing) < 100`
 
 #### 税务 (1)
 - ⭐ TAX-RECLASS-001 出口退税反向余额重分类
-  - source `无锡东林 2025-01`
+  - source `甲所 2025-01`
   - formal `code == '1133' AND closing < 0 AND abs(closing) > TE`
   - 本案命中 `1133 期末 ¥-430K → 触发 Z6-AI-A9-01`
 
 #### 持续经营 (1)
 - ⭐ GC-INDICATOR-001 关联担保集中度 → 持续经营
-  - source `无锡东林 2025-01`
+  - source `甲所 2025-01`
   - formal `(loan_closing > 0) AND (sum(guarantee) / sum(loan) >= 1.0)`
   - 本案命中 `5 笔贷款 100% 担保 → 标记 RiskFlag`
 
 #### 复核 (1)
 - ⭐ DL-RULE-001 三级复核签字完整性
-  - source `无锡东林 2025-01`
+  - source `甲所 2025-01`
   - formal `all(['编制人','部门负责人','签字合伙人'] in signatures)`
 
 ## 🔗 LinkInstance (139 链接)
 
 ### 客户关联方 (4)
-- 江苏大王 ─[EntityHasRelatedParty]→ 杨春平
-- 江苏大王 ─[EntityHasRelatedParty]→ 黄燕红
-- 江苏大王 ─[EntityHasRelatedParty]→ 朱洋红
-- 江苏大王 ─[EntityHasRelatedParty]→ 柒米叁
+- 甲公司 ─[EntityHasRelatedParty]→ 杨春平
+- 甲公司 ─[EntityHasRelatedParty]→ 黄燕红
+- 甲公司 ─[EntityHasRelatedParty]→ 朱洋红
+- 甲公司 ─[EntityHasRelatedParty]→ 柒米叁
 
 ### 担保链路 (10)
 - G-001 ─[GuaranteeByParty]→ 杨春平
@@ -474,12 +474,12 @@ markmap:
 - G-005 ─[GuaranteeByParty]→ 杨春平/黄燕红
 
 ### 项目-团队-成员 (13)
-- ENG-JSDW-2025 ─[EngagementForEntity]→ 江苏大王
+- ENG-JSDW-2025 ─[EngagementForEntity]→ 甲公司
 - ENG-JSDW-2025 ─[EngagementForPeriod]→ 2025FY
-- ENG-JSDW-2025 ─[EngagementHasTeam]→ 江苏大王项目组
+- ENG-JSDW-2025 ─[EngagementHasTeam]→ 甲公司项目组
 - ENG-JSDW-2025 ─[EngagementHasMateriality]→ PM/TE/SUM
-- 江苏大王项目组 ─[TeamHasAuditor]→ 童中国/侯佳成/王叙超/洪潇
-- 江苏大王项目组 ─[TeamHasReviewLevel]→ 一/二/三级复核+签发
+- 甲公司项目组 ─[TeamHasAuditor]→ 童中国/侯佳成/王叙超/洪潇
+- 甲公司项目组 ─[TeamHasReviewLevel]→ 一/二/三级复核+签发
 
 ### 底稿-科目-区域 (~30)
 - A1 ─[PaperConcernsAccount]→ Account-1001
@@ -490,7 +490,7 @@ markmap:
 - 9 张底稿全部 ─[PaperUsesTemplate]→ 同一模板
 
 ### 会计政策 (12)
-- 江苏大王 ─[EntityHasAccountingPolicy]→ 12 条政策
+- 甲公司 ─[EntityHasAccountingPolicy]→ 12 条政策
 
 ### 其他 (~70)
 - EngagementHasTimeline × 5

@@ -3,16 +3,16 @@
 Palantir Foundry 风格的「本体 + 智能体」原型平台，面向会计师事务所的财务年审场景。
 
 > **本仓库 vs 上游 leizhai2025/pilot-demo**
-> 此仓库 fork 自 `leizhai2025/pilot-demo`，并集成了 **东林事务所审计本体 + 江苏大王 2025 年度案例底稿填写过程**（位于 `backend/data/donglin/` 与 `backend/app/donglin/`）。
+> 此仓库 fork 自 `leizhai2025/pilot-demo`，并集成了 **甲会计师事务所审计本体 + 甲公司 2025 年度案例底稿填写过程**（位于 `backend/data/donglin/` 与 `backend/app/donglin/`）。
 > 上游为通用骨架；本仓库为真实案例落地。
 
-## 东林事务所本体扩展
+## 甲会计师事务所本体扩展
 
 ### 本体规模（接入数据库后）
 - **50** 个 ObjectType（10 大簇：客户/项目/数据/审计区域/认定/风险/程序/证据/底稿/报告）
 - **73** 个 LinkType（关系定义）
 - **11** 个核心 ActionType（Read/Map/Standardize/Sample/Reconcile/Recompute/Explain/Generate/Review/SignOff/Archive）
-- **95+** 个 ObjectInstance（江苏大王 2025 实例数据）
+- **95+** 个 ObjectInstance（甲公司 2025 实例数据）
 - **117+** 个 LinkInstance
 - **4** 个智能体（底稿填写/方案生成/异常分析/高新专项）
 
@@ -26,7 +26,7 @@ Palantir Foundry 风格的「本体 + 智能体」原型平台，面向会计师
 ### 4,250+ 单元格级本体追溯
 每个填入的单元格都附带 `cell_provenance`，记录其来自哪个 📦 OT / ⚡ AT / 📜 Rule。
 
-### 东林相关 API 端点
+### 甲所相关 API 端点
 - `GET  /api/donglin/papers` — 5 张已填底稿元数据
 - `GET  /api/donglin/papers/{A1|A6|A9|A24|B1}` — 单张底稿完整内容
 - `POST /api/donglin/fill/{A1|A6|A9|A24|B1}` — 触发 Agent 重新填稿（读 input/ 客户数据 → 写回 DB）
@@ -39,15 +39,15 @@ Palantir Foundry 风格的「本体 + 智能体」原型平台，面向会计师
 ```
 backend/
 ├── app/
-│   ├── donglin/                 ← 东林样式底稿填写代码
+│   ├── donglin/                 ← 甲所样式底稿填写代码
 │   │   ├── __init__.py
 │   │   ├── fill.py              # 5 个 fill_<paper> 函数 (1500+ 行)
 │   │   └── router.py            # /api/donglin/* HTTP 接口
-│   ├── seed_donglin.py          # 装载东林本体到 SQLite
+│   ├── seed_donglin.py          # 装载甲所本体到 SQLite
 │   ├── seed.py                  # 主 seed (尾部调 seed_donglin)
 │   └── main.py                  # 主路由 (尾部 mount donglin_router)
 └── data/
-    └── donglin/                 ← 东林本体 + 客户数据
+    └── donglin/                 ← 甲所本体 + 客户数据
         ├── object_types.json    # 50 类
         ├── link_types.json      # 73 关系
         ├── action_types.json    # 11 动作
@@ -67,7 +67,7 @@ backend/
             └── agent_fill.py         # (复用版本已迁至 app/donglin/fill.py)
 ```
 
-### 关闭东林 seed (如只想用上游 demo)
+### 关闭甲所 seed (如只想用上游 demo)
 ```bash
 export AUDIT_ONTOLOGY_SKIP_DONGLIN=1
 ```

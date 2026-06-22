@@ -1,4 +1,4 @@
-"""江苏大王 · 底稿 Agent 填写模拟器 (新本体颗粒度 + 单元格级本体追溯)
+"""甲公司 · 底稿 Agent 填写模拟器 (新本体颗粒度 + 单元格级本体追溯)
 
 新增：每个填入单元格都附带 provenance（本体追溯），便于在 HTML 中点击单元格查看
 "该值是怎么来的、用了哪些 ObjectType/LinkType/ActionType/AuditRule"。

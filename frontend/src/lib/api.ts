@@ -156,7 +156,7 @@ export const api = {
     { method: 'POST', body: JSON.stringify(body) },
   ),
 
-  // ---------- 斑目项目底稿预填 ----------
+  // ---------- 己公司项目底稿预填 ----------
   banmuFill: (paperIndex: string) =>
     json<{ ok: boolean; paper_id: number; decisions_count: number; fill_summary: string; status: string }>(
       `${API}/banmu/fill/${encodeURIComponent(paperIndex)}`,

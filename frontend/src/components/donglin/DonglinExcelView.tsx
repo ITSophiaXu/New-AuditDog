@@ -1,7 +1,7 @@
-/** 东林事务所样式的内嵌 Excel 视图。
+/** 甲会计师事务所样式的内嵌 Excel 视图。
  *
  * 与原 ExcelGridView 的区别：
- *   1. 顶部带「东林模板」navy 横幅 + 元数据表（编制人/复核人/客户/日期）
+ *   1. 顶部带「甲所模板」navy 横幅 + 元数据表（编制人/复核人/客户/日期）
  *   2. 行号 / 列字母 使用真实 Excel 地址（按 cell_mapping 配置）
  *   3. 每个填好的单元格旁，如果有 FillRule 覆盖，显示 Σ 角标，点击弹 popover 显示公式
  *   4. 数据格按 source_kind 颜色编码（TB / Aux / Voucher / RuleDerived / Computed / Knowledge）
@@ -19,7 +19,7 @@ type Props = {
   cellMap: Record<string, ProvenanceCell>  // 4250 cell trace
   fillRules: any[]                   // 当前底稿的所有 FillRule (从 backend 拉回)
   onCellClick: (cellKey: string) => void
-  /** 东林模板 header 元数据 */
+  /** 甲所模板 header 元数据 */
   paperMeta?: {
     auditEntity?: string
     paperTitle?: string
@@ -158,7 +158,7 @@ function zhLabel(key: string): string {
   return COLUMN_LABELS_ZH[key] || key
 }
 
-// ── 真实东林模板的「项目」列分类 + 我们的字段到列的映射 ──────────
+// ── 真实甲所模板的「项目」列分类 + 我们的字段到列的映射 ──────────
 // 每行格式: [项目名, {列字母: 字段名 | "COMPUTED"}]
 // COMPUTED 表示用真实模板公式 G = D + E - F 自动算
 type RealTemplateRow = {
@@ -303,7 +303,7 @@ export default function DonglinExcelView({
 
   return (
     <div className="donglin-excel-view border border-slate-300 rounded-lg overflow-hidden bg-white shadow-sm">
-      {/* —— 东林样式 header —— */}
+      {/* —— 甲所样式 header —— */}
       <DonglinHeader
         sheetCode={excelSheetName}
         meta={paperMeta}
@@ -350,13 +350,13 @@ export default function DonglinExcelView({
 }
 
 // ═══════════════════════════════════════════════════════════
-// 东林样式 header
+// 甲所样式 header
 // ═══════════════════════════════════════════════════════════
 function DonglinHeader({ sheetCode, meta }: {
   sheetCode: string
   meta: NonNullable<Props['paperMeta']>
 }) {
-  // 模仿真实东林 .xlsm 的 5 行元数据布局
+  // 模仿真实甲所 .xlsm 的 5 行元数据布局
   return (
     <div className="donglin-header" style={{ borderBottom: '2px solid #1e3a8a', background: '#fafbfc' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5 }}>
@@ -364,7 +364,7 @@ function DonglinHeader({ sheetCode, meta }: {
           {/* Row 1: 事务所名 + 编制人 */}
           <tr>
             <td style={{...firmRow, width: '70%'}}>
-              <strong style={{ color: '#1e3a8a' }}>无锡东林会计师事务所有限公司</strong>
+              <strong style={{ color: '#1e3a8a' }}>甲会计师事务所有限公司</strong>
             </td>
             <td style={metaLabelRight}>编&nbsp;&nbsp;制：</td>
             <td style={metaValue}>{meta.preparer || '王叙超'}</td>
@@ -377,7 +377,7 @@ function DonglinHeader({ sheetCode, meta }: {
           </tr>
           {/* Row 3: 被审计单位 + 复核人 */}
           <tr>
-            <td style={firmRow}>被审计单位：<strong>{meta.auditEntity || '江苏大王通风机械有限公司'}</strong></td>
+            <td style={firmRow}>被审计单位：<strong>{meta.auditEntity || '甲公司（通风机械）'}</strong></td>
             <td style={metaLabelRight}>复&nbsp;&nbsp;核：</td>
             <td style={metaValue}>{meta.reviewer || '侯佳成'}</td>
           </tr>
@@ -578,7 +578,7 @@ function TableModeGrid({
 }
 
 // ═══════════════════════════════════════════════════════════
-// 字段模式 (审定表) — 用真实东林模板的 8 列 × N 行
+// 字段模式 (审定表) — 用真实甲所模板的 8 列 × N 行
 // ═══════════════════════════════════════════════════════════
 function SummaryModeGrid({
   sheetData, excelSheetName, sheetCode, paperIndex, cellMap,
@@ -617,7 +617,7 @@ function SummaryModeGrid({
 }
 
 // ═══════════════════════════════════════════════════════════
-// 真实东林模板 8 列 N 行表格
+// 真实甲所模板 8 列 N 行表格
 // ═══════════════════════════════════════════════════════════
 function RealTemplateGrid({
   rows, excelSheetName, sheetData, sheetCode, paperIndex, cellMap,
@@ -773,7 +773,7 @@ function RealTemplateGrid({
         </tbody>
       </table>
       <div className="border-t border-slate-300 px-3 py-1.5 bg-slate-50 flex items-center text-[11px] text-slate-600">
-        <span>真实东林 .xlsm 模板 · 8 列 × {rows.length} 行 · 数据从第 8 行起</span>
+        <span>真实甲所 .xlsm 模板 · 8 列 × {rows.length} 行 · 数据从第 8 行起</span>
         <span className="ml-auto text-slate-400">空格 = 模板里待填或不适用</span>
       </div>
     </div>

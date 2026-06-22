@@ -637,8 +637,8 @@ human_review(low_conf)  <span class="c"># 写入 review_queue.jsonl</span></pre>
     layer_chain=[                                  <span class="c"># 4 层完整链路</span>
         {<span class="s">"layer"</span>: <span class="s">"L1"</span>, <span class="s">"basis"</span>: <span class="s">"ISA 530 抽样准则"</span>},
         {<span class="s">"layer"</span>: <span class="s">"L2"</span>, <span class="s">"basis"</span>: <span class="s">"CSA 1101 一般要求"</span>},
-        {<span class="s">"layer"</span>: <span class="s">"L3"</span>, <span class="s">"basis"</span>: <span class="s">"东林辅助账标准列名"</span>},
-        {<span class="s">"layer"</span>: <span class="s">"L0"</span>, <span class="s">"basis"</span>: <span class="s">"江苏大王 1122 辅助账 客户 000860"</span>},
+        {<span class="s">"layer"</span>: <span class="s">"L3"</span>, <span class="s">"basis"</span>: <span class="s">"甲所辅助账标准列名"</span>},
+        {<span class="s">"layer"</span>: <span class="s">"L0"</span>, <span class="s">"basis"</span>: <span class="s">"甲公司 1122 辅助账 客户 000860"</span>},
     ],
     fill_rule_ref=<span class="s">"fillrule-a6-c11-from-a62"</span>,    <span class="c"># 引用 B 抽出的 FillRule</span>
 
@@ -702,7 +702,7 @@ human_review(low_conf)  <span class="c"># 写入 review_queue.jsonl</span></pre>
 
 <span class="c"># 审计师 sign-off 后:</span>
 upgrade_to_l3(proposed_rule, signed_by=<span class="s">"侯佳成"</span>)
-  <span class="c"># 写入 rules_l3_donglin.ttl, source="侯佳成 + 无锡东林沉淀"</span></pre>
+  <span class="c"># 写入 rules_l3_donglin.ttl, source="侯佳成 + 甲所沉淀"</span></pre>
 
     <div class="acceptance">
       <h5>Acceptance Criteria</h5>
@@ -737,7 +737,7 @@ upgrade_to_l3(proposed_rule, signed_by=<span class="s">"侯佳成"</span>)
 │   │   ├── <span class="new">build_abox.py</span>           <span class="annot"># 新: aligned_facts → abox.ttl + instances.json</span>
 │   │   ├── <span class="new">build_fill_rules.py</span>     <span class="annot"># 新: cell_formulas → fill_rules.ttl</span>
 │   │   ├── <span class="reused-a">build_rules_l2.py</span>       <span class="annot"># A 的中注协 5 规则</span>
-│   │   └── <span class="reused-a">build_rules_l3.py</span>       <span class="annot"># A 的东林 7 规则</span>
+│   │   └── <span class="reused-a">build_rules_l3.py</span>       <span class="annot"># A 的甲所 7 规则</span>
 │   │
 │   ├── <span class="dir">validators/</span>
 │   │   └── <span class="reused-b">validate.py</span>             <span class="annot"># B 复用 + 扩展到 18 check</span>
@@ -783,7 +783,7 @@ upgrade_to_l3(proposed_rule, signed_by=<span class="s">"侯佳成"</span>)
     │
     ├── <span class="dir">rules/</span>
     │   ├── <span class="reused-a">rules_l2_csa.ttl</span>          <span class="annot"># 5 条中注协 / 财政部</span>
-    │   └── <span class="reused-a">rules_l3_donglin.ttl</span>      <span class="annot"># 7 条东林内规</span>
+    │   └── <span class="reused-a">rules_l3_donglin.ttl</span>      <span class="annot"># 7 条甲所内规</span>
     │
     ├── <span class="dir">provenance/</span>                  <span class="annot"># Phase 4 产物</span>
     │   ├── <span class="reused-a">cell_provenance.json</span>     <span class="annot"># 含 layer_chain (v4 新增)</span>
@@ -1066,7 +1066,7 @@ $ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
   <div class="callout danger">
     <strong>⚠️ R2: 跨所 TBox 复用边界不清</strong>
     <p style="margin:6px 0 0">
-      "事务所专有 OT" 和 "中国通用 OT" 的边界主观。如东林的 <code>AuditArea</code>（按字母分组）— 是 L3 还是 L2？侯佳成可能说这是中注协推荐的通用做法。需要每个 OT 加 <code>_layer_basis</code> 说明依据，由审计师共识决定。
+      "事务所专有 OT" 和 "中国通用 OT" 的边界主观。如甲所的 <code>AuditArea</code>（按字母分组）— 是 L3 还是 L2？侯佳成可能说这是中注协推荐的通用做法。需要每个 OT 加 <code>_layer_basis</code> 说明依据，由审计师共识决定。
     </p>
   </div>
 

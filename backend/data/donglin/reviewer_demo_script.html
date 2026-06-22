@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>东林审计师 Review · Demo 脚本 + Review Checklist</title>
+<title>甲所审计师 Review · Demo 脚本 + Review Checklist</title>
 <style>
   :root {
     --bg: #f8fafc;
@@ -170,7 +170,7 @@
 <body>
 
 <header>
-  <h1>东林审计师 Review · Demo 脚本 + Checklist</h1>
+  <h1>甲所审计师 Review · Demo 脚本 + Checklist</h1>
   <div class="sub">
     给侯佳成项目经理（或其团队）现场 demo 本体平台的完整脚本：
     5 段 demo 路径（约 45 分钟） + 6 个具体 review 决策点。
@@ -224,14 +224,14 @@
   <h2>§1 诚实开场白（5 分钟）</h2>
 
   <div class="callout honest">
-    <strong>⚠ 一定要诚实开场，不要让侯总误以为本体全部来自东林</strong>
+    <strong>⚠ 一定要诚实开场，不要让侯总误以为本体全部来自甲所</strong>
   </div>
 
   <h3>开场话术（请按这段背诵）</h3>
 
   <div class="demo-step" style="border-left-color:#dc2626">
     <div class="talking-point" style="background:#fef2f2;border-left-color:#dc2626;color:#7f1d1d;font-style:normal">
-      "侯老师，今天给您看的是一套<strong>本体平台 + AI Agent 自动填稿</strong>原型，用江苏大王 2025 年度审计作为 demo 案例。
+      "侯老师，今天给您看的是一套<strong>本体平台 + AI Agent 自动填稿</strong>原型，用甲公司 2025 年度审计作为 demo 案例。
       <br><br>
       <strong>需要先说清楚 — 它分 3 类内容</strong>：
       <br><br>
@@ -239,16 +239,16 @@
       <br><br>
       ② <span class="pill public">公开准则相关</span>：CSA 1141 / 1221 / 1311 / 1411 等 5 条审计规则 — <strong>规则文字大致符合中注协/财政部公开准则，但形式化阈值是我们设的</strong>，需要您确认阈值符合本所实务。
       <br><br>
-      ③ <span class="pill ai-inferred">AI 从模板形态反推</span>：7 条标"无锡东林"的内规 (如 AR-RULE-001 应收贷方重分类、GC-INDICATOR-001 关联担保识别) — <strong>这些是我们看到您的 442-sheet 底稿里有'重分类'/'担保识别'这些列后反推的，并不是从东林内规手册抽出来的</strong>。这些<strong>请您重点 review</strong>，告诉我们是否符合本所实操、阈值要不要改。
+      ③ <span class="pill ai-inferred">AI 从模板形态反推</span>：7 条标"甲所"的内规 (如 AR-RULE-001 应收贷方重分类、GC-INDICATOR-001 关联担保识别) — <strong>这些是我们看到您的 442-sheet 底稿里有'重分类'/'担保识别'这些列后反推的，并不是从甲所内规手册抽出来的</strong>。这些<strong>请您重点 review</strong>，告诉我们是否符合本所实操、阈值要不要改。
       <br><br>
-      <strong>今天 review 的目标</strong>：让您看清这套本体长什么样，提出 ①缺哪些规则 ②哪些规则阈值要改 ③哪些对象类型本所没有要删掉。这一轮 review 后，规则库才算真正属于东林。"
+      <strong>今天 review 的目标</strong>：让您看清这套本体长什么样，提出 ①缺哪些规则 ②哪些规则阈值要改 ③哪些对象类型本所没有要删掉。这一轮 review 后，规则库才算真正属于甲所。"
     </div>
   </div>
 
   <h3>不要说的话</h3>
   <ul>
     <li>❌ "这是我们从您给的材料里抽出的 14 条审计规则" — <strong>错，14 条里 7 条是 AI 推测的</strong></li>
-    <li>❌ "我们已经把东林事务所的本体抽出来了" — <strong>错，TBox 是设计的，不是抽取的</strong></li>
+    <li>❌ "我们已经把甲会计师事务所的本体抽出来了" — <strong>错，TBox 是设计的，不是抽取的</strong></li>
     <li>❌ "这是您所审计师确认过的规则库" — <strong>错，本次 review 才是首轮审计师确认</strong></li>
   </ul>
 </section>
@@ -264,8 +264,8 @@
 
     <p><strong>展示重点</strong>：</p>
     <ul>
-      <li>左侧顶部：107 个对象类型（OT），按 4 层过滤 — L1 国际 / L2 中国 / L3 东林 / L4 经验</li>
-      <li>点击"东林专有 L3"过滤胶囊 → 约 50+ 个 OT（包括 v5 新增的 FillRule / WorkpaperField / SummarySheet 等）</li>
+      <li>左侧顶部：107 个对象类型（OT），按 4 层过滤 — L1 国际 / L2 中国 / L3 甲所 / L4 经验</li>
+      <li>点击"甲所专有 L3"过滤胶囊 → 约 50+ 个 OT（包括 v5 新增的 FillRule / WorkpaperField / SummarySheet 等）</li>
       <li>点开任意 L3 OT (如 <code>RelatedPartyGuarantee</code>) → 展示 properties_schema + 关联的 LinkType + 实例数</li>
       <li>切到关系类型 → 97 条 LinkType</li>
       <li>切到操作类型 → 11 个 ActionType (Read/Map/Standardize/Sample/Reconcile/Recompute/Explain/Generate/Review/SignOff/Archive)</li>
@@ -287,7 +287,7 @@
       <li>14 条规则按 source 分两类显示:
         <ul>
           <li><span class="pill public">5 条 L2 公共准则</span>: CASH-RULE-001/002 (中注协 2023-12), REV-RULE-001 (中注协), FA-RULE-001 (CSA 1221), TAX-RULE-001 (财政部 2008)</li>
-          <li><span class="pill ai-inferred">7 条 L3 "东林"内规</span>: AR-RULE-001 / AP-RULE-001 / RP-RULE-001 / INV-RULE-001 / TAX-RECLASS-001 / GC-INDICATOR-001 / DL-RULE-001</li>
+          <li><span class="pill ai-inferred">7 条 L3 "甲所"内规</span>: AR-RULE-001 / AP-RULE-001 / RP-RULE-001 / INV-RULE-001 / TAX-RECLASS-001 / GC-INDICATOR-001 / DL-RULE-001</li>
         </ul>
       </li>
       <li>每条规则展示 4 个字段:
@@ -319,7 +319,7 @@
         ② "RP-RULE-001 因客户名匿名未能命中" (low, 需人工补充)
       </li>
       <li><strong>顶部黄色统计卡</strong> — "已由 Agent 填稿"，4250 单元格中 A6 占 3,978 / 引用 N 个 OT / 触发 N 条规则</li>
-      <li><strong>中央东林模板样式 Excel 网格</strong> — 模拟真实 .xlsm 头部 (5 行元数据 + sheet 大标题 + 8 列真实表头)。切到 customer_detail 看 458 客户行</li>
+      <li><strong>中央甲所模板样式 Excel 网格</strong> — 模拟真实 .xlsm 头部 (5 行元数据 + sheet 大标题 + 8 列真实表头)。切到 customer_detail 看 458 客户行</li>
       <li><strong>点任意单元格 → 弹 ProvenanceDrawer</strong>，展示该格 trace:<br>
         - cell: <code>customer_detail.rows[0].closing_dr</code><br>
         - value: ¥685,088.49<br>
@@ -351,7 +351,7 @@
 
     <p><strong>展示重点</strong>：</p>
     <ul>
-      <li>下载 27MB 的真实东林 .xlsm 模板（保留 442 sheet + VBA 宏 + 跨表公式）</li>
+      <li>下载 27MB 的真实甲所 .xlsm 模板（保留 442 sheet + VBA 宏 + 跨表公式）</li>
       <li>用 Excel 打开 → 翻到 A6 / A6-2 看 Agent 填的数据已经写入对应 cell</li>
       <li>翻其他 sheet 看模板原样完整保留</li>
     </ul>
@@ -385,8 +385,8 @@
 
   <!-- Review Item 1 -->
   <div class="review-item high">
-    <h4>① <span class="badge-ai">AI 推测</span> 7 条 L3 "东林内规" 是否符合本所实务？</h4>
-    <p>这 7 条规则的 <code>source="无锡东林"</code> 是我们贴的标签，规则内容是从模板形态反推的，<strong>需要您逐条确认</strong>。</p>
+    <h4>① <span class="badge-ai">AI 推测</span> 7 条 L3 "甲所内规" 是否符合本所实务？</h4>
+    <p>这 7 条规则的 <code>source="甲所"</code> 是我们贴的标签，规则内容是从模板形态反推的，<strong>需要您逐条确认</strong>。</p>
 
     <div class="checkbox-row">
       <input type="checkbox" />
@@ -433,7 +433,7 @@
     <div class="checkbox-row">
       <input type="checkbox" />
       <div><strong>DL-RULE-001</strong> 三级复核签字完整性 · 编制人 + 经理 + 合伙人三签
-        <div class="ask">问：东林是 3 级还是 4 级（含一级复核-洪潇）？</div>
+        <div class="ask">问：甲所是 3 级还是 4 级（含一级复核-洪潇）？</div>
       </div>
     </div>
   </div>
@@ -543,7 +543,7 @@
       <input type="checkbox"/>
       <div>每个 OT 的 properties_schema 字段够用 · 没有缺关键字段</div>
     </div>
-    <div class="ask">问：东林审计实操中常用但本体里没有的对象有哪些？</div>
+    <div class="ask">问：甲所审计实操中常用但本体里没有的对象有哪些？</div>
   </div>
 
   <!-- Review Item 6 -->
@@ -606,8 +606,8 @@
   <table>
     <tr><th style="width:40%">问题</th><th>建议回答</th></tr>
     <tr>
-      <td>"这套规则真的是从我们东林材料里抽出来的吗？"</td>
-      <td><strong>诚实回答</strong>："5 条公共准则是从中注协/财政部条文里来的，7 条标'东林'的是我们看了您的 442-sheet 模板反推的，并没有抽您所的内规手册。所以这次请您 review 是关键的一步。"</td>
+      <td>"这套规则真的是从我们甲所材料里抽出来的吗？"</td>
+      <td><strong>诚实回答</strong>："5 条公共准则是从中注协/财政部条文里来的，7 条标'甲所'的是我们看了您的 442-sheet 模板反推的，并没有抽您所的内规手册。所以这次请您 review 是关键的一步。"</td>
     </tr>
     <tr>
       <td>"AR-RULE-001 我们其实不会按 closing_cr > 0 直接重分类，要看金额绝对值"</td>
@@ -647,14 +647,14 @@
     <br><br>
     <strong>但本体知识库的准确度，依赖您和团队的 review</strong>。今天给您看的 14 条规则里，5 条是公开准则（您只需要确认本所采用版本），7 条是我们从您 442-sheet 模板里反推的（需要您逐条确认 ✓/✗/改）。
     <br><br>
-    <strong>您 review 完后 (大概 2-3 周)，规则库才算真正属于东林</strong>。之后接下一个客户时，所有 review 过的规则都可以无缝复用 — 这是本体作为<strong>事务所长期资产</strong>的价值。
+    <strong>您 review 完后 (大概 2-3 周)，规则库才算真正属于甲所</strong>。之后接下一个客户时，所有 review 过的规则都可以无缝复用 — 这是本体作为<strong>事务所长期资产</strong>的价值。
     <br><br>
     <strong>下一步</strong>: 您把这份 checklist 给到合适的项目经理或合伙人，3 周内填好返还给我们。我们 1 周内根据反馈修订本体，再给您看一次升级版。"</p>
   </div>
 </section>
 
 <footer>
-  生成于 2026-05-25 · 东林审计师 Review · Demo 脚本 + Checklist<br>
+  生成于 2026-05-25 · 甲所审计师 Review · Demo 脚本 + Checklist<br>
   原始平台: <code>http://127.0.0.1:5174</code> · 数据源: backend/data/donglin/
 </footer>
 

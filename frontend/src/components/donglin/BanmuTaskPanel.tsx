@@ -71,7 +71,7 @@ const PHASE1_CHECKPOINTS: TaskCheckpoint[] = [
   {
     id: 'X-scope', stage: '计划', index: 'X2',
     label: '审计范围确认',
-    desc: '确认仅覆盖无锡斑目 2025 年度财务报表审计及相关附注。',
+    desc: '确认仅覆盖无锡己公司 2025 年度财务报表审计及相关附注。',
     suggestion: '建议按年审范围执行，不扩展专项审计；待业务约定书签署后固化。',
   },
   {
@@ -466,7 +466,7 @@ export default function BanmuTaskPanel({ paperIndex, paperId, engagementCode, on
             <ClipboardList size={14} />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[12px] font-semibold text-slate-900">无锡斑目 · 2025年度审计</div>
+            <div className="text-[12px] font-semibold text-slate-900">无锡己公司 · 2025年度审计</div>
             <div className="text-[10px] text-slate-500">选择左侧底稿查看对应阶段任务</div>
           </div>
         </div>

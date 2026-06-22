@@ -1,5 +1,5 @@
 /**
- * PlanningPaperView — 计划阶段底稿「东林 Excel 样式」渲染器
+ * PlanningPaperView — 计划阶段底稿「甲所 Excel 样式」渲染器
  * 复现 DonglinExcelView 的 navy header + 表格网格样式
  * 支持 Y1 / Y2 / Y3 / Y4 / Y5 / Y8 / X1 / X4
  */
@@ -267,7 +267,7 @@ function RenderSection({ sectionKey, data }: { sectionKey: string; data: any }) 
   return <Cell cellKey={sectionKey} val={data} />
 }
 
-// ---- 东林 header 样式（复现 DonglinHeader 的 navy 模板） ----
+// ---- 甲所 header 样式（复现 DonglinHeader 的 navy 模板） ----
 const firmCell: React.CSSProperties = { padding: '3px 12px', borderRight: '1px solid #e5e7eb', fontSize: 11.5, color: '#1e293b' }
 const metaLabel: React.CSSProperties = { padding: '3px 8px', textAlign: 'right', fontSize: 11, color: '#64748b', whiteSpace: 'nowrap' }
 const metaVal: React.CSSProperties = { padding: '3px 8px', fontSize: 11.5, color: '#1e293b', minWidth: 100 }
@@ -283,7 +283,7 @@ function ExcelHeader({ paperIndex, paperName, meta }: {
         <tbody>
           <tr>
             <td style={{ ...firmCell, width: '70%' }}>
-              <strong style={{ color: '#1e3a8a' }}>无锡东林会计师事务所有限公司</strong>
+              <strong style={{ color: '#1e3a8a' }}>甲会计师事务所有限公司</strong>
             </td>
             <td style={metaLabel}>编&nbsp;&nbsp;制：</td>
             <td style={metaVal}>{meta.preparer}</td>
@@ -338,7 +338,7 @@ export default function PlanningPaperView({ paperIndex, paperName, paperData, ac
   const status = paperData?.review_status || 'AI 初稿'
   const filledBy = sheetData?.preparer || paperData?.filled_by || 'AI Agent'
   const filledAt = sheetData?.prepared_at?.slice(0, 10) || paperData?.filled_at?.slice(0, 10) || ''
-  const entity = (sheetData?.company_info?.name) || '江苏大王通风机械有限公司'
+  const entity = (sheetData?.company_info?.name) || '甲公司（通风机械）'
 
   const meta = {
     entity,

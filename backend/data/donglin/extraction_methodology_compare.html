@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>东林审计本体 — 两种抽取方法论对照</title>
+<title>甲所审计本体 — 两种抽取方法论对照</title>
 <style>
   :root {
     --bg: #f8fafc;
@@ -186,8 +186,8 @@
 <body>
 
 <header>
-  <h1>东林审计本体 · 两种抽取方法论对照</h1>
-  <div class="sub">A. 江苏大王案例（我们当前实现）&nbsp;&nbsp;vs&nbsp;&nbsp;B. ontology_build_v3（侯佳成 review 版）</div>
+  <h1>甲所审计本体 · 两种抽取方法论对照</h1>
+  <div class="sub">A. 甲公司案例（我们当前实现）&nbsp;&nbsp;vs&nbsp;&nbsp;B. ontology_build_v3（侯佳成 review 版）</div>
   <div class="meta">
     <span>📅 2026-05-24</span>
     <span>📁 backend/data/donglin/ &amp; OneDrive/claude output/ontology_build_v3/</span>
@@ -219,13 +219,13 @@
     <thead>
       <tr>
         <th class="dim">维度</th>
-        <th class="a">方法 A · 江苏大王 (我们)</th>
+        <th class="a">方法 A · 甲公司 (我们)</th>
         <th class="b">方法 B · ontology_build_v3</th>
       </tr>
     </thead>
     <tbody>
       <tr><td class="dim">底稿源</td>
-        <td><code>WP_FSR.xlsm</code> / <code>WP_CIT.xlsm</code><br>(442 sheets, 老准则东林模板)</td>
+        <td><code>WP_FSR.xlsm</code> / <code>WP_CIT.xlsm</code><br>(442 sheets, 老准则甲所模板)</td>
         <td><code>C:\hualingmu\audit Knowledge\</code> 下所有 .xls / .xlsx / .xlsm<br>(`rglob` 递归扫，多个工作簿)</td>
       </tr>
       <tr><td class="dim">公司数据</td>
@@ -322,7 +322,7 @@
       <ul>
         <li><code>A6 → 应收账款审定表</code> 这种"A=资产 / 6=应收账款"的对应是人工 hard-code 的 <code>code_to_area</code> 字典</li>
         <li>规则 <code>AR-RULE-001</code> 既有自然语言 <code>IF customer.closing_cr&gt;0 THEN 重分类至 2203</code>，又有形式化 <code>closing_cr &gt; 0</code> 表达式 — 两套</li>
-        <li>规则来源标 <code>"事务所" / "无锡东林" / "2024-01"</code> — 显式区分公共准则 vs 内部沉淀</li>
+        <li>规则来源标 <code>"事务所" / "甲所" / "2024-01"</code> — 显式区分公共准则 vs 内部沉淀</li>
         <li>每个调整分录 <code>Z6-AI-A6-01</code> 都带 <code>triggered_by_rule</code> 字段反查</li>
       </ul>
       <p><strong>语义注入点：</strong>extracted_knowledge/0X_*.md 的人工编辑环节。审计师在这里决定"哪一行是 Y3 重要性、Y8.3 留空意味着什么"。</p>
@@ -404,7 +404,7 @@ guarantees = [
   <h3><span class="pill a">A</span> 规则编码（双语 + 形式化表达式）</h3>
 <pre><code>(<span class="s">"AR-RULE-001"</span>, <span class="s">"应收账款贷方余额重分类"</span>, <span class="s">"应收应付"</span>,
     <span class="s">"IF customer.closing_balance &lt; 0 THEN 重分类至 2203 预收款项"</span>,  <span class="c"># expression</span>
-    <span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"无锡东林"</span>, <span class="s">"2024-01"</span>,
+    <span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"甲所"</span>, <span class="s">"2024-01"</span>,
     <span class="s">"客户级期末贷方余额 = 客户预付/超付 → 资产负债表移到「预收款项」"</span>, <span class="c"># narrative</span>
     <span class="s">"closing_cr &gt; 0"</span>),  <span class="c"># formal_expression — agent 可程序化求值</span></code></pre>
 
@@ -454,7 +454,7 @@ REASON: A6-99 是 BRIEF 反复强调的 hub；单独建类便于挂 :dependsOn /
     <thead>
       <tr>
         <th class="dim">维度</th>
-        <th class="a">方法 A · 江苏大王（我们）</th>
+        <th class="a">方法 A · 甲公司（我们）</th>
         <th class="b">方法 B · ontology_build_v3</th>
       </tr>
     </thead>
@@ -508,7 +508,7 @@ REASON: A6-99 是 BRIEF 反复强调的 hub；单独建类便于挂 :dependsOn /
         <td><span class="tag tag-yes">显式</span> cross_sheet_edges.jsonl 29,503 边 (formula + vba)</td>
       </tr>
       <tr><td class="dim">演化路径</td>
-        <td>fork pilot-demo，加东林 seed</td>
+        <td>fork pilot-demo，加甲所 seed</td>
         <td>v1 (68 Class) → v2 (critique) → v3 (20 Class，瘦身)</td>
       </tr>
       <tr><td class="dim">校验</td>
@@ -543,7 +543,7 @@ REASON: A6-99 是 BRIEF 反复强调的 hub；单独建类便于挂 :dependsOn /
       <ul>
         <li>❌ <strong>不可重跑</strong> — 关联担保 5 笔等是字面量编码，新公司要重写</li>
         <li>❌ <strong>没用 Excel 公式</strong> — A6!C11='A6-2'!F824 这种沉淀完全没读</li>
-        <li>❌ <strong>没读 VBA</strong> — 东林模板里 369 条 VBA 映射没用上</li>
+        <li>❌ <strong>没读 VBA</strong> — 甲所模板里 369 条 VBA 映射没用上</li>
         <li>❌ <strong>没用 W3C 标准</strong> — JSON 而非 Turtle/OWL，不能 SPARQL 查询</li>
         <li>❌ <strong>没有 validate</strong> — 字面量错了到运行才发现</li>
       </ul>
@@ -609,7 +609,7 @@ REASON: A6-99 是 BRIEF 反复强调的 hub；单独建类便于挂 :dependsOn /
 <hr>
 
 <footer>
-  生成于 2026-05-24 · 江苏大王案例 · 两版本对照<br>
+  生成于 2026-05-24 · 甲公司案例 · 两版本对照<br>
   方法 A 落库 = <code>backend/data/donglin/{object,link,action}_types.json + agent_demo/cell_provenance.json</code><br>
   方法 B 落库 = <code>ontology_build_v3/ontology/{tbox,abox,fill_rules}.ttl + reports/extracted/*.jsonl</code>
 </footer>

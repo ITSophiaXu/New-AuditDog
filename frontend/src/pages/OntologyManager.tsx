@@ -11,7 +11,7 @@ import { Icon } from '@/components/ui/Icon'
 import LinkGraph from '@/components/ontology/LinkGraph'
 import { cn } from '@/lib/utils'
 
-// 解析描述里的 [L1/L2/L3] + [东林·簇] 双前缀
+// 解析描述里的 [L1/L2/L3] + [甲所·簇] 双前缀
 function parseDescMeta(desc: string | undefined): {
   layer: string | null
   cluster: string | null
@@ -26,8 +26,8 @@ function parseDescMeta(desc: string | undefined): {
     layer = layerM[1]
     work = layerM[2]
   }
-  // 再匹配 [东林·簇]
-  const clusterM = work.match(/^\[东林·([^\]]+)\]\s*(.*)$/)
+  // 再匹配 [甲所·簇]
+  const clusterM = work.match(/^\[甲所·([^\]]+)\]\s*(.*)$/)
   let cluster: string | null = null
   if (clusterM) {
     cluster = clusterM[1]
@@ -40,7 +40,7 @@ function parseDescMeta(desc: string | undefined): {
 // L0 客户事实 / L1 通用准则 / L2 事务所专有 / L3 审计师经验
 const LAYER_LABELS: Record<string, { short: string; full: string; tone: string }> = {
   L1:           { short: 'L1 通用', full: 'L1 通用准则 (ISA/IFRS/CSA/CAS/法律)', tone: 'teal' },
-  'L2:donglin': { short: 'L2 东林', full: 'L2 东林事务所专有', tone: 'amber' },
+  'L2:donglin': { short: 'L2 甲所', full: 'L2 甲会计师事务所专有', tone: 'amber' },
   'L2:firm':    { short: 'L2 所有', full: 'L2 事务所内规', tone: 'amber' },
   'L3:auditor': { short: 'L3 经验', full: 'L3 审计师个人经验 (待捕获)', tone: 'sky' },
   L0:           { short: 'L0 客户', full: 'L0 客户事实', tone: 'gray' },
@@ -122,7 +122,7 @@ export default function OntologyManager() {
           <div className="text-xs text-slate-500 mb-1">本体管理 · Ontology Manager</div>
           <div className="text-lg font-semibold text-slate-900">对象类型</div>
           <div className="text-[11px] text-slate-500 mt-0.5">
-            共 <b>{types.length}</b> 类 · 东林事务所 (江苏大王 2025)
+            共 <b>{types.length}</b> 类 · 甲会计师事务所 (甲公司 2025)
           </div>
           <div className="relative mt-3">
             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />

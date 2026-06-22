@@ -32,6 +32,6 @@ backend/data/evidence/*
 *.swp
 .DS_Store
 
-# 东林真实 .xlsm 模板（27MB · 不提交，部署时本地复制）
+# 甲所真实 .xlsm 模板（27MB · 不提交，部署时本地复制）
 backend/data/donglin/templates/*.xlsm
 backend/data/donglin/templates/*.xlsx

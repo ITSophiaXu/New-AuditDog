@@ -19,7 +19,7 @@
     --L2: #0d9488;   /* 中国 teal */
     --L2-bg: #ccfbf1;
     --L2-soft: #f0fdfa;
-    --L3: #d97706;   /* 东林 amber */
+    --L3: #d97706;   /* 甲所 amber */
     --L3-bg: #fed7aa;
     --L3-soft: #fffbeb;
     --L4: #7c3aed;   /* 经验 violet */
@@ -286,7 +286,7 @@
       <span class="tag">L3</span>
       <span class="name">事务所内规</span> · Firm-Specific Methodology
       <span class="pct">~35%</span>
-      <div class="desc">东林 vs 立信 vs 信永中和 不同。例：东林的三级复核 / Z6 调整分录编号 / AR-RULE-001 应收贷方重分类</div>
+      <div class="desc">甲所 vs 立信 vs 信永中和 不同。例：甲所的三级复核 / Z6 调整分录编号 / AR-RULE-001 应收贷方重分类</div>
     </div>
     <div class="layer L4">
       <span class="tag">L4</span>
@@ -301,7 +301,7 @@
     <ul>
       <li><strong>TBox（对象类型骨架）来自 L1+L2</strong> — 这层每个所大概率一样，做一次跨所复用</li>
       <li><strong>ABox（实例值）+ Rule formal_expression + Action 参数来自 L3</strong> — 这是事务所差异化资产</li>
-      <li><strong>L3 偶尔触发新 OT</strong>（如东林强调"关联担保" → 单独建 RelatedPartyGuarantee）</li>
+      <li><strong>L3 偶尔触发新 OT</strong>（如甲所强调"关联担保" → 单独建 RelatedPartyGuarantee）</li>
       <li><strong>L4 通过 Agent 交互逐步累积</strong> — 复核批注 / 对话日志 / 手动修改 Agent 填的内容</li>
     </ul>
   </div>
@@ -314,7 +314,7 @@
   <div class="stats">
     <div class="stat L1"><div class="v">~18</div><div class="l">L1 国际通用 OT</div></div>
     <div class="stat L2"><div class="v">~12</div><div class="l">L2 中国本地化 OT</div></div>
-    <div class="stat L3"><div class="v">~22</div><div class="l">L3 东林专有 OT</div></div>
+    <div class="stat L3"><div class="v">~22</div><div class="l">L3 甲所专有 OT</div></div>
     <div class="stat L4"><div class="v">0</div><div class="l">L4 审计师经验 OT</div></div>
   </div>
 
@@ -351,14 +351,14 @@
     </div>
 
     <div class="layer-card L3">
-      <div class="head"><span class="num">3</span>L3 东林事务所专有 (~22 个)</div>
+      <div class="head"><span class="num">3</span>L3 甲会计师事务所专有 (~22 个)</div>
       <p style="font-size:12px;color:var(--muted);margin:0 0 8px">从 WP_FSR.xlsm 442-sheet 模板抽出</p>
       <ul style="font-size:12.5px">
-        <li><code>AuditArea</code> (按 A/B/C/D/G/H 字母分组 9 大区域) — 东林习惯</li>
-        <li><code>PaperTemplate.sheets</code> 6 个固定子表 — 东林模板结构</li>
-        <li><code>RelatedPartyGuarantee</code> — 东林单独建类 (其他所可能合并到 RelatedParty)</li>
-        <li><code>ProjectTimeline</code> 5 个里程碑 — 东林项目治理</li>
-        <li><code>Z6 调整分录编号体系</code> (Z6-AI-* 前缀) — 东林底稿规范</li>
+        <li><code>AuditArea</code> (按 A/B/C/D/G/H 字母分组 9 大区域) — 甲所习惯</li>
+        <li><code>PaperTemplate.sheets</code> 6 个固定子表 — 甲所模板结构</li>
+        <li><code>RelatedPartyGuarantee</code> — 甲所单独建类 (其他所可能合并到 RelatedParty)</li>
+        <li><code>ProjectTimeline</code> 5 个里程碑 — 甲所项目治理</li>
+        <li><code>Z6 调整分录编号体系</code> (Z6-AI-* 前缀) — 甲所底稿规范</li>
         <li><strong>规则层 7 条事务所内规</strong>：AR-RULE-001 / AP-RULE-001 / RP-RULE-001 / INV-RULE-001 / TAX-RECLASS-001 / GC-INDICATOR-001 / DL-RULE-001</li>
       </ul>
     </div>
@@ -395,19 +395,19 @@
       <tr><td class="code">CASH-RULE-002</td><td>大额现金审批</td><td><span class="pill L2">L2</span></td><td>中注协 2023-12</td><td>内控基本规范</td></tr>
       <tr><td class="code">REV-RULE-001</td><td>收入截止性核查</td><td><span class="pill L2">L2</span></td><td>中注协 2023-12</td><td>CSA 1141 收入舞弊风险默认假设</td></tr>
       <tr><td class="code">FA-RULE-001</td><td>固定资产折旧重算 (CSA 1221 四级梯度)</td><td><span class="pill L2">L2</span></td><td>中注协 2023-12</td><td>CSA 1221 重要性梯度框架</td></tr>
-      <tr><td class="code">AR-RULE-001</td><td>应收账款贷方余额重分类</td><td><span class="pill L3">L3</span></td><td>无锡东林 2024-01</td><td>东林事务所内规（其他所可能不强制阈值）</td></tr>
-      <tr><td class="code">AP-RULE-001</td><td>应付账款借方余额重分类</td><td><span class="pill L3">L3</span></td><td>无锡东林 2024-01</td><td>东林事务所内规</td></tr>
-      <tr><td class="code">RP-RULE-001</td><td>关联方资金占用披露 (&gt; PM 触发)</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>CAS 36 在东林的形式化阈值版</td></tr>
-      <tr><td class="code">INV-RULE-001</td><td>存货归零异常检测</td><td><span class="pill L3">L3</span></td><td>无锡东林 2024-01</td><td>东林反舞弊关注</td></tr>
-      <tr><td class="code">TAX-RECLASS-001</td><td>出口退税款反向余额重分类</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>东林针对出口业务公司沉淀</td></tr>
-      <tr><td class="code">GC-INDICATOR-001</td><td>关联担保集中度 → 持续经营</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>东林对民营企业风险关注</td></tr>
-      <tr><td class="code">DL-RULE-001</td><td>三级复核签字完整性</td><td><span class="pill L3">L3</span></td><td>无锡东林 2025-01</td><td>东林项目治理</td></tr>
+      <tr><td class="code">AR-RULE-001</td><td>应收账款贷方余额重分类</td><td><span class="pill L3">L3</span></td><td>甲所 2024-01</td><td>甲会计师事务所内规（其他所可能不强制阈值）</td></tr>
+      <tr><td class="code">AP-RULE-001</td><td>应付账款借方余额重分类</td><td><span class="pill L3">L3</span></td><td>甲所 2024-01</td><td>甲会计师事务所内规</td></tr>
+      <tr><td class="code">RP-RULE-001</td><td>关联方资金占用披露 (&gt; PM 触发)</td><td><span class="pill L3">L3</span></td><td>甲所 2025-01</td><td>CAS 36 在甲所的形式化阈值版</td></tr>
+      <tr><td class="code">INV-RULE-001</td><td>存货归零异常检测</td><td><span class="pill L3">L3</span></td><td>甲所 2024-01</td><td>甲所反舞弊关注</td></tr>
+      <tr><td class="code">TAX-RECLASS-001</td><td>出口退税款反向余额重分类</td><td><span class="pill L3">L3</span></td><td>甲所 2025-01</td><td>甲所针对出口业务公司沉淀</td></tr>
+      <tr><td class="code">GC-INDICATOR-001</td><td>关联担保集中度 → 持续经营</td><td><span class="pill L3">L3</span></td><td>甲所 2025-01</td><td>甲所对民营企业风险关注</td></tr>
+      <tr><td class="code">DL-RULE-001</td><td>三级复核签字完整性</td><td><span class="pill L3">L3</span></td><td>甲所 2025-01</td><td>甲所项目治理</td></tr>
     </tbody>
   </table>
 
   <p style="margin-top:14px;font-size:13px">
     <span class="pill L2">L2</span> <strong>5 条</strong>（中注协/财政部）·
-    <span class="pill L3">L3</span> <strong>7 条</strong>（无锡东林）·
+    <span class="pill L3">L3</span> <strong>7 条</strong>（甲所）·
     <span class="pill gray">合计</span> 12 条
     <span style="color:var(--muted);font-size:12px">（其余 2 条为占位，未发布）</span>
   </p>
@@ -421,7 +421,7 @@
     <div class="method-col A">
       <h4><span class="pill A">方法 A · 我们</span> 「Top-down 自上而下」</h4>
       <p style="font-size:12.5px;color:var(--muted);margin:0 0 10px">
-        先按 L1+L2 准则手工设计 TBox 骨架，再用 L3 东林内规填 ABox + Rule
+        先按 L1+L2 准则手工设计 TBox 骨架，再用 L3 甲所内规填 ABox + Rule
       </p>
       <div class="bar">
         <div class="L1" style="width:35%">L1 35%</div>
@@ -431,12 +431,12 @@
       <div class="bar-legend">
         <span><span class="dot" style="background:var(--L1)"></span>国际</span>
         <span><span class="dot" style="background:var(--L2)"></span>中国</span>
-        <span><span class="dot" style="background:var(--L3)"></span>东林</span>
+        <span><span class="dot" style="background:var(--L3)"></span>甲所</span>
       </div>
       <ul style="font-size:12.5px;margin-top:10px">
         <li><strong>L1+L2 TBox 设计</strong>：手工 + LLM 候选 + Palantir 范式 → 52 OT</li>
         <li><strong>L3 ABox + Rule</strong>：人工读 10 个 markdown 知识卡，编码到 build_instances.py</li>
-        <li><strong>已显式标 source 字段</strong>：14 条规则区分"中注协" vs "无锡东林" → 已在做 L2/L3 区分</li>
+        <li><strong>已显式标 source 字段</strong>：14 条规则区分"中注协" vs "甲所" → 已在做 L2/L3 区分</li>
         <li><strong>L4 缺位</strong>：无捕获管道</li>
       </ul>
     </div>
@@ -444,7 +444,7 @@
     <div class="method-col B">
       <h4><span class="pill B">方法 B · v3</span> 「Bottom-up 自下而上」</h4>
       <p style="font-size:12.5px;color:var(--muted);margin:0 0 10px">
-        从东林 .xlsm 公式 + VBA 自动抽证据，反推应该有哪些 TBox + FillRule
+        从甲所 .xlsm 公式 + VBA 自动抽证据，反推应该有哪些 TBox + FillRule
       </p>
       <div class="bar">
         <div class="L1" style="width:20%">L1 20%</div>
@@ -454,7 +454,7 @@
       <div class="bar-legend">
         <span><span class="dot" style="background:var(--L1)"></span>国际</span>
         <span><span class="dot" style="background:var(--L2)"></span>中国</span>
-        <span><span class="dot" style="background:var(--L3)"></span>东林</span>
+        <span><span class="dot" style="background:var(--L3)"></span>甲所</span>
       </div>
       <ul style="font-size:12.5px;margin-top:10px">
         <li><strong>L1+L2 TBox</strong>：弱 — 20 Class 是从 442-sheet 反推的，不是从准则开始</li>
@@ -482,7 +482,7 @@
       </tr>
       <tr>
         <td><strong>L3 填 ABox + Rule</strong></td>
-        <td>✅ 显式标 <code>source="无锡东林"</code> 7 条内规</td>
+        <td>✅ 显式标 <code>source="甲所"</code> 7 条内规</td>
         <td>✅ 每条都有 <code>evidenceRef: jsonl#L&lt;n&gt;</code></td>
       </tr>
       <tr>
@@ -536,7 +536,7 @@
 },
 {
   <span class="s">"code"</span>: <span class="s">"AuditArea"</span>,
-  <span class="s">"_layer"</span>: <span class="s">"L3:donglin"</span>,         <span class="c">// 东林按字母分组 9 大区域</span>
+  <span class="s">"_layer"</span>: <span class="s">"L3:donglin"</span>,         <span class="c">// 甲所按字母分组 9 大区域</span>
   <span class="s">"_cluster"</span>: <span class="s">"审计区域"</span>
 }
 
@@ -544,15 +544,15 @@
 {
   <span class="s">"code"</span>: <span class="s">"AR-RULE-001"</span>,
   <span class="s">"_layer"</span>: <span class="s">"L3:donglin"</span>,
-  <span class="s">"_layer_basis"</span>: <span class="s">"CAS 22 金融工具列报 (L2 底层) + 东林 2024-01 形式化阈值 (L3)"</span>,
-  <span class="s">"source"</span>: <span class="s">"无锡东林"</span>
+  <span class="s">"_layer_basis"</span>: <span class="s">"CAS 22 金融工具列报 (L2 底层) + 甲所 2024-01 形式化阈值 (L3)"</span>,
+  <span class="s">"source"</span>: <span class="s">"甲所"</span>
 }</pre>
 
   <h3>4.2 前端按层级过滤</h3>
   <p>本体管理页加 <strong>「来源层级」过滤胶囊条</strong>：
     <span class="pill L1">L1 国际</span>
     <span class="pill L2">L2 中国</span>
-    <span class="pill L3">L3 东林</span>
+    <span class="pill L3">L3 甲所</span>
     <span class="pill L4">L4 经验</span>
     审计师一眼看清"哪些是通用知识/哪些是我们专有"。</p>
 
@@ -564,7 +564,7 @@
     </div>
     <div class="step">
       <div><span class="num">2</span><span class="name">替换 L3</span></div>
-      <div class="detail">东林 7 内规 → 新所 N 内规</div>
+      <div class="detail">甲所 7 内规 → 新所 N 内规</div>
     </div>
     <div class="step">
       <div><span class="num">3</span><span class="name">跑方法 B 抽取</span></div>
@@ -608,7 +608,7 @@
     <p>
       ① <strong>L1 国际通用</strong> (~30%) — ISA / IFRS 框架，跨所跨国都适用。包括 6 种认定、审计动作分类、底稿概念。<br>
       ② <strong>L2 中国本地化</strong> (~20%) — CSA / CAS / 中注协 / 财政部。包括 PM/TE/SUM 重要性梯度、关联方判定、4 类审计意见。<br>
-      ③ <strong>L3 东林事务所内规</strong> (~35%) — <span style="color:var(--L3);font-weight:600">这是从你给我的 WP_FSR.xlsm + 5 张已填底稿抽出来的，请你重点 review 这部分</span>。包括三级复核、Z6 调整分录编号、7 条事务所内规（AR-RULE-001 应收贷方重分类 / GC-INDICATOR-001 关联担保识别等）。<br>
+      ③ <strong>L3 甲会计师事务所内规</strong> (~35%) — <span style="color:var(--L3);font-weight:600">这是从你给我的 WP_FSR.xlsm + 5 张已填底稿抽出来的，请你重点 review 这部分</span>。包括三级复核、Z6 调整分录编号、7 条事务所内规（AR-RULE-001 应收贷方重分类 / GC-INDICATOR-001 关联担保识别等）。<br>
       ④ <strong>L4 审计师个人经验</strong> (~0%) — 现在还没有，但 Agent 对话面板能捕获你每次的修改。<strong>等你用上一段时间，你的判断会自动累积成新的 L3 规则候选</strong>。这是事务所专属的"AI 老审计师大脑"。"
     </p>
   </div>
@@ -617,7 +617,7 @@
     <strong>📢 跟侯佳成讲价值</strong>
     <ul style="margin-top:8px">
       <li><strong>L1+L2 是复用资产</strong> — 我做了一次，下次给立信、信永中和也能用，不重复开发</li>
-      <li><strong>L3 是事务所差异化</strong> — 你的核心 IP，是东林对外服务的护城河</li>
+      <li><strong>L3 是事务所差异化</strong> — 你的核心 IP，是甲所对外服务的护城河</li>
       <li><strong>L4 是审计师个人资产</strong> — 跳槽都能带走（如果你愿意），但你愿意把它沉淀到本体里 → 事务所就拥有了"人走茶不凉"</li>
     </ul>
   </div>
@@ -626,8 +626,8 @@
     <strong>📢 请侯佳成 review 的 3 个问题</strong>
     <ol style="margin-top:8px">
       <li><strong>L2 通用准则版本</strong> — 我用的中注协 2023-12 / 财政部条文等是不是最新？有没有更新过的？</li>
-      <li><strong>L3 东林 7 条内规</strong> — AR-RULE-001 / RP-RULE-001 / GC-INDICATOR-001 / DL-RULE-001 等是不是东林 2024-2025 的实操版本？阈值对不对？narrative 描述准不准？</li>
-      <li><strong>L3 OT 是否缺漏</strong> — 我从 442-sheet 索引体系抽出了 22 个东林专有 OT，是不是还有"应该建模但没建"的？（举例：函证流程是否需要单独建 OT？）</li>
+      <li><strong>L3 甲所 7 条内规</strong> — AR-RULE-001 / RP-RULE-001 / GC-INDICATOR-001 / DL-RULE-001 等是不是甲所 2024-2025 的实操版本？阈值对不对？narrative 描述准不准？</li>
+      <li><strong>L3 OT 是否缺漏</strong> — 我从 442-sheet 索引体系抽出了 22 个甲所专有 OT，是不是还有"应该建模但没建"的？（举例：函证流程是否需要单独建 OT？）</li>
     </ol>
   </div>
 </section>
@@ -642,7 +642,7 @@
     <li>给 Rules 面板每条规则显示层级徽章 (~30 分钟)</li>
     <li>给 ChatPanel 加"用户改写事件"捕获 (~半天)</li>
     <li>设计 LearningInbox 的 ProposedRule 流程 (~半天)</li>
-    <li>把 v3 的 <code>extract_excel.py</code> + <code>extract_vba.py</code> 拉进 backend，跑一遍东林 442-sheet (~1 天)</li>
+    <li>把 v3 的 <code>extract_excel.py</code> + <code>extract_vba.py</code> 拉进 backend，跑一遍甲所 442-sheet (~1 天)</li>
     <li>用 v3 抽出来的 evidence 给现有 14 条规则补 <code>evidenceRef</code> 字段 (~半天)</li>
   </ol>
 
@@ -654,7 +654,7 @@
 <hr>
 
 <footer>
-  生成于 2026-05-24 · 江苏大王案例 + 东林事务所样式 · 4 层架构策略文档<br>
+  生成于 2026-05-24 · 甲公司案例 + 甲会计师事务所样式 · 4 层架构策略文档<br>
   本文档基于用户提出的「国际准则 / 中国本地化 / 事务所内规 / 审计师经验」4 层分层思路展开
 </footer>
 

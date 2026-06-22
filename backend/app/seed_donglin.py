@@ -1,10 +1,10 @@
-"""江苏大王 (东林事务所样式) 审计本体 seed.
+"""甲公司 (甲会计师事务所样式) 审计本体 seed.
 
 加载 pilot_jsdw 抽取的 50 ObjectType + 73 LinkType + 11 ActionType + 95+ ObjectInstance +
 117+ LinkInstance + 4 AgentConfig + 5 张已填底稿 + 4250+ 单元格追溯 到 pilot-demo 数据库。
 
-数据来源：江苏大王通风机械有限公司 2025 年度审计材料，由 audit-knowledge 项目抽取。
-事务所：无锡东林会计师事务所。
+数据来源：甲公司（通风机械） 2025 年度审计材料，由 audit-knowledge 项目抽取。
+事务所：甲会计师事务所。
 """
 from __future__ import annotations
 import json
@@ -32,7 +32,7 @@ def _load(name: str):
 
 def _strip_meta(spec: dict) -> dict:
     """剥离 _cluster / _layer 等非模型字段；编码进 description 头部以便前端解析。
-    最终格式: '[L3:donglin] [东林·客户类] 原描述...'
+    最终格式: '[L3:donglin] [甲所·客户类] 原描述...'
     """
     cluster = spec.get("_cluster")
     layer = spec.get("_layer")
@@ -42,14 +42,14 @@ def _strip_meta(spec: dict) -> dict:
     if layer:
         prefixes.append(f"[{layer}]")
     if cluster:
-        prefixes.append(f"[东林·{cluster}]")
+        prefixes.append(f"[甲所·{cluster}]")
     if prefixes:
         clean["description"] = " ".join(prefixes + [original_desc]).strip()
     return clean
 
 
 def seed_donglin(skip_if_exists: bool = True) -> dict[str, int]:
-    """装载东林样式本体 + 已填底稿。返回各项计数。"""
+    """装载甲所样式本体 + 已填底稿。返回各项计数。"""
     stats = {"ObjectType": 0, "LinkType": 0, "ActionType": 0,
              "ObjectInstance": 0, "LinkInstance": 0, "AgentConfig": 0}
     if not DATA_DIR.exists():
@@ -151,7 +151,7 @@ def seed_donglin(skip_if_exists: bool = True) -> dict[str, int]:
             stats["AgentConfig"] += 1
         s.commit()
 
-        # ---- 6.5. 补充骨架底稿（江苏大王完整 442-sheet 子集的 ~40 张空底稿） ----
+        # ---- 6.5. 补充骨架底稿（甲公司完整 442-sheet 子集的 ~40 张空底稿） ----
         # 已在 object_instances.json 的 9 张外，再加 40+ 张「未开始」的底稿，
         # 让侧栏 4 级树能体现完整的「计划 / 风险 / 执行 / 报告」结构。
         SKELETON_PAPERS = [
@@ -280,7 +280,7 @@ def seed_donglin(skip_if_exists: bool = True) -> dict[str, int]:
                 stats["ObjectInstance"] += 1
             s.commit()
 
-        # ---- 7c. 中国南玻集团 销售循环穿行测试 (新项目 + walkthrough 底稿) ----
+        # ---- 7c. 乙公司 销售循环穿行测试 (新项目 + walkthrough 底稿) ----
         wt_path = DEMO_DIR / "filled_CSG_walkthrough.json"
         if wt_path.exists():
             wt = json.loads(wt_path.read_text(encoding="utf-8"))

@@ -1,4 +1,4 @@
-"""把已填底稿的数据写回真实东林 WP_FSR.xlsm 模板副本，返回 xlsx 文件给用户下载。
+"""把已填底稿的数据写回真实甲所 WP_FSR.xlsm 模板副本，返回 xlsx 文件给用户下载。
 
 工作流:
   1. 拷贝 WP_FSR_donglin.xlsm → 临时文件
@@ -113,7 +113,7 @@ def export_paper_xlsx(paper_code: str, session: Session) -> Path:
 
     # 2. 拷贝模板到临时文件
     tmp_dir = Path(tempfile.gettempdir())
-    out_path = tmp_dir / f"东林审计_江苏大王_{paper_code}_{wp.id}.xlsm"
+    out_path = tmp_dir / f"甲所审计_甲公司_{paper_code}_{wp.id}.xlsm"
     shutil.copy(str(TEMPLATE_FILE), str(out_path))
 
     # 3. 打开拷贝并写入

@@ -356,7 +356,7 @@ export default function WorkingPaperWorkbench() {
   const engByCode = (code: string) =>
     engagements.find((e) => (e.data as any)?.code === code)?.display_name || code
 
-  // 当前 paper 是否为东林
+  // 当前 paper 是否为甲所
   const isActiveDonglin = !!paper && isDonglinFilledDemo(paper.data as any)
   const activeDonglinCode = isActiveDonglin
     ? ((paper!.data as any)?.index as DonglinPaperCode)
@@ -917,7 +917,7 @@ export default function WorkingPaperWorkbench() {
                 </div>
               )}
 
-              {/* 东林已填 → DonglinPaperView */}
+              {/* 甲所已填 → DonglinPaperView */}
               {isActiveDonglin && activeDonglinCode && (
                 <DonglinPaperView
                   paperCode={activeDonglinCode}
@@ -949,7 +949,7 @@ export default function WorkingPaperWorkbench() {
                 />
               )}
 
-              {/* 东林未填 → 空状态 */}
+              {/* 甲所未填 → 空状态 */}
               {isActiveDonglinEmpty && (
                 <Card className="p-6 bg-gradient-to-br from-slate-50 to-white border-slate-200/80">
                   <div className="flex items-start gap-4">
@@ -965,9 +965,9 @@ export default function WorkingPaperWorkbench() {
                           {(paper.data as any)?.index} {paper.display_name?.replace(/^[A-Z]+\d*\s+/, '')}
                         </span>
                         {isBanmuPaper
-                          ? '点击下方按钮，AI 将根据斑目账套数据和东林所知识自动预填此底稿，遇到需要人工判断的节点会暂停等待。'
+                          ? '点击下方按钮，AI 将根据己公司账套数据和甲所知识自动预填此底稿，遇到需要人工判断的节点会暂停等待。'
                           : isJsdwPlanningPaper
-                          ? '点击下方按钮，AI 将根据江苏大王账套数据和东林所知识自动预填此底稿，遇到需要人工判断（如适用会计准则）的节点会暂停等待。'
+                          ? '点击下方按钮，AI 将根据甲公司账套数据和甲所知识自动预填此底稿，遇到需要人工判断（如适用会计准则）的节点会暂停等待。'
                           : <>尚未配置 fill 函数；目前 Demo 已实现的 5 张是
                             <span className="font-mono"> A1 / A6 / A9 / A24 / B1</span>。
                             点击右侧 <strong>「任务」</strong> 标签页查看相关本体规则。</>

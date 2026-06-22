@@ -1,4 +1,4 @@
-"""斑目项目底稿填写 API。
+"""己公司项目底稿填写 API。
 
 Endpoints:
   POST /api/banmu/fill/{paper_index}   — 触发 AI 预填，返回待确认决策列表
@@ -39,7 +39,7 @@ def set_accounting_standard(body: SetStandardBody, s: Session = Depends(get_sess
         None,
     )
     if eng is None:
-        raise HTTPException(404, "斑目项目 Engagement 未找到")
+        raise HTTPException(404, "己公司项目 Engagement 未找到")
     eng_data = dict(eng.data or {})
     eng_data["accounting_standard"] = body.value
     eng.data = eng_data
@@ -140,7 +140,7 @@ def _decisions_for_paper(paper_id: int, s: Session) -> list[ObjectInstance]:
 
 @router.post("/fill/{paper_index}")
 def fill_paper(paper_index: str, s: Session = Depends(get_session)) -> dict:
-    """触发 AI 预填指定斑目底稿（支持 Y3 / Y5 / X1）。"""
+    """触发 AI 预填指定己公司底稿（支持 Y3 / Y5 / X1）。"""
     if paper_index not in FILL_FNS:
         raise HTTPException(
             400,
@@ -149,7 +149,7 @@ def fill_paper(paper_index: str, s: Session = Depends(get_session)) -> dict:
 
     wp = _find_paper(paper_index, s)
     if wp is None:
-        raise HTTPException(404, f"斑目底稿 {paper_index} 未找到")
+        raise HTTPException(404, f"己公司底稿 {paper_index} 未找到")
 
     # Read accounting_standard from Engagement (filled by auditor after asking the client)
     eng = next(

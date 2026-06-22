@@ -254,7 +254,7 @@ export default function WorkbenchKnowledgePanel({ paperCode, paperIndex, paperId
           <div className="px-3 py-2.5 border-b border-amber-100 bg-gradient-to-r from-amber-50 to-orange-50/40 shrink-0">
             <div className="text-[10px] text-amber-600 uppercase tracking-wider">填写方法</div>
             <div className="text-sm font-semibold text-slate-900 truncate">
-              ★ 东林事务所 · 江苏大王 2025 — 已由 Agent 填稿
+              ★ 甲会计师事务所 · 甲公司 2025 — 已由 Agent 填稿
             </div>
             <div className="text-[11px] text-slate-500 mt-0.5">{paperIndex}</div>
           </div>

@@ -1,4 +1,4 @@
-"""东林样式底稿填写 API.
+"""甲所样式底稿填写 API.
 
 Endpoints:
   GET  /api/donglin/papers                 — 5 张已填底稿元数据 + 当前状态
@@ -50,26 +50,26 @@ def freeform_xlsx():
     return FileResponse(
         p,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        filename="货币资金A1_自由底稿_江苏大王2025.xlsx",
+        filename="货币资金A1_自由底稿_甲公司2025.xlsx",
     )
 
 
 @router.get("/walkthrough-xlsx")
 def walkthrough_xlsx():
-    """下载中国南玻集团销售循环穿行测试 · Agent 细节测试回填底稿 (.xlsx)。"""
+    """下载乙公司销售循环穿行测试 · Agent 细节测试回填底稿 (.xlsx)。"""
     p = DEMO_DIR / "CSG_walkthrough_filled.xlsx"
     if not p.exists():
         raise HTTPException(404, "walkthrough xlsx not found")
     return FileResponse(
         p,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        filename="细节测试回填_中国南玻集团股份有限公司.xlsx",
+        filename="细节测试回填_乙公司（光伏玻璃）.xlsx",
     )
 
 
 @router.get("/papers")
 def list_papers(s: Session = Depends(get_session)) -> list[dict]:
-    """列出东林 5 张已填底稿。"""
+    """列出甲所 5 张已填底稿。"""
     out = []
     for paper_idx in ("A1", "A6", "A9", "A24", "B1"):
         wp = next((o for o in s.exec(select(ObjectInstance).where(
@@ -200,7 +200,7 @@ def list_agent_runs() -> list[dict]:
 # ──────────────────────────────────────────────────────────
 @router.get("/export-xlsx/{paper_code}")
 def export_xlsx(paper_code: str, s: Session = Depends(get_session)):
-    """把底稿数据写回东林真实 .xlsm 模板，返回 xlsx 文件下载。"""
+    """把底稿数据写回甲所真实 .xlsm 模板，返回 xlsx 文件下载。"""
     from .export_xlsx import export_paper_xlsx
     from fastapi.responses import FileResponse
 

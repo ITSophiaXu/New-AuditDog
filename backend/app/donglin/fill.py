@@ -1,4 +1,4 @@
-"""江苏大王 · 底稿 Agent 填写模拟器 (新本体颗粒度 + 单元格级本体追溯)
+"""甲公司 · 底稿 Agent 填写模拟器 (新本体颗粒度 + 单元格级本体追溯)
 
 新增：每个填入单元格都附带 provenance（本体追溯），便于在 HTML 中点击单元格查看
 "该值是怎么来的、用了哪些 ObjectType/LinkType/ActionType/AuditRule"。
@@ -535,7 +535,7 @@ def fill_A6(ontology, raw, prov: Provenance):
         f"REV-RULE-001 截止测试 {len(cutoff_28_31)} 笔")
 
     # ──────── Generate summary ────────
-    # 严格按真实东林模板公式 G = D + E - F 算审定数:
+    # 严格按真实甲所模板公式 G = D + E - F 算审定数:
     #   D (tb_closing_unaudited) = TB 1122 期末净额
     #   E (reclass_to_advance)   = 审计借方调整 = aux_cr_total (贷方客户重分类移出 = 借方调增)
     #   F                        = 审计贷方调整 = 0 (无)
@@ -597,7 +597,7 @@ def fill_A6(ontology, raw, prov: Provenance):
         rule_code="AR-RULE-001")
     prov.record(PAPER, "summary.closing_audited", summary["closing_audited"], "Computed",
         ["⚡ AT::Recompute (审定表公式 G=D+E-F)", "📜 Rule::AR-RULE-001"],
-        f"按东林模板公式 G = D + E - F: "
+        f"按甲所模板公式 G = D + E - F: "
         f"{tb_closing_unaudited:,.2f} (期末未审) "
         f"+ {audit_dr_adj:,.2f} (审计借方调整 = AR-RULE-001 重分类) "
         f"- 0 (审计贷方调整) = {closing_audited_formula:,.2f}",

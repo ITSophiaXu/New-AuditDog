@@ -1,6 +1,6 @@
 # 底稿 Agent 填写过程演示
 
-> 演示 `jsdw_paper_fill` 智能体如何**消费本体知识库**填写江苏大王 2025 年度审计底稿。
+> 演示 `jsdw_paper_fill` 智能体如何**消费本体知识库**填写甲公司 2025 年度审计底稿。
 > 全程明确标注每一步使用的 **ObjectType / LinkType / ActionType / ObjectInstance / LinkInstance / AuditRule**。
 
 ## 演示范围

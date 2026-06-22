@@ -1,4 +1,4 @@
-"""填写 JSDW (江苏大王通风机械有限公司) 计划阶段底稿 sheet_data
+"""填写 JSDW (甲公司（通风机械）) 计划阶段底稿 sheet_data
 
 涉及底稿：
   Y1  审计计划总结
@@ -490,8 +490,8 @@ def _fill_X1(s: Session) -> None:
     std = _get_engagement_std(s, ENG)
     sheet = {
         "company_info": {
-            "name":              "江苏大王通风机械有限公司",
-            "short_name":        "大王通风",
+            "name":              "甲公司（通风机械）",
+            "short_name":        "甲公司通风",
             "reg_no":            "（待填：统一社会信用代码）",
             "reg_capital":       2_000_000.00,
             "address":           "江苏省无锡市（待填具体地址）",

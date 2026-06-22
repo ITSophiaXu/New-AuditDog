@@ -38,7 +38,7 @@ for layer in layers:
         "applicability": "客户在 12,620 笔凭证里有 ≥ 1 笔匹配 party_code",
         "fallback_method": "METHOD-AGING-NO-VOUCHER-001 (无凭证降级规则)",
         "references_standards": ["CAS 22", "CSA 1311"],
-        "firm_choice_rationale": "东林选 FIFO 而非 LIFO，理由：① 更符合企业实际经营逻辑（先发生的应收先收回）② 与 ECL 模型更兼容 ③ 行业惯例",
+        "firm_choice_rationale": "甲所选 FIFO 而非 LIFO，理由：① 更符合企业实际经营逻辑（先发生的应收先收回）② 与 ECL 模型更兼容 ③ 行业惯例",
         "review_severity": "关键 - 影响判断",
         "source_code_ref": "agent_fill.py:419-453 (compute_aging 函数)",
         "review_status": "AI 抽取候选，待审计师 sign-off",
@@ -267,7 +267,7 @@ def _do(s: Session) -> dict[str, int]:
         s.add(ObjectType(
             code="AuditMethod",
             display_name="审计方法/算法",
-            description="[L1] [东林·程序] 审计师可 review 的算法实例 (FIFO 账龄 / 直线折旧 / 重要性梯度 等)",
+            description="[L1] [甲所·程序] 审计师可 review 的算法实例 (FIFO 账龄 / 直线折旧 / 重要性梯度 等)",
             icon="Calculator", color="#d946ef", is_seed=True,
             properties_schema=[
                 {"code": "code", "label": "方法代号", "type": "string", "required": True},

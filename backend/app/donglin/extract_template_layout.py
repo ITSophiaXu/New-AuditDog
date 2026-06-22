@@ -1,4 +1,4 @@
-"""从真实东林 WP_FSR.xlsm 抽取 5 张 demo 底稿的实际表头/起始行/列结构。
+"""从真实甲所 WP_FSR.xlsm 抽取 5 张 demo 底稿的实际表头/起始行/列结构。
 
 输出: backend/data/donglin/templates/template_layout.json
 

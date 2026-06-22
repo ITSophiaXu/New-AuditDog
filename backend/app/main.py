@@ -62,12 +62,12 @@ app.include_router(intake_router, prefix="/api", tags=["intake"])
 app.include_router(corrections_router, prefix="/api", tags=["corrections"])
 app.include_router(templates_router, prefix="/api", tags=["templates"])
 app.include_router(rules_router, prefix="/api", tags=["rules"])
-app.include_router(donglin_router)  # 东林样式底稿填写 (prefix 已含 /api/donglin)
-app.include_router(banmu_router)    # 斑目项目底稿预填 (prefix 已含 /api/banmu)
+app.include_router(donglin_router)  # 甲所样式底稿填写 (prefix 已含 /api/donglin)
+app.include_router(banmu_router)    # 己公司项目底稿预填 (prefix 已含 /api/banmu)
 app.include_router(archive_router)  # 项目档案 (prefix 已含 /api/archive)
 app.include_router(report_review_router)  # 报告复核 (prefix 已含 /api/report-review)
 
-# 静态资源：东林 demo HTML
+# 静态资源：甲所 demo HTML
 from pathlib import Path as _Path
 from fastapi.staticfiles import StaticFiles as _SF
 _DONGLIN_DATA = _Path(__file__).resolve().parent.parent / "data" / "donglin"
@@ -85,7 +85,7 @@ if _AUDIT_REVIEW_ARTIFACTS.exists():
 
 @app.get("/donglin")
 def donglin_demo_redirect():
-    """重定向到东林 demo HTML（单文件离线版）。"""
+    """重定向到甲所 demo HTML（单文件离线版）。"""
     from fastapi.responses import RedirectResponse
     return RedirectResponse(url="/donglin-static/audit_ontology_review.html")
 # -*- coding: utf-8 -*-

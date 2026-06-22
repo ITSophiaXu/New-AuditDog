@@ -188,7 +188,7 @@
 <header>
   <h1>新审计所对接 · 本体抽取 + Agent 填稿 复用 Playbook</h1>
   <div class="sub">
-    把东林事务所 + 江苏大王 项目里实际用到的<strong>提示词 / 代码 / 工作流</strong>总结为可复用的 5 阶段管线。
+    把甲会计师事务所 + 甲公司 项目里实际用到的<strong>提示词 / 代码 / 工作流</strong>总结为可复用的 5 阶段管线。
     新所对接时按这套流程跑一遍，4-6 周即可拿到能跑 Agent 的本体知识库。
   </div>
   <div class="meta">
@@ -258,7 +258,7 @@
 请你阅读以下材料：
 1. 审计准则：CSA 1101 / 1141 / 1221 / 1311 / 1411（中注协）
 2. 这家事务所的 442-sheet 工作底稿模板的 sheet 索引（如 X/Y/A/B/C/D/G/H/Z）
-3. 已审计案例：江苏大王通风机械有限公司 2025 年度报表审计
+3. 已审计案例：甲公司（通风机械） 2025 年度报表审计
 
 按照 <b>Palantir Foundry 风格</b> 的 ObjectType / LinkType / ActionType 三联建模法，
 为这个事务所设计一套审计本体 TBox。要求：
@@ -383,15 +383,15 @@
 rules = [
     (<span class="s">"AR-RULE-001"</span>, <span class="s">"应收账款贷方余额重分类"</span>, <span class="s">"应收应付"</span>,
         <span class="s">"IF customer.closing_balance &lt; 0 THEN 重分类至 2203 预收款项"</span>,
-        <span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"无锡东林"</span>, <span class="s">"2024-01"</span>,
+        <span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"甲所"</span>, <span class="s">"2024-01"</span>,
         <span class="s">"客户级期末贷方余额 = 客户预付/超付 → 资产负债表列报时移到「预收款项」"</span>,
         <span class="s">"closing_cr &gt; 0"</span>),  <span class="c"># ← formal_expression, Agent 直接 eval</span>
     ...
 ]</pre>
 
     <div class="callout danger">
-      <strong>⚠ 真相</strong>：东林这 7 条 L3 规则其实是我（Claude）从模板形态反推的，
-      <strong>不是真正从东林内规手册抽出来的</strong>。新所对接时必须用真实来源（内规手册 + 审计师面谈）。
+      <strong>⚠ 真相</strong>：甲所这 7 条 L3 规则其实是我（Claude）从模板形态反推的，
+      <strong>不是真正从甲所内规手册抽出来的</strong>。新所对接时必须用真实来源（内规手册 + 审计师面谈）。
     </div>
   </div>
 </section>
@@ -682,13 +682,13 @@ DONGLIN_ANOMALIES = [
       <tr>
         <td>W2</td>
         <td><span class="pill llm">阶段 1</span> TBox 设计</td>
-        <td>① 跑 <code>extract_template_layout.py</code> 在新所 .xlsm 上  ② 用我的 prompt 模板让 LLM 提议 OT/LT/AT  ③ 复用东林版的 L1+L2 (~50 个 OT)  ④ 设计该所 L3 特有 OT (~10-20 个)</td>
+        <td>① 跑 <code>extract_template_layout.py</code> 在新所 .xlsm 上  ② 用我的 prompt 模板让 LLM 提议 OT/LT/AT  ③ 复用甲所版的 L1+L2 (~50 个 OT)  ④ 设计该所 L3 特有 OT (~10-20 个)</td>
         <td><code>object_types.json</code> + <code>link_types.json</code> + <code>action_types.json</code></td>
       </tr>
       <tr>
         <td>W3</td>
         <td><span class="pill llm">阶段 2</span> L3 规则</td>
-        <td>① LLM 读内规手册产出候选规则 (~10-15 条)  ② 项目经理 + 合伙人面谈确认  ③ 把 narrative 形式化为 formal_expression  ④ 复用东林版的 L2 5 条公共准则规则</td>
+        <td>① LLM 读内规手册产出候选规则 (~10-15 条)  ② 项目经理 + 合伙人面谈确认  ③ 把 narrative 形式化为 formal_expression  ④ 复用甲所版的 L2 5 条公共准则规则</td>
         <td><code>rules_l3_xxxfirm.json</code></td>
       </tr>
       <tr>
@@ -781,7 +781,7 @@ DONGLIN_ANOMALIES = [
 
   <div class="callout success">
     <strong>给新所合伙人的话</strong>：
-    "我们已经把东林事务所的 50+ 个本体类型 + 14 条审计规则跑通了一个江苏大王案例。
+    "我们已经把甲会计师事务所的 50+ 个本体类型 + 14 条审计规则跑通了一个甲公司案例。
     给您 4-6 周，我把您所的 .xlsm 模板 + 内规手册 + 1 个 demo 客户接进来，
     您就能看到 Agent 在您所的底稿模板里自动填好 5 张底稿 +
     自动建议 2 笔调整分录 + 自动识别 ~10 个异常 + 自动生成 4250 个单元格本体追溯。

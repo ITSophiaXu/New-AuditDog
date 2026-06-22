@@ -1,6 +1,6 @@
-"""无锡斑目信息技术有限公司 (ENG-BANMU-2024) 审计项目 seed.
+"""己公司（信息技术） (ENG-BANMU-2024) 审计项目 seed.
 
-装载斑目 Engagement + WorkingPaper 骨架，并使用 banmu/fill.py 预填
+装载己公司 Engagement + WorkingPaper 骨架，并使用 banmu/fill.py 预填
 所有有 fill_* 函数的底稿（sheet_data + review_status），使项目切换后
 底稿工作台可直接展示 AI 初稿内容。
 """
@@ -37,7 +37,7 @@ BANMU_PAPERS = [
 
 
 def seed_banmu(skip_if_exists: bool = True) -> dict[str, int]:
-    """装载斑目 Engagement + WorkingPaper，预填有 fill 函数的底稿。"""
+    """装载己公司 Engagement + WorkingPaper，预填有 fill 函数的底稿。"""
     stats = {"Engagement": 0, "WorkingPaper": 0, "Prefilled": 0}
 
     with Session(engine) as s:
@@ -50,16 +50,16 @@ def seed_banmu(skip_if_exists: bool = True) -> dict[str, int]:
         if ENG_CODE not in existing_codes:
             s.add(ObjectInstance(
                 type_code="Engagement",
-                display_name="无锡斑目信息技术有限公司 2024年报审计",
+                display_name="己公司（信息技术） 2024年报审计",
                 data={
                     "code": ENG_CODE,
                     "status": "进行中",
                     "period": "2024-12-31",
-                    "partner": "东林合伙人",
+                    "partner": "甲所合伙人",
                     "industry": "软件信息服务",
                     "planned_fee": 30000.0,
-                    "company_name": "无锡斑目信息技术有限公司",
-                    "short_name": "斑目科技",
+                    "company_name": "己公司（信息技术）",
+                    "short_name": "己公司",
                     "accounting_standard": "企业会计制度（财会〔2000〕25号）",
                 },
             ))

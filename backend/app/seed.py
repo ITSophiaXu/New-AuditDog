@@ -879,7 +879,7 @@ def _seed_qcc_mcp(s: Session) -> None:
 # ---------- Entry ----------
 
 def seed() -> None:
-    """只装载东林（江苏大王 2025）本体。
+    """只装载甲所（甲公司 2025）本体。
     pilot-demo 内置的 OT/LT/AT/示例数据/agents/MCP 已停用 —— 如需恢复请将
     AUDIT_ONTOLOGY_INCLUDE_PILOT_DEMO=1，或直接修改本函数。"""
     from .db import init_db
@@ -918,7 +918,7 @@ def seed() -> None:
             _seed_agents(s)
             _seed_mcp(s)
 
-    # ─── 东林样式审计本体 (江苏大王 2025 案例) ────────────────────
+    # ─── 甲所样式审计本体 (甲公司 2025 案例) ────────────────────
     # 50 OT + 73 LT + 11 AT + 95+ 实例 + 5 张已填底稿 + 4250 单元格追溯
     if os.environ.get("AUDIT_ONTOLOGY_SKIP_DONGLIN", "0") != "1":
         try:
@@ -931,7 +931,7 @@ def seed() -> None:
     with Session(engine) as s:
         _seed_qcc_mcp(s)
 
-    # ─── 斑目项目 (无锡斑目信息技术有限公司 2024 案例) ────────────────────
+    # ─── 己公司项目 (己公司（信息技术） 2024 案例) ────────────────────
     try:
         from .seed_banmu import seed_banmu
         seed_banmu()

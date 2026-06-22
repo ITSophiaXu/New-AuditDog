@@ -184,7 +184,7 @@
     <div class="stat L1"><div class="v">107</div><div class="l">ObjectType</div></div>
     <div class="stat L1"><div class="v">97</div><div class="l">LinkType</div></div>
     <div class="stat L1"><div class="v">11</div><div class="l">ActionType</div></div>
-    <div class="stat L0"><div class="v">200+</div><div class="l">实例 (江苏大王)</div></div>
+    <div class="stat L0"><div class="v">200+</div><div class="l">实例 (甲公司)</div></div>
     <div class="stat L2"><div class="v">12</div><div class="l">AuditRule</div></div>
     <div class="stat L2"><div class="v">30</div><div class="l">法规库 (CSA/CAS/法律)</div></div>
   </div>
@@ -213,14 +213,14 @@
       <td>30 法规 + 5 公共规则</td>
     </tr>
     <tr>
-      <td><span class="pill L3">L3</span> 东林专有</td>
+      <td><span class="pill L3">L3</span> 甲所专有</td>
       <td>事务所内规 + 442-sheet 模板 + 工作流</td>
       <td>56</td>
       <td>7 内规 + 9 项目治理</td>
     </tr>
     <tr>
       <td><span class="pill L0">L0</span> 客户事实</td>
-      <td>江苏大王专属数据</td>
+      <td>甲公司专属数据</td>
       <td>(无独立 OT)</td>
       <td>~150 (客户/担保/凭证/底稿)</td>
     </tr>
@@ -265,7 +265,7 @@
     <tr>
       <td><strong>2. L3 规则</strong></td>
       <td>用 LLM 从事务所内规手册抽形式化规则</td>
-      <td>Claude 看 442-sheet 模板形态<strong>反推</strong> 7 条规则, 贴 source="无锡东林" 标签</td>
+      <td>Claude 看 442-sheet 模板形态<strong>反推</strong> 7 条规则, 贴 source="甲所" 标签</td>
       <td><span class="pill bad">没有内规手册可抽</span></td>
     </tr>
     <tr>
@@ -359,11 +359,11 @@
   </div>
 
   <div class="problem-card">
-    <h4><span class="num">5</span>L3 "东林内规" 是 AI 推测，不是真实抽取</h4>
-    <p>7 条 source="无锡东林" 的规则 (AR-RULE-001 / GC-INDICATOR-001 等) 是 Claude
+    <h4><span class="num">5</span>L3 "甲所内规" 是 AI 推测，不是真实抽取</h4>
+    <p>7 条 source="甲所" 的规则 (AR-RULE-001 / GC-INDICATOR-001 等) 是 Claude
     看 442-sheet 模板有"重分类"/"担保识别"等列后<strong>反推</strong>出来的，
-    <strong>不是从东林内规手册抽出来的</strong>。</p>
-    <p><strong>根因</strong>：没有真实的内规手册可抽，但又要让 demo "看起来完整"，所以贴了 "东林" 标签。</p>
+    <strong>不是从甲所内规手册抽出来的</strong>。</p>
+    <p><strong>根因</strong>：没有真实的内规手册可抽，但又要让 demo "看起来完整"，所以贴了 "甲所" 标签。</p>
     <div class="fix-block">
       <strong>修复</strong>：① demo 时<strong>诚实标 AI 推测</strong>（review_status="AI 推测，待审计师 review"）
       ② 让审计师逐条 review 7 条规则的阈值和触发条件 ③ Review 后规则才能升级为 <code>review_status="审计师签字"</code>
@@ -774,7 +774,7 @@ ObjectType.properties_schema 里定义过。</pre>
     ② 通用判定规则有缺失（如受限资金 8 类情形只覆盖 1 类）；<br>
     ③ 6 个审计认定实例<strong>零引用</strong> — 装饰性数据；<br>
     ④ 11 个 ActionType 是 ETL 动词不是审计业务动作；<br>
-    ⑤ 7 条所谓"东林内规"其实是<strong>我从您模板反推</strong>的，<strong>没有抽自您所的内规手册</strong>；<br>
+    ⑤ 7 条所谓"甲所内规"其实是<strong>我从您模板反推</strong>的，<strong>没有抽自您所的内规手册</strong>；<br>
     ⑥ 设计时<strong>重数据轻流程</strong>，凡是能 30 行 Python 写完的都没建本体。
     <br><br>
     <strong>修复方案</strong>是把本体重新组织成 6 大模块（概念/规则/算法/认定/动作/法规），每个模块都建一等公民实例。

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>穿行测试过程说明 — 中国南玻集团股份有限公司</title><style>
+<title>穿行测试过程说明 — 乙公司（光伏玻璃）</title><style>
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:#1f2937;background:#f1f5f9;line-height:1.75;font-size:14.5px}
 .wrap{max-width:1000px;margin:0 auto;padding:0 20px 90px}
@@ -56,12 +56,12 @@ footer{text-align:center;color:#94a3b8;font-size:12.5px;margin-top:30px}
 </style></head><body>
 <header><div class="wrap">
 <div class="kicker">销售循环 · 穿行测试方法与过程说明书</div>
-<h1>中国南玻集团股份有限公司<br>销售合同 ↔ 出库单 穿行测试</h1>
+<h1>乙公司（光伏玻璃）<br>销售合同 ↔ 出库单 穿行测试</h1>
 <div class="sub">本说明书重点呈现两项<b>需审计师复核的判断逻辑</b>：①穿行测试怎么做（测什么、查什么、怎么定结论）；②材料之间的关联（link）怎么判断（合同与出库怎么配对、怎么校验、何时算通过）。</div>
 <div class="metabar"><span>📁 范围：销售合同 4 + 出库台账 4</span><span>🧪 样本 4</span><span>✅ 通过 1 / 🔍 需复核 3 / ⚠ 异常 0</span></div>
 </div></header><div class="wrap">
 <div class="banner"><h3>一句话结论</h3>
-<p>对 中国南玻集团股份有限公司 销售循环执行穿行测试，<b>仅以销售合同与出库台账为证据</b>，按「从合同到出库」方向逐笔追踪 4 笔业务并回填底稿。
+<p>对 乙公司（光伏玻璃） 销售循环执行穿行测试，<b>仅以销售合同与出库台账为证据</b>，按「从合同到出库」方向逐笔追踪 4 笔业务并回填底稿。
 <b>1 笔通过、3 笔需人工复核</b>——需复核源于本次材料范围下「单笔合同 vs 该客户全年出库台账」的口径差异（金额/计量单位/时间），非账实不符。</p>
 <div class="concl"><div class="c pass">通过测试 1</div><div class="c rev">需人工复核 3</div><div class="c bad">发现异常 0</div></div></div>
 <nav><b>复核导航：</b>
@@ -71,7 +71,7 @@ footer{text-align:center;color:#94a3b8;font-size:12.5px;margin-top:30px}
 </nav>
 <section id="s1"><h2><span class="n">1</span>背景与测试目标</h2>
 <p class="lead">穿行测试：选取若干笔典型业务，沿业务与凭证的流转路径逐环节追踪，验证销售收入相关单据链条是否真实、连贯、可追溯。</p>
-<p>本次针对 中国南玻集团股份有限公司 的<b>销售循环</b>，按既定范围<b>仅使用</b>：① <b>销售合同</b> 4 份（扫描件 PDF，对应 4 家客户）；② <b>出库单</b> 4 份（「出入库流水账」Excel，每份对应一家客户的全期逐笔出库）。
+<p>本次针对 乙公司（光伏玻璃） 的<b>销售循环</b>，按既定范围<b>仅使用</b>：① <b>销售合同</b> 4 份（扫描件 PDF，对应 4 家客户）；② <b>出库单</b> 4 份（「出入库流水账」Excel，每份对应一家客户的全期逐笔出库）。
 本次<b>不含</b>发票、回款、记账凭证、明细账等，故测试聚焦「合同真实存在、并有对应实物出库」；收入确认金额的完整勾稽不在本次范围，相关底稿列留空注明「范围外」。</p></section>
 <section id="s2" class="focus"><h2><span class="n">2</span>穿行测试怎么做：方法、检查项与判定标准 <span class="review">★ 审计师复核重点</span></h2>
 <p class="lead">本节说明本次穿行测试的<b>测试设计与判断规则</b>。请审计师评判：测试方向、检查项、阈值与结论判定规则是否符合本次审计目标。</p>
@@ -201,18 +201,18 @@ footer{text-align:center;color:#94a3b8;font-size:12.5px;margin-top:30px}
 <p>每个回填数值可回溯到具体合同页码或出库行；每个非「通过」结论对应至少一条勾稽发现；每个人工决策均留痕；全过程判断以脚本/库查询为准。最终证据库 <code>walkthrough.db</code> 随交付。</p>
 <div class="files">
 <code>summary.html</code>
-<code>walkthrough-memo_中国南玻集团股份有限公司.md</code>
+<code>walkthrough-memo_乙公司（光伏玻璃）.md</code>
 <code>walkthrough.db</code>
-<code>异常点清单_中国南玻集团股份有限公司.json</code>
-<code>异常点清单_中国南玻集团股份有限公司.md</code>
-<code>穿行测试_中国南玻集团股份有限公司.csv</code>
-<code>穿行测试_中国南玻集团股份有限公司.json</code>
-<code>穿行测试_中国南玻集团股份有限公司.xlsx</code>
+<code>异常点清单_乙公司（光伏玻璃）.json</code>
+<code>异常点清单_乙公司（光伏玻璃）.md</code>
+<code>穿行测试_乙公司（光伏玻璃）.csv</code>
+<code>穿行测试_乙公司（光伏玻璃）.json</code>
+<code>穿行测试_乙公司（光伏玻璃）.xlsx</code>
 <code>穿行测试汇总.md</code>
-<code>穿行测试汇总_中国南玻集团股份有限公司.json</code>
-<code>穿行测试过程文档_TSG_中国南玻集团股份有限公司.md</code>
-<code>穿行测试过程说明_中国南玻集团股份有限公司.html</code>
-<code>细节测试回填_中国南玻集团股份有限公司.xlsx</code>
+<code>穿行测试汇总_乙公司（光伏玻璃）.json</code>
+<code>穿行测试过程文档_TSG_乙公司（光伏玻璃）.md</code>
+<code>穿行测试过程说明_乙公司（光伏玻璃）.html</code>
+<code>细节测试回填_乙公司（光伏玻璃）.xlsx</code>
 </div>
 <h3>局限与建议</h3><ul>
 <li><b>材料范围有限</b>：仅合同+出库，缺发票/回款/记账凭证/明细账，无法完成收入确认完整勾稽；如需可补材料并开展双向穿行（明细账→合同）。</li>

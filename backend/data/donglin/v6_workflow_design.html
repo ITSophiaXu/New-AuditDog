@@ -275,7 +275,7 @@
   <h1>v5 分析 + v6 工作流引擎设计</h1>
   <div class="sub">
     把 v5 的 <strong>96 Class 字典</strong> + 我们 review 版的 <strong>14 条业务规则</strong> + v4 设计的 <strong>4 层标签 / 经验沉淀</strong>
-    合并为统一的 v6 引擎，最终<strong>目标是让本体知识库直接驱动东林事务所的年审业务工作流</strong> ——
+    合并为统一的 v6 引擎，最终<strong>目标是让本体知识库直接驱动甲会计师事务所的年审业务工作流</strong> ——
     从计划、执行到报告，一条工作流串起 60+ 张底稿 / 14 条规则 / 4 个 Agent / 三级复核。
   </div>
   <div class="meta">
@@ -393,7 +393,7 @@
       <tr>
         <td>往来 / 税务 / 薪酬 (L3)</td>
         <td><code>CounterpartyUnit</code> · <code>TaxItem</code> · <code>SalaryRoster</code></td>
-        <td>东林模板的具体业务对象</td>
+        <td>甲所模板的具体业务对象</td>
         <td><span class="pill L3">L3</span></td>
       </tr>
     </tbody>
@@ -411,7 +411,7 @@
     <div class="innov-card" style="border-left-color:#ef4444">
       <h5 style="color:#ef4444">❌ 2. 没有 4 层标签 <code>_layer</code></h5>
       <p style="font-size:12.5px">v5 的 96 个 Class 全在同一 namespace，<strong>没区分 L1/L2/L3</strong>。新所部署时不知道哪些可一字不改、哪些必须重抽。</p>
-      <p style="font-size:12.5px">侯老师 review 时也无法快速识别"哪些是国际通用、哪些是东林自定"。</p>
+      <p style="font-size:12.5px">侯老师 review 时也无法快速识别"哪些是国际通用、哪些是甲所自定"。</p>
     </div>
 
     <div class="innov-card" style="border-left-color:#ef4444">
@@ -456,7 +456,7 @@
 
   <h3>2.1 终极目标</h3>
   <p style="font-size:14px">
-    <strong>让东林事务所的审计师能在 v6 引擎上完成一次完整的年审项目</strong>：
+    <strong>让甲会计师事务所的审计师能在 v6 引擎上完成一次完整的年审项目</strong>：
     从承接客户开始，按工作流逐步推进，每一步都由本体知识自动驱动 ——
     告诉审计师"现在做什么、用哪张底稿、跑哪条规则、调用哪个 Agent、达到什么条件可签字"。
   </p>
@@ -481,7 +481,7 @@
   <div class="callout info">
     <strong>v6 成功标准</strong>：
     <ul style="margin:6px 0">
-      <li>审计师在前端选"江苏大王 2025 年审" → 系统自动展开 ~20 步工作流</li>
+      <li>审计师在前端选"甲公司 2025 年审" → 系统自动展开 ~20 步工作流</li>
       <li>每步显示"输入底稿 + 触发规则 + 绑定 Agent + 完成条件"</li>
       <li>Agent 跑稿后自动 mark 该步完成，触发下一步</li>
       <li>三级复核签字后该步进入"已完成"状态</li>
@@ -558,7 +558,7 @@
         <td><code>WorkflowDefinition</code></td>
         <td><span class="pill L3">L3</span></td>
         <td>name / version / phases[] / total_steps</td>
-        <td><strong>工作流模板</strong>（东林标准年审、特殊审计、高新专项…），定义"应该做什么"</td>
+        <td><strong>工作流模板</strong>（甲所标准年审、特殊审计、高新专项…），定义"应该做什么"</td>
       </tr>
       <tr>
         <td><code>WorkflowStep</code></td>
@@ -609,7 +609,7 @@
 
 <!-- ═══════════ §5 年审工作流（具体 20 步） ═══════════ -->
 <section>
-  <h2>§5 v6 年审工作流定义 (东林标准, 3 阶段 × ~20 步)</h2>
+  <h2>§5 v6 年审工作流定义 (甲所标准, 3 阶段 × ~20 步)</h2>
 
   <div class="workflow-phases">
     <div class="wf-phase plan">
@@ -749,7 +749,7 @@
     :completionCriteria <span class="s">"materiality.PM and materiality.TE and materiality.SUM populated"</span> ;
     :reviewRequired <span class="s">"项目经理"</span> ;
     :_layer <span class="s">"L3:donglin"</span> ;
-    :_layerBasis <span class="s">"东林标准年审工作流 v2025X04A · 基于 CSA 1221"</span> .
+    :_layerBasis <span class="s">"甲所标准年审工作流 v2025X04A · 基于 CSA 1221"</span> .
 
 <span class="c"># Step B2 - 应收账款 (A6) 实质性测试</span>
 :step-b2-receivables a :WorkflowStep ;
@@ -776,7 +776,7 @@
   <h2>§6 完整业务场景演示 — A6 应收账款审计在 v6 里怎么跑</h2>
 
   <div class="scenario-flow">
-    <div class="scenario-title">🎬 场景：江苏大王 2025 年审 · A6 应收账款（v6 工作流引擎驱动）</div>
+    <div class="scenario-title">🎬 场景：甲公司 2025 年审 · A6 应收账款（v6 工作流引擎驱动）</div>
 
     <div class="flow-step">
       <div class="head"><span class="num">1</span>审计师在前端选 "ENG-JSDW-2025 年审"</div>
@@ -812,7 +812,7 @@
     <div class="flow-step">
       <div class="head"><span class="num">5</span>每填一格记录 layer_chain provenance</div>
       <div class="uses">
-        <code>:cell-a6-customer-detail-row42-closing_dr</code> 带 layer_chain = [L1 ISA 530 抽样, L2 CSA 1101, L3 东林 AR-RULE-001, L0 江苏大王客户 000860]
+        <code>:cell-a6-customer-detail-row42-closing_dr</code> 带 layer_chain = [L1 ISA 530 抽样, L2 CSA 1101, L3 甲所 AR-RULE-001, L0 甲公司客户 000860]
       </div>
     </div>
 
@@ -907,7 +907,7 @@
       </tr>
       <tr>
         <td><strong>Sprint W2</strong></td>
-        <td>编写东林标准年审工作流定义 (Turtle + JSON, ~20 步)</td>
+        <td>编写甲所标准年审工作流定义 (Turtle + JSON, ~20 步)</td>
         <td>W1</td>
         <td>1 周</td>
         <td>workflow-donglin-annual-v2025X04A.ttl<br>每步绑定 paper / rule / agent</td>
@@ -935,7 +935,7 @@
       </tr>
       <tr>
         <td><strong>Sprint E2E</strong></td>
-        <td>江苏大王 2025 完整端到端跑通 ~20 步年审</td>
+        <td>甲公司 2025 完整端到端跑通 ~20 步年审</td>
         <td>L4</td>
         <td>1 周</td>
         <td>能从 A1 跑到 C5，每步 Agent 输出 + 三级复核签字 + 报告生成</td>
@@ -953,7 +953,7 @@
   <p style="margin-top:14px;font-size:13px">
     <strong>共计</strong>: 7-9 周 ·
     <strong>关键里程碑</strong>:
-    Sprint E2E (江苏大王跑通 20 步) = 给侯佳成 demo 节点 ·
+    Sprint E2E (甲公司跑通 20 步) = 给侯佳成 demo 节点 ·
     Sprint PoC = 跨所商业里程碑
   </p>
 </section>
@@ -969,15 +969,15 @@
       但缺<strong>业务规则形式化</strong>和<strong>工作流编排</strong>这两层。
       <br><br>
       我提议 <strong>v6 = v5 字典 + 我们的 14 条业务规则 + 新增工作流编排层（5 个新 Class）</strong>。
-      最终效果是审计师能在前端选"江苏大王 2025 年审"，
+      最终效果是审计师能在前端选"甲公司 2025 年审"，
       系统自动展开 ~20 步年审流程（计划 → 执行 → 报告），
       每步告诉审计师"用哪张底稿、跑哪条规则、调用哪个 Agent、达到什么条件可签字"，
       Agent 自动填稿、自动建议调整分录、自动累积你的经验成新规则。
       <br><br>
       <strong>请你 review 三件事</strong>：
       <ol>
-        <li><strong>v5 的 96 Class 完整性</strong> — 还有哪些东林业务场景没覆盖？（如 IT 审计、舞弊调查）</li>
-        <li><strong>东林标准年审工作流 ~20 步的颗粒度</strong> — 我画的 §5 阶段分解是否符合你们实际？</li>
+        <li><strong>v5 的 96 Class 完整性</strong> — 还有哪些甲所业务场景没覆盖？（如 IT 审计、舞弊调查）</li>
+        <li><strong>甲所标准年审工作流 ~20 步的颗粒度</strong> — 我画的 §5 阶段分解是否符合你们实际？</li>
         <li><strong>三级复核 / 客户确认 / 签字合伙人</strong> 这些 Gate 的具体规则 — 触发条件正确吗？</li>
       </ol>
       <br>
@@ -999,7 +999,7 @@
       <tr><td><strong>P0</strong></td><td>给每个 Class 加 <code>_layer</code> 字段（L1/L2/L3，参考我们之前的标签策略）</td><td>P0-1</td></tr>
       <tr><td><strong>P0</strong></td><td>合并 v5 的 96 Class + 我们 14 条 AuditRule</td><td>P0-2</td></tr>
       <tr><td><strong>P1</strong></td><td>新增 5 个工作流 Class 到 TBox（WorkflowDefinition 等）</td><td>P0</td></tr>
-      <tr><td><strong>P1</strong></td><td>用 Turtle 写东林标准年审工作流（20 步 × 每步约 8 个属性）</td><td>P1-1</td></tr>
+      <tr><td><strong>P1</strong></td><td>用 Turtle 写甲所标准年审工作流（20 步 × 每步约 8 个属性）</td><td>P1-1</td></tr>
       <tr><td><strong>P1</strong></td><td>实现 WorkflowExecutor 运行时（python，支持 start/advance/gate/signoff）</td><td>P1-2</td></tr>
       <tr><td><strong>P2</strong></td><td>给 cell_provenance 加 layer_chain 字段</td><td>P0</td></tr>
       <tr><td><strong>P2</strong></td><td>前端加 WorkflowDashboard.tsx 看板</td><td>P1</td></tr>
@@ -1010,10 +1010,10 @@
 
   <h3>🎯 验收门槛（v6 sign-off 才能发布）</h3>
   <ul>
-    <li>✅ 江苏大王 2025 年审能从 A1 跑到 C5（20 步全过）</li>
+    <li>✅ 甲公司 2025 年审能从 A1 跑到 C5（20 步全过）</li>
     <li>✅ 每步 Agent 自动产出 ≥ 80% cell；剩 ≤ 20% 留人工补</li>
     <li>✅ 自动建议 ≥ 2 笔 Z6 调整分录</li>
-    <li>✅ 自动触发 GoingConcernAssessment（江苏大王 100% 关联担保场景）</li>
+    <li>✅ 自动触发 GoingConcernAssessment（甲公司 100% 关联担保场景）</li>
     <li>✅ 三级复核 Gate 在前端可见 + 签字操作可记录</li>
     <li>✅ 跨所部署立信 PoC 在 ≤ 1 周内完成</li>
   </ul>
@@ -1023,7 +1023,7 @@
 
 <footer>
   生成于 2026-05-25 · v5 分析 + v6 工作流引擎设计<br>
-  目标：让本体知识库直接驱动东林事务所的年审业务工作流（从承接到出报告）
+  目标：让本体知识库直接驱动甲会计师事务所的年审业务工作流（从承接到出报告）
 </footer>
 
 </main>

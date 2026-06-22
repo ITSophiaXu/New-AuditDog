@@ -42,7 +42,7 @@ function kindLabel(kind: string) {
   return { word: 'Word', excel: 'Excel', markdown: '文本', unknown: '未知' }[kind] || kind
 }
 
-// 默认展示的真实复核案例：鹏盛（日新立格 / 立格昌泰，2024 & 2025，单体+合并）
+// 默认展示的真实复核案例：复核案例（丙公司 / 丁公司，2024 & 2025，单体+合并）
 const CASE_REVIEW: TReportReview = PENGSHENG_REVIEW
 
 // 该案例的「复核意见书原版」HTML（A–G 七段版式，public/cases/ 下，按原样式渲染）
@@ -63,7 +63,7 @@ export default function ReportReview() {
 
   // —— 文件夹地址输入（主输入方式：给一个文件夹即可复核整包报告 + TB）——
   const [folderPath, setFolderPath] = useState(PENGSHENG_FOLDER)
-  const [scanned, setScanned] = useState(true) // 演示：默认已识别鹏盛文件夹
+  const [scanned, setScanned] = useState(true) // 演示：默认已识别复核案例文件夹
   const [showUpload, setShowUpload] = useState(false) // 折叠的"或上传文件"入口
   const [demoRunning, setDemoRunning] = useState(false) // 文件夹模式的复核中动画
 
@@ -76,7 +76,7 @@ export default function ReportReview() {
   // —— 默认复核清单（预填）——
   const { data: checklistData } = useQuery({ queryKey: ['review-checklist'], queryFn: api.reviewChecklist })
   useEffect(() => {
-    // 已用鹏盛 Prompt 预填；仅当用户清空后端清单覆盖时才回填（保持演示稳定，不覆盖鹏盛 Prompt）
+    // 已用复核案例 Prompt 预填；仅当用户清空后端清单覆盖时才回填（保持演示稳定，不覆盖复核案例 Prompt）
     if (checklistData?.checklist && !instruction) setInstruction(checklistData.checklist)
   }, [checklistData])
 
@@ -299,7 +299,7 @@ export default function ReportReview() {
             disabled={(files.length === 0 && !(scanned && folderPath.trim())) || run.isPending || demoRunning}
             onClick={() => {
               if (files.length > 0) { run.mutate(); return }
-              // 文件夹模式：演示展示鹏盛复核结果
+              // 文件夹模式：演示展示复核案例复核结果
               setDemoRunning(true)
               setActiveId(null)
               nav('/report-review')
@@ -325,7 +325,7 @@ export default function ReportReview() {
           <div className="text-[10px] uppercase tracking-widest text-slate-400 mb-1.5 px-1">历史复核</div>
           {reviews.length === 0 ? (
             <div className="text-[11px] text-slate-500 px-2 py-2 rounded-md bg-amber-50 border border-amber-100">
-              当前展示「鹏盛 · 日新立格 / 立格昌泰」真实复核案例（含企查查工商核验）。更换文件夹地址或上传文件后会生成新的复核记录。
+              当前展示「复核案例 · 丙公司 / 丁公司」真实复核案例（含企查查工商核验）。更换文件夹地址或上传文件后会生成新的复核记录。
             </div>
           ) : (
             <div className="space-y-1">

@@ -128,7 +128,7 @@ REVIEW_LIMITATIONS: list[str] = [
 ]
 
 
-# ── 案例复核脚本：基于鹏盛真实审计报告/附注的确定性结果 ─────────
+# ── 案例复核脚本：基于复核案例真实审计报告/附注的确定性结果 ─────────
 def _demo_findings(docs: list[ReportDoc], checklist: str) -> list[dict[str, Any]]:
     """无 token 时返回的确定性案例复核意见。
 
@@ -221,7 +221,7 @@ def _demo_findings(docs: list[ReportDoc], checklist: str) -> list[dict[str, Any]
         if ref:
             add("high", "日期签字",
                 "审计报告文号含占位符，需替换为正式文号",
-                f"文件《{d.filename}》报告文号仍为占位符（如 鹏盛A审字[2026]XXXXXX号）。出具前必须替换为事务所实际编号，否则报告无效。",
+                f"文件《{d.filename}》报告文号仍为占位符（如 复核案例A审字[2026]XXXXXX号）。出具前必须替换为事务所实际编号，否则报告无效。",
                 [ref])
         ref2 = find_anchor(d, "注册会计师（", "会计师事务所（", "签字", "盖章")
         if ref2:

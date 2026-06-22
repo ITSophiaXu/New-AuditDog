@@ -124,7 +124,7 @@ export function DonglinPaperView({
           </Button>
           <a
             href={donglinApi.exportXlsxUrl(paperCode)}
-            download={`东林审计_江苏大王_${paperCode}.xlsm`}
+            download={`甲所审计_甲公司_${paperCode}.xlsm`}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium bg-emerald-600 hover:bg-emerald-700 text-white"
             title={`下载当前底稿 ${paperCode} 的 .xlsm 文件（含 AI 填写结果）`}
           >
@@ -163,7 +163,7 @@ export function DonglinPaperView({
         </div>
       )}
 
-      {/* —— 当前 Sheet 内容 (东林样式 Excel 视图) —— */}
+      {/* —— 当前 Sheet 内容 (甲所样式 Excel 视图) —— */}
       <DonglinExcelView
         paperIndex={paperCode}
         sheetCode={curSheet}
@@ -174,7 +174,7 @@ export function DonglinPaperView({
         rowLimit={rowLimit}
         onLoadMore={() => setRowLimit((n) => n + 100)}
         paperMeta={{
-          auditEntity: '江苏大王通风机械有限公司',
+          auditEntity: '甲公司（通风机械）',
           paperCode: paperCode,
           paperTitle: (DONGLIN_PAPER_TITLE_ZH[paperCode] || `${paperCode} 底稿`)
             + (curSheet === 'summary' ? '' : ` · ${DONGLIN_SHEET_LABEL_ZH[curSheet] || curSheet}`),

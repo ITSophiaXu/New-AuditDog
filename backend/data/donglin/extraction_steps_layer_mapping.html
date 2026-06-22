@@ -337,13 +337,13 @@
 <!-- ═══════════ §0 图例 ═══════════ -->
 <section>
   <h2>§0 图例 — 5 层 + 4 类机制</h2>
-  <p style="margin-bottom: 12px">在 4 层模型之外加一个 <strong>L0 客户事实层</strong>（江苏大王这家公司本身的具体数据，不属于任何"知识"，是"事实"）：</p>
+  <p style="margin-bottom: 12px">在 4 层模型之外加一个 <strong>L0 客户事实层</strong>（甲公司这家公司本身的具体数据，不属于任何"知识"，是"事实"）：</p>
   <div class="venn">
     <div class="seg L1"><div class="head">L1</div>国际通用<br>ISA / IFRS</div>
     <div class="seg L2"><div class="head">L2</div>中国本地化<br>CSA / CAS</div>
-    <div class="seg L3"><div class="head">L3</div>事务所内规<br>东林专有</div>
+    <div class="seg L3"><div class="head">L3</div>事务所内规<br>甲所专有</div>
     <div class="seg L4"><div class="head">L4</div>审计师经验<br>未捕获</div>
-    <div class="seg L0"><div class="head">L0</div>客户事实<br>江苏大王数据</div>
+    <div class="seg L0"><div class="head">L0</div>客户事实<br>甲公司数据</div>
   </div>
   <p style="margin-top: 10px">抽取机制 4 类：</p>
   <p style="font-size:12.5px">
@@ -452,7 +452,7 @@
     <div class="ls-card L2"><div class="v">~12</div><div class="l">L2 OT + 5 规则</div></div>
     <div class="ls-card L3"><div class="v">~22</div><div class="l">L3 OT + 7 规则</div></div>
     <div class="ls-card L4"><div class="v">0</div><div class="l">L4 (未捕获)</div></div>
-    <div class="ls-card L0"><div class="v">114</div><div class="l">L0 实例 (江苏大王)</div></div>
+    <div class="ls-card L0"><div class="v">114</div><div class="l">L0 实例 (甲公司)</div></div>
   </div>
 
   <div class="callout info">
@@ -466,7 +466,7 @@
       <span class="arrow">→</span>
       <span class="node intermediate">build_instances.py 字面量</span>
       <span class="arrow">→</span>
-      <span class="node final">AR-RULE-001 (source="无锡东林")</span>
+      <span class="node final">AR-RULE-001 (source="甲所")</span>
     </div>
   </div>
 </section>
@@ -511,7 +511,7 @@
         <td class="output">audit Knowledge/ 下所有 .xlsx/.xlsm<br>→ cell_formulas.jsonl (106,614 行)<br>+ cross_sheet_edges.jsonl (formula 部分)</td>
         <td class="layer">
           <span class="pill L3">L3</span>
-          (东林模板里的公式)
+          (甲所模板里的公式)
         </td>
         <td class="mech"><span class="pill mechanism-machine">⚙ 机器</span></td>
       </tr>
@@ -595,7 +595,7 @@
   <div class="callout info">
     <strong>方法 B 的来源链 (单条 FillRule 示例)</strong>
     <div class="chain">
-      <span class="node raw">东林 WP_FSR.xlsm</span>
+      <span class="node raw">甲所 WP_FSR.xlsm</span>
       <span class="arrow">→</span>
       <span class="node intermediate">extract_excel.py 扫公式</span>
       <span class="arrow">→</span>
@@ -650,7 +650,7 @@
         <td><span class="pill A">A 强</span><br>B 完全缺位</td>
       </tr>
       <tr>
-        <td><span class="pill L3">L3</span> 东林事务所</td>
+        <td><span class="pill L3">L3</span> 甲会计师事务所</td>
         <td>
           <strong>22 OT + 7 规则</strong>，但是<strong>人工字面量编码</strong><br>
           5 笔关联担保 / AR-RULE-001 等都是 Python 字面量<br>
@@ -678,7 +678,7 @@
       <tr>
         <td><span class="pill L0">L0</span> 客户事实</td>
         <td>
-          <strong>114 个 ObjectInstance</strong> (江苏大王 / 杨春平 / G-001~G-005 / 12,620 凭证)<br>
+          <strong>114 个 ObjectInstance</strong> (甲公司 / 杨春平 / G-001~G-005 / 12,620 凭证)<br>
           客户原始数据完整 ETL
         </td>
         <td>
@@ -693,7 +693,7 @@
   <div class="callout diff">
     <strong>核心差异 (一图说清)</strong>
     <p style="margin: 8px 0 0; font-size: 13px">
-      A 的工作量花在了 <strong>"L1+L2 把准则建模成 TBox + L3 把东林材料人工翻译"</strong> 两端 →
+      A 的工作量花在了 <strong>"L1+L2 把准则建模成 TBox + L3 把甲所材料人工翻译"</strong> 两端 →
       所以 L1/L2 强、L0 全 (客户实例完整)、但 L3 不可重跑。<br>
       B 的工作量花在了 <strong>"L3 自动化抽取"</strong> 一端 →
       所以 L3 可重跑、证据强、但 L1/L2 显得弱、L0 几乎没读客户原始数据。
@@ -713,18 +713,18 @@
     <div class="card A">
       <h4><span class="pill A">方法 A</span> 这条规则怎么进本体</h4>
       <ol style="font-size: 12.5px">
-        <li><strong>步骤 1</strong>：人读 CSA 1311 应收账款审计准则 + 东林 2024-01 内部沉淀 → 写到 implementation_guide.md</li>
-        <li><strong>步骤 5</strong>：人写 <code>07_audit_procedures.md</code> 把"客户级期末贷方余额需重分类"明确为东林做法</li>
+        <li><strong>步骤 1</strong>：人读 CSA 1311 应收账款审计准则 + 甲所 2024-01 内部沉淀 → 写到 implementation_guide.md</li>
+        <li><strong>步骤 5</strong>：人写 <code>07_audit_procedures.md</code> 把"客户级期末贷方余额需重分类"明确为甲所做法</li>
         <li><strong>步骤 6</strong>：build_instances.py line 485-489 编码：
 <pre><span class="s">"AR-RULE-001"</span>, <span class="s">"应收账款贷方余额重分类"</span>, <span class="s">"应收应付"</span>,
 <span class="s">"IF customer.closing_balance &lt; 0 THEN 重分类至 2203"</span>,
-<span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"无锡东林"</span>, <span class="s">"2024-01"</span>,
+<span class="s">"high"</span>, <span class="s">"事务所"</span>, <span class="s">"甲所"</span>, <span class="s">"2024-01"</span>,
 <span class="s">"客户级期末贷方余额 = 客户预付/超付 → 移到「预收款项」"</span>,
 <span class="s">"closing_cr &gt; 0"</span>  <span class="c"># formal_expression</span></pre></li>
         <li><strong>步骤 7</strong>：agent_fill.py 跑 A6 时, FOR 每个客户 IF closing_cr&gt;0 THEN 触发 → 153 客户命中, 累计 ¥7.11M 建议重分类</li>
       </ol>
       <p style="font-size: 12px; color: var(--muted); margin-top: 10px;">
-        <strong>层级标签</strong>：<span class="pill L2">L2 法理</span> CSA 1311 → <span class="pill L3">L3 形式化</span> 东林阈值 → <span class="pill L0">L0 实例化</span> 江苏大王 153 命中
+        <strong>层级标签</strong>：<span class="pill L2">L2 法理</span> CSA 1311 → <span class="pill L3">L3 形式化</span> 甲所阈值 → <span class="pill L0">L0 实例化</span> 甲公司 153 命中
       </p>
     </div>
 
@@ -752,11 +752,11 @@
   <div class="callout success">
     <strong>同一条业务规则的两个视角</strong>
     <ul style="margin-top: 6px">
-      <li><strong>A 知道</strong> "这是 CSA 1311 应收账款审计准则要求的，东林 2024-01 沉淀了 closing_cr&gt;0 形式化阈值"</li>
+      <li><strong>A 知道</strong> "这是 CSA 1311 应收账款审计准则要求的，甲所 2024-01 沉淀了 closing_cr&gt;0 形式化阈值"</li>
       <li><strong>B 知道</strong> "A6-2!I8 这格 = D8+G8-H8 (Excel 公式) — 这是底稿模板里 hardcoded 的算法"</li>
       <li><strong>完整 = A + B</strong>: A 提供 <em>为什么这样算</em>，B 提供 <em>具体在哪格算的</em></li>
       <li><strong>如果只有 B</strong>，给客户看 A6-2!I8 的公式他知道是怎么算的，但不知道"为什么算" → 无法 review</li>
-      <li><strong>如果只有 A</strong>，知道"重分类是规则"但不知道<em>东林模板把这步放在了 A6-2 的 I 列</em> → 写回 .xlsm 时找不到位置</li>
+      <li><strong>如果只有 A</strong>，知道"重分类是规则"但不知道<em>甲所模板把这步放在了 A6-2 的 I 列</em> → 写回 .xlsm 时找不到位置</li>
     </ul>
   </div>
 </section>
@@ -788,7 +788,7 @@
       <tr>
         <td>实例数量</td>
         <td>67 个 (5 已填 + 62 骨架)</td>
-        <td>5 个 (江苏大王 A6/A6-2/A6-99/B6-2/ZK4)</td>
+        <td>5 个 (甲公司 A6/A6-2/A6-99/B6-2/ZK4)</td>
       </tr>
       <tr>
         <td>实例属性</td>
@@ -802,7 +802,7 @@
       </tr>
       <tr>
         <td>层级归属</td>
-        <td><span class="pill L1">L1</span> 通用 + <span class="pill L3">L3</span> 东林模板字段</td>
+        <td><span class="pill L1">L1</span> 通用 + <span class="pill L3">L3</span> 甲所模板字段</td>
         <td><span class="pill L1">L1</span> 通用 + 含 <span class="pill L3">L3</span> SummarySheet/DetailSheet/AggregationSheet 子类</td>
       </tr>
       <tr>
@@ -821,7 +821,7 @@
   <ol>
     <li>
       <strong>"哪些层是机器抽出来的，哪些是人脑里来的"</strong> —
-      <span class="pill L3">L3 东林专有</span> 这层在 A 里全是人脑/字面量, 在 B 里全是机器抽。
+      <span class="pill L3">L3 甲所专有</span> 这层在 A 里全是人脑/字面量, 在 B 里全是机器抽。
       <span class="pill L1">L1</span>+<span class="pill L2">L2</span> 在 A 里是人 + LLM 设计, 在 B 里是人从证据反推。
       <span class="pill L0">L0 客户事实</span> 在 A 里有 (openpyxl 读 TB/Aux/Voucher), 在 B 里几乎没读 (B 只读模板不读数据)。
     </li>
@@ -847,7 +847,7 @@
     <p style="margin: 8px 0 0; font-size: 13px">
       "侯老师，这是我对两套抽取方法的步骤拆解。
       <strong>我们用的方法 A</strong> 强在 L1+L2 准则建模 + L0 客户数据 (Agent 能算能填)，
-      <strong>v3 用的方法 B</strong> 强在 L3 自动抽东林模板 (可重跑 + 证据链)。
+      <strong>v3 用的方法 B</strong> 强在 L3 自动抽甲所模板 (可重跑 + 证据链)。
       把两个串起来 = 真正能跑生产的本体: A 算数, B 把数字写回你熟悉的 .xlsm 模板，
       再加 L4 经验沉淀, 就是你跟我说的<strong>『审计本体长期资产化』</strong>的路径。"
     </p>
@@ -940,7 +940,7 @@
 {
   <span class="s">"code"</span>: <span class="s">"AR-RULE-001"</span>,
   <span class="s">"_layer"</span>: <span class="s">"L3:donglin"</span>,
-  <span class="s">"_layer_basis"</span>: <span class="s">"CAS 22 + 东林 2024-01"</span>
+  <span class="s">"_layer_basis"</span>: <span class="s">"CAS 22 + 甲所 2024-01"</span>
 }</pre>
     </div>
 
@@ -971,8 +971,8 @@
   layer_chain=[                              <span class="c">// 新</span>
     {<span class="s">"layer"</span>:<span class="s">"L1"</span>, <span class="s">"basis"</span>:<span class="s">"ISA 530"</span>},
     {<span class="s">"layer"</span>:<span class="s">"L2"</span>, <span class="s">"basis"</span>:<span class="s">"CSA 1101"</span>},
-    {<span class="s">"layer"</span>:<span class="s">"L3"</span>, <span class="s">"basis"</span>:<span class="s">"东林辅助账标准"</span>},
-    {<span class="s">"layer"</span>:<span class="s">"L0"</span>, <span class="s">"basis"</span>:<span class="s">"江苏大王 1122 辅助账"</span>}
+    {<span class="s">"layer"</span>:<span class="s">"L3"</span>, <span class="s">"basis"</span>:<span class="s">"甲所辅助账标准"</span>},
+    {<span class="s">"layer"</span>:<span class="s">"L0"</span>, <span class="s">"basis"</span>:<span class="s">"甲公司 1122 辅助账"</span>}
   ],
   rule_code=<span class="k">None</span>,
 )</pre>
@@ -1008,16 +1008,16 @@ propose_rules.py (count ≥ <span class="n">3</span>)
 ├── <span class="dir">tbox/</span>                                <span class="annot"># L1+L2 跨所复用资产</span>
 │   ├── <span class="from-a">tbox.ttl</span>                        <span class="annot"># 52 OT + 73 LT + 11 AT (借鉴 B 的 Turtle)</span>
 │   ├── <span class="from-a">tbox.json</span>                       <span class="annot"># 同上, JSON 双轨 (借鉴 A)</span>
-│   └── <span class="new">tbox_donglin_ext.ttl</span>            <span class="annot"># 东林 L3 OT 扩展 (新, 显式拆出)</span>
+│   └── <span class="new">tbox_donglin_ext.ttl</span>            <span class="annot"># 甲所 L3 OT 扩展 (新, 显式拆出)</span>
 │
 ├── <span class="dir">abox/</span>                                <span class="annot"># 实例数据</span>
-│   ├── <span class="from-a">abox_l0_jsdw.ttl</span>                <span class="annot"># L0 江苏大王客户事实</span>
+│   ├── <span class="from-a">abox_l0_jsdw.ttl</span>                <span class="annot"># L0 甲公司客户事实</span>
 │   ├── <span class="from-a">abox_l0_jsdw.json</span>               <span class="annot"># 同上 JSON 双轨</span>
-│   └── <span class="new">abox_l3_donglin.ttl</span>             <span class="annot"># L3 东林 ABox (从 jsonl 自动抽 + 人工 review)</span>
+│   └── <span class="new">abox_l3_donglin.ttl</span>             <span class="annot"># L3 甲所 ABox (从 jsonl 自动抽 + 人工 review)</span>
 │
 ├── <span class="dir">rules/</span>                               <span class="annot"># 规则分层</span>
 │   ├── <span class="new">rules_l2_csa.ttl</span>                <span class="annot"># L2 中注协/财政部 5 条规则 (含 formal_expression)</span>
-│   ├── <span class="new">rules_l3_donglin.ttl</span>            <span class="annot"># L3 东林 7 条内规</span>
+│   ├── <span class="new">rules_l3_donglin.ttl</span>            <span class="annot"># L3 甲所 7 条内规</span>
 │   └── <span class="from-b">fill_rules.ttl</span>                  <span class="annot"># L3 公式 FillRule (从 .xlsm 抽, 含 evidenceRef)</span>
 │
 ├── <span class="dir">evidence/</span>                            <span class="annot"># 证据库 (B 的输出 + A 的客户数据)</span>
@@ -1061,7 +1061,7 @@ propose_rules.py (count ≥ <span class="n">3</span>)
   <h3>7.4 跨所迁移合约 — v4 真正的价值</h3>
 
   <div class="migration-tbl">
-    <h5>从「东林」迁到「立信」需要做什么？</h5>
+    <h5>从「甲所」迁到「立信」需要做什么？</h5>
     <table>
       <thead>
         <tr>
@@ -1089,21 +1089,21 @@ propose_rules.py (count ≥ <span class="n">3</span>)
         </tr>
         <tr>
           <td><span class="pill L3">L3</span></td>
-          <td>22 个东林 OT + 7 条事务所内规 + 37 FillRule</td>
+          <td>22 个甲所 OT + 7 条事务所内规 + 37 FillRule</td>
           <td>⚙ 跑 <code>extract_excel.py + extract_vba.py</code> on 立信的 audit Knowledge/</td>
           <td><span class="pill L3">~100% 重跑</span></td>
           <td>立信会有立信自己的 7 条内规 + ~M 条 FillRule</td>
         </tr>
         <tr>
           <td><span class="pill L0">L0</span></td>
-          <td>114 江苏大王实例</td>
+          <td>114 甲公司实例</td>
           <td>⚙ 跑 <code>extract_tb.py</code> on 新客户的 TB/Aux/Voucher.xlsx</td>
           <td><span class="pill L0">100% 替换</span></td>
           <td>每接一个新客户都做一次</td>
         </tr>
         <tr>
           <td><span class="pill L4">L4</span></td>
-          <td>东林审计师经验 (待累积)</td>
+          <td>甲所审计师经验 (待累积)</td>
           <td>🔀 立信团队自己重新累积</td>
           <td><span class="pill L4">独立累积</span></td>
           <td>L4 不跨所共享 (除非审计师跳槽且授权)</td>
@@ -1146,7 +1146,7 @@ build_abox.py + 人工 review 产出:
     :hasCode <span class="s">"AR-RULE-001"</span> ;
     :hasName <span class="s">"应收账款贷方余额重分类"</span> ;
     :_layer <span class="s">"L3:donglin"</span> ;
-    :_layer_basis <span class="s">"L2 CAS 22 + L3 东林 2024-01 阈值"</span> ;
+    :_layer_basis <span class="s">"L2 CAS 22 + L3 甲所 2024-01 阈值"</span> ;
     :hasFormalExpression <span class="s">"closing_cr &gt; 0"</span> ;
     :hasNarrative <span class="s">"客户级期末贷方余额 → 重分类至 2203"</span> ;
     :hasEvidenceRef <span class="s">"cell_formulas.jsonl#L14627"</span> ,
@@ -1161,7 +1161,7 @@ prov.add(
   evidence_ref=<span class="s">"cell_formulas.jsonl#L14627"</span>,
   layer_chain=[
     {<span class="s">"layer"</span>:<span class="s">"L2"</span>, <span class="s">"basis"</span>:<span class="s">"CAS 22 金融工具列报"</span>},
-    {<span class="s">"layer"</span>:<span class="s">"L3"</span>, <span class="s">"basis"</span>:<span class="s">"AR-RULE-001 (无锡东林 2024-01)"</span>},
+    {<span class="s">"layer"</span>:<span class="s">"L3"</span>, <span class="s">"basis"</span>:<span class="s">"AR-RULE-001 (甲所 2024-01)"</span>},
     {<span class="s">"layer"</span>:<span class="s">"L0"</span>, <span class="s">"basis"</span>:<span class="s">"客户 000860 closing_cr=¥125,000"</span>}
   ],
 )
@@ -1201,7 +1201,7 @@ capture_chat_events.py 监听到 ExcelGridView 改写:
       </tr>
       <tr>
         <td>Sprint 2</td>
-        <td>引入 B 的 extract_excel.py + extract_vba.py, 跑东林 WP_FSR.xlsm</td>
+        <td>引入 B 的 extract_excel.py + extract_vba.py, 跑甲所 WP_FSR.xlsm</td>
         <td>Sprint 1</td>
         <td>5-7 天</td>
         <td>cell_formulas.jsonl + vba_account_map.jsonl 入库; 验证证据数 ≥ 100K</td>
@@ -1246,10 +1246,10 @@ capture_chat_events.py 监听到 ExcelGridView 改写:
   <div class="callout">
     <strong>给侯佳成的 v4 一句话</strong>
     <p style="margin: 8px 0 0; font-size: 13px">
-      "侯老师，v4 我会把 A 的<strong>业务规则建模</strong>和 v3 的<strong>东林模板证据抽取</strong>合并到一个管线里，
+      "侯老师，v4 我会把 A 的<strong>业务规则建模</strong>和 v3 的<strong>甲所模板证据抽取</strong>合并到一个管线里，
       再加上<strong>审计师经验沉淀</strong>这个 L4 双管道。
-      每个本体元素都带 <code>_layer</code> 标签 (L1 国际 / L2 中国 / L3 东林 / L4 经验) 和 <code>_evidence</code> 行号，
-      你 review 时既能看到准则依据 (L1/L2), 又能看到东林模板里的真实证据 (L3),
+      每个本体元素都带 <code>_layer</code> 标签 (L1 国际 / L2 中国 / L3 甲所 / L4 经验) 和 <code>_evidence</code> 行号，
+      你 review 时既能看到准则依据 (L1/L2), 又能看到甲所模板里的真实证据 (L3),
       还能看到你自己每一次改 Agent 答案累积成新规则 (L4)。
       跨所部署时 L1+L2 是<strong>免费搬</strong>, L3+L4 才需要重抽 + 重累积。
       这就是你说的<strong>『审计本体作为事务所长期资产』</strong>的工程方案。"

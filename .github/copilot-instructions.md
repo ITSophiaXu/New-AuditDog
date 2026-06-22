@@ -2,7 +2,7 @@
 
 ## What this project is
 
-A Palantir Foundry–style "Ontology + Agents" demo platform for Chinese CPA firms, built around a real 2025 annual audit engagement (江苏大王, 东林事务所). The backend models audit knowledge as an ontology (object types → link types → action types), and AI agents read that ontology context to fill working papers cell by cell.
+A Palantir Foundry–style "Ontology + Agents" demo platform for Chinese CPA firms, built around a real 2025 annual audit engagement (甲公司, 甲会计师事务所). The backend models audit knowledge as an ontology (object types → link types → action types), and AI agents read that ontology context to fill working papers cell by cell.
 
 ## Stack
 
@@ -51,12 +51,12 @@ MODEL_ID=openai/gpt-4o  # default
 | Variable | Effect |
 |---|---|
 | `AUDIT_ONTOLOGY_SKIP_SEED=1` | Skip DB seed on startup |
-| `AUDIT_ONTOLOGY_SKIP_DONGLIN=1` | Skip 东林 data seed only |
+| `AUDIT_ONTOLOGY_SKIP_DONGLIN=1` | Skip 甲所 data seed only |
 
 ### Re-seeding the database
 Delete `backend/data/audit_ontology.db`, then restart the server — `app.main._startup()` calls `seed.py` automatically.
 
-### Running the 东林 fill agent manually
+### Running the 甲所 fill agent manually
 ```bash
 cd backend
 .venv\Scripts\python.exe -m app.donglin.fill   # Windows
@@ -80,12 +80,12 @@ backend/app/
 ├── main.py           # FastAPI app, CORS, router mounting, static files
 ├── models.py         # All SQLModel table definitions
 ├── seed.py           # Generic ontology seed (calls seed_donglin at tail)
-├── seed_donglin.py   # Loads 东林 JSON data into DB
+├── seed_donglin.py   # Loads 甲所 JSON data into DB
 ├── db.py             # SQLite engine + session factory
 ├── llm.py            # GitHub Models chat() + DEMO mode scripted traces
 ├── ontology/         # CRUD routes for object/link/action types and instances
 ├── agents/           # Agent CRUD + runner loop (multi-turn tool-call execution)
-├── donglin/          # 东林 working paper fill logic
+├── donglin/          # 甲所 working paper fill logic
 │   ├── fill.py       # 5 fill_<paper>() functions (A1/A6/A9/A24/B1), 1500+ lines
 │   └── router.py     # /api/donglin/* endpoints
 ├── corrections/      # Human correction capture + ontology-change promotion
@@ -115,7 +115,7 @@ All API calls are centralised in `frontend/src/lib/api.ts`. State for the correc
 - The demo routes on tool names: `draft_audit_plan` / `get_case_context` → 专项审计 plan script; everything else → 货币资金 A1 fill script.
 - When adding a new agent scenario, add a new branch in `_demo_response()`.
 
-### 东林 working papers (`backend/app/donglin/fill.py`)
+### 甲所 working papers (`backend/app/donglin/fill.py`)
 Each `fill_<paper>()` function:
 1. Reads client data from `backend/data/donglin/input/` (TB, Aux, Vouchers xlsx).
 2. Applies hard-coded audit rules (e.g. `AR-RULE-001` for A6 AR ageing, `TAX-RECLASS-001` for A9).

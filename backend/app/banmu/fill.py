@@ -1,4 +1,4 @@
-"""斑目项目底稿 AI 填稿逻辑（含人工确认暂停点）。
+"""己公司项目底稿 AI 填稿逻辑（含人工确认暂停点）。
 
 设计：
   fill_<index>(accounting_standard)  → FillResult(sheet_data_partial, decisions[])

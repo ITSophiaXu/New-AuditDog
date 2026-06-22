@@ -367,7 +367,7 @@ function DonglinHeader({ sheetCode, meta }: {
               <strong style={{ color: '#1e3a8a' }}>甲会计师事务所有限公司</strong>
             </td>
             <td style={metaLabelRight}>编&nbsp;&nbsp;制：</td>
-            <td style={metaValue}>{meta.preparer || '王叙超'}</td>
+            <td style={metaValue}>{meta.preparer || '审计师'}</td>
           </tr>
           {/* Row 2: 编制日期 */}
           <tr>
@@ -379,7 +379,7 @@ function DonglinHeader({ sheetCode, meta }: {
           <tr>
             <td style={firmRow}>被审计单位：<strong>{meta.auditEntity || '甲公司（通风机械）'}</strong></td>
             <td style={metaLabelRight}>复&nbsp;&nbsp;核：</td>
-            <td style={metaValue}>{meta.reviewer || '侯佳成'}</td>
+            <td style={metaValue}>{meta.reviewer || '项目经理'}</td>
           </tr>
           {/* Row 4: 项目 + 复核日期 */}
           <tr>

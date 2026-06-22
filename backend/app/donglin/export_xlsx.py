@@ -159,7 +159,7 @@ def export_paper_xlsx(paper_code: str, session: Session) -> Path:
 
     # 3c. 填头部元数据（编制人、复核人、日期）
     d = wp.data or {}
-    preparer = d.get("filled_by", "王叙超")
+    preparer = d.get("filled_by", "审计师")
     filled_at = (d.get("filled_at") or "2026-02-28")[:10]
     for sheet_name in [paper_code, f"{paper_code}-2"]:
         if sheet_name in wb.sheetnames:
@@ -167,7 +167,7 @@ def export_paper_xlsx(paper_code: str, session: Session) -> Path:
             try:
                 ws["H1"] = preparer
                 ws["H2"] = filled_at
-                ws["H3"] = "侯佳成"
+                ws["H3"] = "项目经理"
                 ws["H4"] = "2026-03-02"
             except Exception:
                 pass

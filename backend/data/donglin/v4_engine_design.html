@@ -671,7 +671,7 @@ human_review(low_conf)  <span class="c"># 写入 review_queue.jsonl</span></pre>
 <pre>on_cell_edit({
   paper_id: <span class="n">94</span>, cell: <span class="s">"A6.summary.tb_closing"</span>,
   before: <span class="n">3360975.70</span>, after: <span class="n">3361000.00</span>,
-  user: <span class="s">"侯佳成"</span>,
+  user: <span class="s">"项目经理"</span>,
   reason: <span class="s">"四舍五入到百元"</span>,
   ts: <span class="s">"2026-05-24T10:30"</span>
 })</pre>
@@ -701,8 +701,8 @@ human_review(low_conf)  <span class="c"># 写入 review_queue.jsonl</span></pre>
     <span class="c"># 写入 proposed_rules.jsonl 等审计师 sign-off</span>
 
 <span class="c"># 审计师 sign-off 后:</span>
-upgrade_to_l3(proposed_rule, signed_by=<span class="s">"侯佳成"</span>)
-  <span class="c"># 写入 rules_l3_donglin.ttl, source="侯佳成 + 甲所沉淀"</span></pre>
+upgrade_to_l3(proposed_rule, signed_by=<span class="s">"项目经理"</span>)
+  <span class="c"># 写入 rules_l3_donglin.ttl, source="项目经理 + 甲所沉淀"</span></pre>
 
     <div class="acceptance">
       <h5>Acceptance Criteria</h5>
@@ -969,7 +969,7 @@ $ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
 
   <p style="margin-top:14px;font-size:13px">
     <strong>共计</strong>: 5-7 周 ·
-    <strong>关键里程碑</strong>: Sprint 4 末 = v4 Demo 给侯佳成 (4 层全打通 + layer_chain) ·
+    <strong>关键里程碑</strong>: Sprint 4 末 = v4 Demo 给项目经理 (4 层全打通 + layer_chain) ·
     <strong>商业里程碑</strong>: Sprint 6 末 = 跨所 PoC 可签合同
   </p>
 </section>
@@ -983,7 +983,7 @@ $ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
       <tr>
         <th>维度</th>
         <th>方法 A (我们 v1)</th>
-        <th>v3 (侯佳成 review 版)</th>
+        <th>v3 (项目经理 review 版)</th>
         <th>v4 (本设计)</th>
       </tr>
     </thead>
@@ -1066,7 +1066,7 @@ $ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
   <div class="callout danger">
     <strong>⚠️ R2: 跨所 TBox 复用边界不清</strong>
     <p style="margin:6px 0 0">
-      "事务所专有 OT" 和 "中国通用 OT" 的边界主观。如甲所的 <code>AuditArea</code>（按字母分组）— 是 L3 还是 L2？侯佳成可能说这是中注协推荐的通用做法。需要每个 OT 加 <code>_layer_basis</code> 说明依据，由审计师共识决定。
+      "事务所专有 OT" 和 "中国通用 OT" 的边界主观。如甲所的 <code>AuditArea</code>（按字母分组）— 是 L3 还是 L2？项目经理可能说这是中注协推荐的通用做法。需要每个 OT 加 <code>_layer_basis</code> 说明依据，由审计师共识决定。
     </p>
   </div>
 
@@ -1080,14 +1080,14 @@ $ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
   <div class="callout">
     <strong>❓ O2: 双轨产物的同步成本</strong>
     <p style="margin:6px 0 0">
-      JSON 和 Turtle 必须严格等价。如果 build_abox.py 有 bug，会导致两者偏离。需要在 validate.py 加 <code>JSON==TTL</code> 这个 check，且每次构建跑 diff。但这增加工程成本，可能不值得。备选：只保留 JSON 单轨，给侯佳成 demo 时单独生成 Turtle 快照。
+      JSON 和 Turtle 必须严格等价。如果 build_abox.py 有 bug，会导致两者偏离。需要在 validate.py 加 <code>JSON==TTL</code> 这个 check，且每次构建跑 diff。但这增加工程成本，可能不值得。备选：只保留 JSON 单轨，给项目经理 demo 时单独生成 Turtle 快照。
     </p>
   </div>
 </section>
 
-<!-- ═══════════ §10 与侯佳成的对话 ═══════════ -->
+<!-- ═══════════ §10 与项目经理的对话 ═══════════ -->
 <section>
-  <h2>§10 给侯佳成的 v4 一句话</h2>
+  <h2>§10 给项目经理的 v4 一句话</h2>
 
   <div class="callout info">
     <p style="font-size:13.5px;margin:0">
@@ -1104,7 +1104,7 @@ $ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
   </div>
 
   <div class="acceptance">
-    <h5>侯佳成应该 review 什么？</h5>
+    <h5>项目经理应该 review 什么？</h5>
     <ul>
       <li>§3 Phase 0 的 TBox 设计 — 52 OT 是否覆盖完整？哪些应该加？</li>
       <li>§3 Phase 3 的 14 条规则 formal_expression — 阈值正确吗？source / effective 日期对吗？</li>
@@ -1118,7 +1118,7 @@ $ python -m audit_ontology.v4.run --firm=lixin --client=newco --year=2025
 
 <footer>
   设计于 2026-05-24 · v4 本体知识抽取引擎 · pre-implementation design doc<br>
-  实施前需 sign-off 的负责人: <strong>项目工程师</strong> + <strong>侯佳成 (审计 review)</strong> + <strong>合规 (L4 隐私)</strong>
+  实施前需 sign-off 的负责人: <strong>项目工程师</strong> + <strong>项目经理 (审计 review)</strong> + <strong>合规 (L4 隐私)</strong>
 </footer>
 
 </main>

@@ -376,22 +376,22 @@
   },
   {
     "id": 30,
-    "key": "Auditor::侯佳成",
+    "key": "Auditor::项目经理",
     "type_code": "Auditor",
-    "display_name": "侯佳成",
+    "display_name": "项目经理",
     "data": {
-      "name": "侯佳成",
+      "name": "项目经理",
       "role": "项目经理",
       "is_signing": true
     }
   },
   {
     "id": 31,
-    "key": "Auditor::王叙超",
+    "key": "Auditor::审计师",
     "type_code": "Auditor",
-    "display_name": "王叙超",
+    "display_name": "审计师",
     "data": {
-      "name": "王叙超",
+      "name": "审计师",
       "role": "审核经理",
       "is_signing": false
     }
@@ -421,12 +421,12 @@
   },
   {
     "id": 34,
-    "key": "ReviewLevel::二级复核-侯佳成",
+    "key": "ReviewLevel::二级复核-项目经理",
     "type_code": "ReviewLevel",
-    "display_name": "二级复核-侯佳成",
+    "display_name": "二级复核-项目经理",
     "data": {
       "level": "二级复核",
-      "reviewer_name": "侯佳成",
+      "reviewer_name": "项目经理",
       "reviewed_at": "2026-03-02",
       "status": "通过"
     }
@@ -488,7 +488,7 @@
       "milestone": "外勤开始",
       "planned_date": "2026-02-28",
       "actual_date": "2026-02-28",
-      "owner": "王叙超"
+      "owner": "审计师"
     }
   },
   {
@@ -500,7 +500,7 @@
       "milestone": "外勤结束",
       "planned_date": "2026-03-02",
       "actual_date": "2026-03-02",
-      "owner": "王叙超"
+      "owner": "审计师"
     }
   },
   {

@@ -345,7 +345,7 @@ export default function PlanningPaperView({ paperIndex, paperName, paperData, ac
     period: '2025-12-31',
     preparer: filledBy,
     preparedAt: filledAt || '2026-02-28',
-    reviewer: '侯佳成',
+    reviewer: '项目经理',
     reviewedAt: '2026-03-02',
   }
 

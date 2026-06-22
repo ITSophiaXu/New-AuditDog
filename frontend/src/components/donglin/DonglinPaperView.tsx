@@ -179,9 +179,9 @@ export function DonglinPaperView({
           paperTitle: (DONGLIN_PAPER_TITLE_ZH[paperCode] || `${paperCode} 底稿`)
             + (curSheet === 'summary' ? '' : ` · ${DONGLIN_SHEET_LABEL_ZH[curSheet] || curSheet}`),
           period: '2025-01-01 至 2025-12-31',
-          preparer: paperData?.filled_by || '王叙超',
+          preparer: paperData?.filled_by || '审计师',
           preparedAt: paperData?.filled_at?.slice(0, 10) || '2026-02-28',
-          reviewer: '侯佳成',
+          reviewer: '项目经理',
           reviewedAt: '2026-03-02',
         }}
       />

@@ -843,7 +843,7 @@
   </ol>
 
   <div class="callout">
-    <strong>给侯佳成展示这张表的话术</strong>
+    <strong>给项目经理展示这张表的话术</strong>
     <p style="margin: 8px 0 0; font-size: 13px">
       "侯老师，这是我对两套抽取方法的步骤拆解。
       <strong>我们用的方法 A</strong> 强在 L1+L2 准则建模 + L0 客户数据 (Agent 能算能填)，
@@ -984,7 +984,7 @@
 <pre><span class="c">// 入口 A: 监听 ExcelGridView 上的用户改写</span>
 on_cell_edit({
   before: <span class="n">685088.49</span>, after: <span class="n">685000</span>,
-  user: <span class="s">"侯佳成"</span>, reason: <span class="s">"四舍五入到整千"</span>,
+  user: <span class="s">"项目经理"</span>, reason: <span class="s">"四舍五入到整千"</span>,
   cell: <span class="s">"A6.summary.tb_closing"</span>
 })
   → chat_change_events.jsonl
@@ -997,7 +997,7 @@ detect_personal_vba_patterns(file)
 propose_rules.py (count ≥ <span class="n">3</span>)
   → proposed_rules.jsonl
   → 审计师 sign-off
-  → 写入 AuditRule(_layer=<span class="s">"L4:侯佳成"</span>)
+  → 写入 AuditRule(_layer=<span class="s">"L4:项目经理"</span>)
   → 累积一段时间后可升级为 <span class="s">"L3:donglin"</span> 事务所规则</pre>
     </div>
   </div>
@@ -1051,7 +1051,7 @@ propose_rules.py (count ≥ <span class="n">3</span>)
 │   ├── <span class="new">detect_vba_patterns.py</span>          <span class="annot"># 新: L4 入口 B 检测</span>
 │   └── <span class="new">propose_rules.py</span>                <span class="annot"># 新: L4 升级管道</span>
 │
-└── <span class="new">HANDOFF_FOR_HOU.md</span>                  <span class="annot"># 给侯佳成的交付导读</span>
+└── <span class="new">HANDOFF_FOR_HOU.md</span>                  <span class="annot"># 给项目经理的交付导读</span>
 
 <span class="annot">图例:</span>
   <span class="from-a">紫色</span> = 来自方法 A 的复用
@@ -1166,17 +1166,17 @@ prov.add(
   ],
 )
 
-<span class="c"># 6. L4 经验捕获 (Phase 5) — 假设侯佳成手动改了某个客户的金额</span>
+<span class="c"># 6. L4 经验捕获 (Phase 5) — 假设项目经理手动改了某个客户的金额</span>
 capture_chat_events.py 监听到 ExcelGridView 改写:
   on_cell_edit(before=<span class="n">125000</span>, after=<span class="n">120000</span>,
-               user=<span class="s">"侯佳成"</span>, reason=<span class="s">"客户已签认 120,000"</span>)
+               user=<span class="s">"项目经理"</span>, reason=<span class="s">"客户已签认 120,000"</span>)
   → chat_change_events.jsonl
 
-如果连续 3 个项目侯佳成都做了"忽略小额贷方"修改:
+如果连续 3 个项目项目经理都做了"忽略小额贷方"修改:
   propose_rules.py 输出 ProposedRule:
     <span class="s">"AR-RULE-001 阈值应改为 closing_cr &gt; 5000"</span>
   → 审计师 sign-off
-  → 写入 :rule-ar-001-v2, _layer=<span class="s">"L4:侯佳成"</span>
+  → 写入 :rule-ar-001-v2, _layer=<span class="s">"L4:项目经理"</span>
   → 一段时间后晋升为 <span class="s">"L3:donglin"</span></pre>
 
   <h3>7.6 v4 落地路线图</h3>
@@ -1239,12 +1239,12 @@ capture_chat_events.py 监听到 ExcelGridView 改写:
 
   <p style="margin-top: 14px; font-size: 13px">
     <strong>共计</strong>：Sprint 1-6 ≈ <strong>5-7 周</strong> 完成 v4 全部落地。
-    <strong>关键里程碑</strong>：Sprint 4 结束时可以给侯佳成做 v4 Demo (4 层全打通, layer_chain 可视化)。
+    <strong>关键里程碑</strong>：Sprint 4 结束时可以给项目经理做 v4 Demo (4 层全打通, layer_chain 可视化)。
     <strong>商业里程碑</strong>：Sprint 6 结束时可签新所 PoC 合同 (跨所部署可行性证明)。
   </p>
 
   <div class="callout">
-    <strong>给侯佳成的 v4 一句话</strong>
+    <strong>给项目经理的 v4 一句话</strong>
     <p style="margin: 8px 0 0; font-size: 13px">
       "侯老师，v4 我会把 A 的<strong>业务规则建模</strong>和 v3 的<strong>甲所模板证据抽取</strong>合并到一个管线里，
       再加上<strong>审计师经验沉淀</strong>这个 L4 双管道。

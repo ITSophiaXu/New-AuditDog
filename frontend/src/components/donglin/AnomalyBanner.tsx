@@ -41,7 +41,7 @@ type AnomalyData = {
   reviewed_at?: string
 }
 
-const CURRENT_AUDITOR = '王叙超'
+const CURRENT_AUDITOR = '审计师'
 
 const SEVERITY_META: Record<string, {
   icon: any; bg: string; border: string; text: string; label: string

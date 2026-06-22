@@ -50,6 +50,16 @@ export function isDonglinFilledDemo(data: any): boolean {
   return isDonglinPaper(data) && DONGLIN_PAPER_CODES.includes(idx)
 }
 
+/** 该底稿是否为「自由底稿」(freeform，不套母版，原始 2D 网格渲染)。 */
+export function isFreeformPaper(data: any): boolean {
+  return data?.layout === 'freeform'
+}
+
+/** 该底稿是否为「穿行测试」(walkthrough，过程说明 + 细节测试底稿)。 */
+export function isWalkthroughPaper(data: any): boolean {
+  return data?.layout === 'walkthrough'
+}
+
 /** ------ HTTP ------ */
 
 async function jget<T>(url: string): Promise<T> {

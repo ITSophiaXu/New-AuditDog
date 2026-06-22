@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import {
   Home, BookOpen, Search, ClipboardList, Bot, Plug, Sparkles, Target,
-  Inbox, PanelLeftClose, PanelLeftOpen, FolderOpen,
+  Inbox, PanelLeftClose, PanelLeftOpen, FolderOpen, FileCheck2,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { zh } from '@/locales/zh'
@@ -37,6 +37,7 @@ const SECTIONS: NavSection[] = [
   {
     title: '管理 / 复核',
     items: [
+      { to: '/report-review', label: zh.nav.reportReview, icon: FileCheck2, demo: true },
       { to: '/explorer', label: zh.nav.explorer, icon: Search },
       { to: '/learning-inbox', label: zh.nav.learningInbox, icon: Inbox, demo: true },
       { to: '/mcp', label: zh.nav.mcp, icon: Plug },

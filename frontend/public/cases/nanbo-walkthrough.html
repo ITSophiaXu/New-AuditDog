@@ -1,0 +1,223 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>穿行测试过程说明 — 中国南玻集团股份有限公司</title><style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:#1f2937;background:#f1f5f9;line-height:1.75;font-size:14.5px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 90px}
+header{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;padding:40px 0 34px}
+.kicker{font-size:12.5px;letter-spacing:3px;color:#93c5fd;text-transform:uppercase;margin-bottom:10px}
+h1{margin:0 0 8px;font-size:26px;font-weight:700;line-height:1.3}
+.sub{color:#cbd5e1;font-size:14.5px}
+.metabar{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.metabar span{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);padding:5px 12px;border-radius:20px;font-size:12.5px;color:#e2e8f0}
+.banner{margin:26px 0 4px;border-radius:14px;padding:22px 26px;background:#eff6ff;border:1px solid #bfdbfe;border-left:7px solid #1e3a5f;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.banner h3{margin:0 0 8px;font-size:16px;color:#1e3a5f}
+.banner p{margin:8px 0 0;color:#334155;font-size:14px}
+.concl{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.concl .c{padding:8px 15px;border-radius:10px;font-weight:700;font-size:14px}
+.c.pass{background:#dcfce7;color:#166534}.c.rev{background:#fef9c3;color:#854d0e}.c.bad{background:#fee2e2;color:#991b1b}
+nav{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 20px;margin-top:22px;font-size:13.5px}
+nav b{color:#1e3a5f}nav a{color:#334155;text-decoration:none;margin-right:14px;white-space:nowrap}
+nav a:hover{color:#1e3a5f;text-decoration:underline}
+section{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:26px 30px;margin-top:22px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+section.focus{border:2px solid #1e3a5f;box-shadow:0 2px 10px rgba(30,58,95,.10)}
+h2{font-size:19px;margin:0 0 14px;color:#0f172a;display:flex;align-items:center;gap:11px;padding-bottom:12px;border-bottom:2px solid #f1f5f9}
+h2 .n{background:#1e3a5f;color:#fff;width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.review{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;font-size:12px;font-weight:700;padding:3px 11px;border-radius:20px;margin-left:auto}
+section p{margin:0 0 13px}
+p.lead{color:#475569;font-size:14px;background:#f8fafc;border-left:3px solid #cbd5e1;padding:10px 15px;border-radius:0 8px 8px 0}
+h3{font-size:15.5px;color:#1e3a5f;margin:22px 0 8px}
+.step{border:1px solid #e5e7eb;border-radius:11px;padding:16px 18px;margin:12px 0;background:#fcfcfd;border-left:4px solid #1e3a5f}
+.step .t{font-weight:700;font-size:15px;color:#0f172a;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+.step .t .b{background:#1e3a5f;color:#fff;font-size:12px;width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.step.gate{border-left-color:#c2410c;background:#fff7ed}.step.gate .t .b{background:#c2410c}
+.step .meta{font-size:12.5px;color:#64748b;margin-top:7px}.step .meta b{color:#334155}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0 4px}
+th,td{border:1px solid #e5e7eb;padding:9px 11px;text-align:left;vertical-align:top}
+th{background:#f8fafc;font-weight:700;color:#334155;font-size:12.5px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.c,th.c{text-align:center}
+.sev-高{color:#991b1b;font-weight:700}.sev-中{color:#9a3412;font-weight:700}.sev-低{color:#854d0e;font-weight:700}
+.tag{display:inline-block;padding:2px 9px;border-radius:11px;font-size:12px;font-weight:700}
+.tag.pass{background:#dcfce7;color:#166534}.tag.rev{background:#fef9c3;color:#854d0e}
+.yes{color:#166534;font-weight:700}.no{color:#b45309;font-weight:700}
+.note{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px 17px;margin:14px 0;font-size:13.5px;color:#713f12}
+.note b{color:#92400e}
+.ok{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 17px;margin:14px 0;font-size:13.5px;color:#14532d}
+.ask{background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:14px 17px;margin:16px 0 2px;font-size:13.5px;color:#3730a3}
+.ask b{color:#312e81}
+ul{margin:6px 0 14px;padding-left:22px}li{margin:6px 0}
+.files{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.files code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:7px;padding:5px 10px;font-size:12.5px;color:#334155}
+footer{text-align:center;color:#94a3b8;font-size:12.5px;margin-top:30px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 18px;font-size:12px}
+.flow .f{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;border-radius:7px;padding:5px 10px;font-weight:600}
+.flow .fg{background:#fff7ed;border-color:#fdba74;color:#9a3412}.flow .ar{color:#94a3b8}
+</style></head><body>
+<header><div class="wrap">
+<div class="kicker">销售循环 · 穿行测试方法与过程说明书</div>
+<h1>中国南玻集团股份有限公司<br>销售合同 ↔ 出库单 穿行测试</h1>
+<div class="sub">本说明书重点呈现两项<b>需审计师复核的判断逻辑</b>：①穿行测试怎么做（测什么、查什么、怎么定结论）；②材料之间的关联（link）怎么判断（合同与出库怎么配对、怎么校验、何时算通过）。</div>
+<div class="metabar"><span>📁 范围：销售合同 4 + 出库台账 4</span><span>🧪 样本 4</span><span>✅ 通过 1 / 🔍 需复核 3 / ⚠ 异常 0</span></div>
+</div></header><div class="wrap">
+<div class="banner"><h3>一句话结论</h3>
+<p>对 中国南玻集团股份有限公司 销售循环执行穿行测试，<b>仅以销售合同与出库台账为证据</b>，按「从合同到出库」方向逐笔追踪 4 笔业务并回填底稿。
+<b>1 笔通过、3 笔需人工复核</b>——需复核源于本次材料范围下「单笔合同 vs 该客户全年出库台账」的口径差异（金额/计量单位/时间），非账实不符。</p>
+<div class="concl"><div class="c pass">通过测试 1</div><div class="c rev">需人工复核 3</div><div class="c bad">发现异常 0</div></div></div>
+<nav><b>复核导航：</b>
+<a href="#s2">②穿行测试怎么做（方法+判定标准）★</a>
+<a href="#s3">③材料关联怎么判断（link 逻辑）★</a>
+<a href="#s4">④执行过程</a><a href="#s5">⑤样本结果</a><a href="#s6">⑥需关注事项</a><a href="#s7">⑦人工轨迹</a>
+</nav>
+<section id="s1"><h2><span class="n">1</span>背景与测试目标</h2>
+<p class="lead">穿行测试：选取若干笔典型业务，沿业务与凭证的流转路径逐环节追踪，验证销售收入相关单据链条是否真实、连贯、可追溯。</p>
+<p>本次针对 中国南玻集团股份有限公司 的<b>销售循环</b>，按既定范围<b>仅使用</b>：① <b>销售合同</b> 4 份（扫描件 PDF，对应 4 家客户）；② <b>出库单</b> 4 份（「出入库流水账」Excel，每份对应一家客户的全期逐笔出库）。
+本次<b>不含</b>发票、回款、记账凭证、明细账等，故测试聚焦「合同真实存在、并有对应实物出库」；收入确认金额的完整勾稽不在本次范围，相关底稿列留空注明「范围外」。</p></section>
+<section id="s2" class="focus"><h2><span class="n">2</span>穿行测试怎么做：方法、检查项与判定标准 <span class="review">★ 审计师复核重点</span></h2>
+<p class="lead">本节说明本次穿行测试的<b>测试设计与判断规则</b>。请审计师评判：测试方向、检查项、阈值与结论判定规则是否符合本次审计目标。</p>
+<h3>2.1 测试认定与方向</h3>
+<p><b>测试认定</b>：销售收入的<b>发生/存在</b>——验证已签销售合同确有真实的实物出库与之对应。<br>
+<b>测试方向</b>：「<b>从合同到明细账</b>」正向追踪——选定合同 → 追踪其出库 →（本次范围止于出库；发票/记账凭证/明细账不在范围，相应环节留空注明）。</p>
+<h3>2.2 穿行步骤（每笔样本）</h3>
+<ul>
+<li><b>第一步</b>：选取样本合同，核对合同基本要素（合同号、客户、货物、规格、数量、金额、签约日期）。</li>
+<li><b>第二步</b>：追踪该合同客户对应的出库台账（出入库流水账）。</li>
+<li><b>第三步</b>：逐项勾稽出库与合同的一致性（见 2.3 检查项）。</li>
+<li><b>第四步</b>：评价勾稽结果，按 2.4 规则定结论；不一致或无法直接勾稽则保守地交审计师判断。</li>
+</ul>
+<h3>2.3 勾稽检查项与判断阈值</h3>
+<table><tr><th>检查项</th><th>判断规则</th><th>不通过的含义</th><th class="c">严重度</th></tr>
+<tr><td><b>客户一致性</b></td><td>出库客户与合同客户须为同一主体（客户名归一化后核对）</td><td>跨客户串单（重大错报风险）</td><td class='c'><span class='sev-高'>高</span></td></tr>
+<tr><td><b>数量勾稽</b></td><td>|合同数量 − 出库数量合计| / 合同数量 ≤ 5%</td><td>量差过大 / 未对应到本批次</td><td class='c'><span class='sev-中'>中</span></td></tr>
+<tr><td><b>计量口径</b></td><td>合同与出库的计量单位须可比或可换算</td><td>单位不可直接折算，无法量价勾稽</td><td class='c'><span class='sev-低'>低</span></td></tr>
+<tr><td><b>金额勾稽</b></td><td>|合同额 − 出库额合计| / 合同额 ≤ 容差（默认 1%）</td><td>金额差异（多因口径不同）</td><td class='c'><span class='sev-低'>低</span></td></tr>
+<tr><td><b>日期顺序</b></td><td>合同签订日期 ≤ 出库日期</td><td>逆序（或台账含签约前历史出库）</td><td class='c'><span class='sev-中'>中</span></td></tr>
+<tr><td><b>证据完整性</b></td><td>合同须有对应的出库证据</td><td>缺关键证据</td><td class='c'><span class='sev-中'>中</span></td></tr>
+</table>
+<h3>2.4 结论判定规则</h3>
+<ul>
+<li>出现 <b>「高」</b> 级异常（如跨客户串单）→ <span class="tag rev">发现异常/风险</span></li>
+<li>出现 <b>「中」</b> 级异常 / 缺关键证据 / 综合置信 &lt; 0.5 / 跨客户 / 弱关联 → <span class="tag rev">需人工复核</span></li>
+<li>无上述情形 → <span class="tag pass">通过测试</span></li>
+</ul>
+<div class="ask"><b>★ 请审计师评判</b>：上述<b>检查项是否齐备</b>、<b>阈值（数量 5% / 金额 1%）是否合适</b>、<b>结论判定规则是否稳妥</b>。
+如本次审计目标需更严或更宽（如增加"出库须可定位到本合同PO批次"为硬性检查、或调整容差），可据此修订规则后重跑。</div>
+</section>
+<section id="s3" class="focus"><h2><span class="n">3</span>材料关联（link）怎么判断：配对规则 + 校验 + 逐组判断 <span class="review">★ 审计师复核重点</span></h2>
+<p class="lead">「把哪份合同与哪份出库视为同一笔业务」是穿行测试最关键的判断——它直接决定后续勾稽与回填是否正确。本节把配对与校验的<b>规则</b>显式列出，并给出本次 4 组 link 的<b>逐组判断</b>，供审计师评判依据是否充分。</p>
+<h3>3.1 怎么"配对"（建立关联）</h3>
+<ul>
+<li><b>主依据 · 源文件名数字前缀</b>：送审材料以 1/2/3/4 编号一一对应（<b>1 号合同 ↔ 1-1 号出库</b>）。这是送审时人为建立的对应关系，作为最强配对信号。</li>
+<li><b>辅助核对 · 归一化客户名</b>：去掉括号与"有限公司/股份/集团/厂"等通用后缀后，比较合同客户与出库客户的"客户核"是否<b>互相包含</b>（如"盐城正泰"⊂"盐城正泰新能源科技有限公司"）。</li>
+<li><b>绝不做</b>：不仅凭合同号或客户名相同就自动归并；<b>不跨客户合并</b>。</li>
+</ul>
+<h3>3.2 风险标记规则</h3>
+<ul>
+<li><b>跨客户(cross_customer)</b>：同组出现互不包含的两个客户核 → 判跨客户，<b>拆分不合并</b>（最严风险）。</li>
+<li><b>弱关联(weak_link)</b>：仅有前缀、客户名无法核对一致 → 标弱关联、提示人工。</li>
+<li><b>缺单</b>：缺合同或缺出库一方。</li>
+</ul>
+<h3>3.3 人工确认（不自行拍板）</h3>
+<p>关联草稿<b>必须经审计人员逐组确认</b>（认可 / 修改 / 拆分 / 剔除）后，才用于后续 link 与回填。本次 4 组均无风险标记，人工已逐组确认采纳，并特别确认「<b>盐城正泰新能源</b>」与「<b>正泰新能科技</b>」名称相近但确为两家独立客户、未串单。</p>
+<h3>3.4 配对成立后怎么"校验"该 link 可靠</h3>
+<p>配对成立 ≠ 自动通过。系统用第 2 节的检查项校验该 link 是否一致可靠：客户须同一主体、数量/金额可比、计量口径可折算、日期顺序合理。<b>不一致或无法直接勾稽 → 判"需复核"</b>，把最终判断交审计师。</p>
+<h3>3.5 本次 4 组 link 的逐组判断</h3>
+<table><tr><th>组</th><th>配对依据</th><th class="c">客户核对</th><th>数量 / 计量口径</th><th>金额（合同 vs 出库合计）</th><th>日期顺序</th><th class="c">link 结论</th></tr>
+<tr><td><b>1</b> 盐城正泰新能<br><span style='font-size:11px;color:#94a3b8'>4500066334</span></td>
+<td>前缀 1 一一对应<br><span style='font-size:11.5px;color:#64748b'>客户名核一致</span></td>
+<td class='c'><span class='yes'>一致 ✓</span></td>
+<td>合同 71400 PC<br>出库 平方米<br><span class='no'>单位不可直接折算</span></td>
+<td class='num'>4,122,447<br>vs 19,828,767<br><span style='font-size:11.5px' class='no'>口径不同</span></td>
+<td><span class='yes'>签约 2022-04-07 ≤ 出库 2022-04-29 ✓</span></td>
+<td class='c'><span class='tag pass'>通过测试</span></td></tr>
+<tr><td><b>2</b> 江苏宇辉光伏<br><span style='font-size:11px;color:#94a3b8'>JSLJ·ZGNB20221010</span></td>
+<td>前缀 2 一一对应<br><span style='font-size:11.5px;color:#64748b'>客户名核一致</span></td>
+<td class='c'><span class='yes'>一致 ✓</span></td>
+<td>合同 5900 片<br>出库 平方米<br><span class='no'>单位不可直接折算</span></td>
+<td class='num'>393,117<br>vs 12,405,001<br><span style='font-size:11.5px' class='no'>口径不同</span></td>
+<td><span class='no'>签约 2022-10-10 晚于出库起始 2022-07-29</span><br><span style='font-size:11.5px;color:#94a3b8'>（台账含本PO前历史出库）</span></td>
+<td class='c'><span class='tag rev'>需人工复核</span></td></tr>
+<tr><td><b>3</b> 一道新能源科<br><span style='font-size:11px;color:#94a3b8'>YDQZ202200200</span></td>
+<td>前缀 3 一一对应<br><span style='font-size:11.5px;color:#64748b'>客户名核一致</span></td>
+<td class='c'><span class='yes'>一致 ✓</span></td>
+<td>合同 12800 块<br>出库 平方米<br><span class='no'>单位不可直接折算</span></td>
+<td class='num'>836,480<br>vs 18,302,296<br><span style='font-size:11.5px' class='no'>口径不同</span></td>
+<td><span class='no'>签约 2022-10-09 晚于出库起始 2022-08-30</span><br><span style='font-size:11.5px;color:#94a3b8'>（台账含本PO前历史出库）</span></td>
+<td class='c'><span class='tag rev'>需人工复核</span></td></tr>
+<tr><td><b>4</b> 正泰新能科技<br><span style='font-size:11px;color:#94a3b8'>4500071502</span></td>
+<td>前缀 4 一一对应<br><span style='font-size:11.5px;color:#64748b'>客户名核一致</span></td>
+<td class='c'><span class='yes'>一致 ✓</span></td>
+<td>合同 153000 PC<br>出库 平方米<br><span class='no'>单位不可直接折算</span></td>
+<td class='num'>7,876,004<br>vs 20,682,892<br><span style='font-size:11.5px' class='no'>口径不同</span></td>
+<td><span class='no'>签约 2022-09-29 晚于出库起始 2022-05-31</span><br><span style='font-size:11.5px;color:#94a3b8'>（台账含本PO前历史出库）</span></td>
+<td class='c'><span class='tag rev'>需人工复核</span></td></tr>
+</table>
+<div class="note"><b>逐组判断说明</b>：4 组的「合同↔出库」配对依据（前缀+客户名）均成立、客户一致、无跨客户。差异集中在<b>校验环节</b>：合同是单笔 PO（计量为片/块/PC），出库台账是该客户全期记录（计量为平方米），单位不可直接折算、金额相差数倍——故 3 组判「需复核」；
+第 1 组（盐城正泰）因<b>签约在先、出库在后</b>，日期逻辑顺畅且无中/高异常，判「通过测试」。</div>
+<div class="ask"><b>★ 请审计师评判</b>：
+① 以<b>「文件名前缀 + 客户名核对」</b>建立合同↔出库的 link 是否<b>依据充分</b>？
+② 是否需要进一步要求<b>以合同号/PO号、规格型号、交期窗口把出库台账收窄到本合同对应批次</b>后，再认定 link 与勾稽量价（当前出库为客户全期台账，无法唯一定位本 PO 出库行）？
+③ 「不跨客户合并」「人工确认后才用」等保守规则是否符合贵所要求？</div>
+</section>
+<section id="s4"><h2><span class="n">4</span>本次执行过程（叙述）</h2>
+<p class="lead">按上述方法实际执行的步骤；其间设三个人工确认点与一次终审，所有判断以脚本/库查询为准并留痕。</p>
+<div class="flow">
+<span class="f">①读模板</span><span class="ar">→</span><span class="f">②采集(质量关卡)</span><span class="ar">→</span><span class="f">③抽取字段</span><span class="ar">→</span><span class="f">④关联草稿</span><span class="ar">→</span>
+<span class="f fg">人工确认关联</span><span class="ar">→</span><span class="f fg">范围/补录确认</span><span class="ar">→</span><span class="f fg">容差确认</span><span class="ar">→</span><span class="f">⑤勾稽</span><span class="ar">→</span><span class="f">⑥回填</span><span class="ar">→</span><span class="f fg">人工终审</span>
+</div>
+<div class="step"><div class="t"><span class="b">1</span>读懂底稿模板</div><p>解析《主营业务收入细节测试.xlsx》（两张表、多层表头，共 82 列），判定每列取数来源；本次有材料的合同列、出库列可回填，发票/凭证/明细账列留空注明范围外。</p></div>
+<div class="step"><div class="t"><span class="b">2</span>采集入库（含质量关卡）</div><p>4 份合同 OCR、4 份出库台账逐行读入。<b>关键扫描件读不出文字则采集真实报错转人工</b>，空材料不放行。本次均成功。出库 Excel 仅取权威「出入库流水账」，其余透视/汇总副表经人工确认范围外、排除以免重复计数。</p></div>
+<div class="step"><div class="t"><span class="b">3</span>抽取字段</div><p>合同抽：合同号/客户/签约日期/含税金额/货物/规格/数量/单价（置信 0.90–0.92，保留源定位）；出库逐行抽：日期/单号/数量/金额/物料/规格。</p></div>
+<div class="step"><div class="t"><span class="b">4</span>生成关联草稿</div><p>按 3.1 规则形成 4 组「合同↔出库」草稿，标注配对依据与风险，导出复核表。</p></div>
+<div class="step gate"><div class="t"><span class="b">✓</span>人工确认 A：材料关联</div><p>人工逐组确认采纳 4 组（completed），确认两家相近客户不串单。此后 link 只用确认后的关联。</p></div>
+<div class="step gate"><div class="t"><span class="b">✓</span>人工确认 B：范围/补录</div><p>系统检出 9 条"疑似缺字段"，经核为出库副表（透视/汇总），人工确认范围外、排除（out_of_scope）；范围内数据齐全。</p></div>
+<div class="step gate"><div class="t"><span class="b">✓</span>人工确认 C：范围与容差</div><p>确认范围（仅合同+出库）与金额容差 1%，确认继续（provided）。</p></div>
+<div class="step"><div class="t"><span class="b">5</span>保守勾稽</div><p>每组勾连成 1 笔样本，按 2.3 检查项逐项勾稽、按 2.4 规则定结论；共 4 样本、11 条勾稽发现。</p></div>
+<div class="step"><div class="t"><span class="b">6</span>按底稿逐列真回填</div><p>合同信息写在每笔首行；<b>出库按日期逐行展开</b>（一个日期一行、同日单号合并、数量金额按日合计），4 笔共 24 个出库日期行；单价列保留模板公式（=金额/数量），数量回填后自动算出；范围外列留空注明。</p></div>
+<div class="step gate"><div class="t"><span class="b">✓</span>人工终审</div><p>终审<b>逐条列出</b>每笔需复核样本的异常点（为什么/担心什么/请确认什么/是否仅口径差异）。第 1 轮人工提出补充要求（补货物/规格/数量、出库按日期展开），系统修订并程序核验后，第 2 轮通过、交付。</p></div>
+</section>
+<section id="s5"><h2><span class="n">5</span>测试样本与结果</h2>
+<table><tr><th>客户</th><th>合同号</th><th class="num">合同含税额(元)</th><th class="num">出库金额合计(元)</th><th class="c">出库日期行</th><th class="c">结论</th></tr>
+<tr><td>盐城正泰新能源科技有限公司</td><td>4500066334</td><td class='num'>4,122,446.79</td><td class='num'>19,828,766.61</td><td class='c'>9</td><td class='c'><span class='tag pass'>通过测试</span></td></tr>
+<tr><td>江苏宇辉光伏科技有限公司</td><td>JSLJ·ZGNB20221010</td><td class='num'>393,117.00</td><td class='num'>12,405,000.76</td><td class='c'>6</td><td class='c'><span class='tag rev'>需人工复核</span></td></tr>
+<tr><td>一道新能源科技（衢州）有限公司</td><td>YDQZ202200200</td><td class='num'>836,480.00</td><td class='num'>18,302,295.87</td><td class='c'>4</td><td class='c'><span class='tag rev'>需人工复核</span></td></tr>
+<tr><td>正泰新能科技有限公司</td><td>4500071502</td><td class='num'>7,876,003.95</td><td class='num'>20,682,891.81</td><td class='c'>5</td><td class='c'><span class='tag rev'>需人工复核</span></td></tr>
+</table></section>
+<section id="s6"><h2><span class="n">6</span>需审计师关注：3 笔「需复核」的实质</h2>
+<p class="lead">这 3 笔未直接判「通过」，核心是<b>本次材料范围下的口径差异</b>，非账实不符。</p>
+<div class="note"><b>共性</b>：系统把「单张销售合同（单笔 PO）」与「该客户整本全期出入库流水账」对比，故金额相差数倍、计量单位不同（片/块/PC ↔ 平方米）、出库台账起始日早于签约日（台账含本 PO 之前历史/框架订单出库）——均属<b>业务口径差异</b>。</div>
+<div class="ask"><b>建议</b>：若需精确量价勾稽，请按「来源单据号 / 规格型号 / 交期窗口」把出库台账<b>收窄到本 PO 对应批次</b>后再核；或补充发票/记账凭证做收入确认勾稽。</div>
+<div class="ok"><b>第 1 笔（盐城正泰）判「通过」</b>：签约在先、出库在后，时间逻辑顺畅且无中/高异常。</div></section>
+<section id="s7"><h2><span class="n">7</span>人工判断与复核轨迹</h2>
+<table><tr><th>人工节点</th><th>作用</th><th>人工选择</th></tr>
+<tr><td>A · 材料关联确认</td><td>确认 4 组合同↔出库配对</td><td>确认采纳（completed）</td></tr>
+<tr><td>B · 补录/范围确认</td><td>确认出库副表为范围外、排除</td><td>确认范围外（out_of_scope）</td></tr>
+<tr><td>C · 范围与容差确认</td><td>确认范围与勾稽容差 1%</td><td>确认继续（provided）</td></tr>
+<tr><td>终审（第 1 轮）</td><td>逐条复核异常点</td><td>退回修订（补字段+按日期展开）</td></tr>
+<tr><td>终审（第 2 轮）</td><td>复核修订结果</td><td>通过、交付（approve）</td></tr>
+</table>
+<p style="font-size:13px;color:#64748b">每个人工节点的提示原文与协调器逐步决策留痕，见随附《穿行测试过程文档_TSG_…md》，可供深入核查。</p></section>
+<section id="s8"><h2><span class="n">8</span>可追溯性、交付物与局限</h2>
+<p>每个回填数值可回溯到具体合同页码或出库行；每个非「通过」结论对应至少一条勾稽发现；每个人工决策均留痕；全过程判断以脚本/库查询为准。最终证据库 <code>walkthrough.db</code> 随交付。</p>
+<div class="files">
+<code>summary.html</code>
+<code>walkthrough-memo_中国南玻集团股份有限公司.md</code>
+<code>walkthrough.db</code>
+<code>异常点清单_中国南玻集团股份有限公司.json</code>
+<code>异常点清单_中国南玻集团股份有限公司.md</code>
+<code>穿行测试_中国南玻集团股份有限公司.csv</code>
+<code>穿行测试_中国南玻集团股份有限公司.json</code>
+<code>穿行测试_中国南玻集团股份有限公司.xlsx</code>
+<code>穿行测试汇总.md</code>
+<code>穿行测试汇总_中国南玻集团股份有限公司.json</code>
+<code>穿行测试过程文档_TSG_中国南玻集团股份有限公司.md</code>
+<code>穿行测试过程说明_中国南玻集团股份有限公司.html</code>
+<code>细节测试回填_中国南玻集团股份有限公司.xlsx</code>
+</div>
+<h3>局限与建议</h3><ul>
+<li><b>材料范围有限</b>：仅合同+出库，缺发票/回款/记账凭证/明细账，无法完成收入确认完整勾稽；如需可补材料并开展双向穿行（明细账→合同）。</li>
+<li><b>合同为扫描件</b>：关键字段经 OCR（置信 0.90–0.92），建议对照原件抽查。</li>
+<li><b>出库为全期台账</b>：未按单笔 PO 收窄；精确勾稽需按来源单据号/规格/交期定位本 PO 批次。</li>
+</ul></section>
+<footer>本说明书由穿行测试工作流（20260621-36b35986）的证据库与过程留痕自动生成，供审计师复核测试方法、材料关联判断逻辑与结论。</footer>
+</div></body></html>

@@ -35,6 +35,7 @@ export type Adjustment = {
   triggered_by_rule: string | null
   status: '待审计' | '已采纳' | '已驳回' | '已手工调整'
   source: 'AI' | 'Manual'
+  sheet?: string
   reviewer?: string
   reviewed_at?: string
   reviewer_note?: string
@@ -44,9 +45,12 @@ type Props = {
   paperId: number
   paperCode: string
   paperData: any
+  /** 可选：按底稿表(sheet)隔离调整分录。传入则每张表各自一份(AI 提议按 a.sheet 过滤)；不传则整稿一份。 */
+  sheetCode?: string
+  sheetLabel?: string
 }
 
-const CURRENT_AUDITOR = '王叙超'
+const CURRENT_AUDITOR = '审计师'
 
 const STATUS_TONE: Record<Adjustment['status'], { bg: string; text: string; label: string }> = {
   '待审计':   { bg: 'bg-amber-50 border-amber-200',  text: 'text-amber-800', label: '待审计' },
@@ -55,20 +59,29 @@ const STATUS_TONE: Record<Adjustment['status'], { bg: string; text: string; labe
   '已手工调整': { bg: 'bg-sky-50 border-sky-200',    text: 'text-sky-800',   label: '已手工调整' },
 }
 
-export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData }: Props) {
+export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData, sheetCode, sheetLabel }: Props) {
   const qc = useQueryClient()
+  const perSheet = !!sheetCode
 
-  // —— AI 预提的调整分录（按 paperCode 过滤）——
+  // —— AI 预提的调整分录（freeform 底稿读 paperData.proposed_adjustments；perSheet 时按 a.sheet 过滤；否则按 paperCode 过滤 endpoint）——
   const { data: allAiAdjs = [] } = useQuery({
     queryKey: ['donglin-adjustments'],
     queryFn: () => donglinApi.listAdjustments(),
   })
-  const aiAdjs = useMemo(() => allAiAdjs.filter((a: any) =>
-    typeof a?.no === 'string' && a.no.includes(`-${paperCode}-`),
-  ), [allAiAdjs, paperCode])
+  const aiAdjs = useMemo(() => {
+    const embedded = paperData?.proposed_adjustments
+    if (Array.isArray(embedded) && embedded.length > 0) {
+      return perSheet ? embedded.filter((a: any) => a?.sheet === sheetCode) : embedded
+    }
+    return allAiAdjs.filter((a: any) =>
+      typeof a?.no === 'string' && a.no.includes(`-${paperCode}-`),
+    )
+  }, [allAiAdjs, paperCode, paperData, perSheet, sheetCode])
 
-  // —— 已保存的状态（in WorkingPaper.data.adjustments） ——
-  const savedAdjs: Adjustment[] = paperData?.adjustments || []
+  // —— 已保存的状态（perSheet → adjustments_by_sheet[sheet]；否则 WorkingPaper.data.adjustments） ——
+  const savedAdjs: Adjustment[] = perSheet
+    ? (paperData?.adjustments_by_sheet?.[sheetCode!] || [])
+    : (paperData?.adjustments || [])
 
   // —— 合并：AI 提的 + 保存的 manual + 状态覆盖 ——
   const initial = useMemo(() => {
@@ -93,7 +106,7 @@ export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData }
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState<string | null>(null)
 
-  useEffect(() => { setDraft(initial) }, [paperId, JSON.stringify(initial.map((d) => d.no))])
+  useEffect(() => { setDraft(initial); setSavedAt(null) }, [paperId, sheetCode, JSON.stringify(initial.map((d) => d.no))])
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(initial)
 
@@ -134,8 +147,9 @@ export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData }
 
   function addManual() {
     const seq = draft.filter((d) => d.source === 'Manual').length + 1
+    const sheetTag = sheetCode ? `${sheetCode}-` : ''
     setDraft((arr) => [...arr, {
-      no: `Z6-MAN-${paperCode}-${String(seq).padStart(2, '0')}`,
+      no: `Z6-MAN-${paperCode}-${sheetTag}${String(seq).padStart(2, '0')}`,
       kind: '更正',
       reason: '',
       entries: [
@@ -149,7 +163,8 @@ export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData }
       source: 'Manual',
       reviewer: CURRENT_AUDITOR,
       reviewed_at: new Date().toISOString(),
-    }])
+      ...(sheetCode ? { sheet: sheetCode } : {}),
+    } as Adjustment])
   }
 
   function removeManual(idx: number) {
@@ -159,9 +174,13 @@ export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData }
   async function save() {
     setSaving(true)
     try {
-      await api.patchObject(paperId, {
-        data: { ...(paperData || {}), adjustments: draft },
-      })
+      const nextData = perSheet
+        ? {
+            ...(paperData || {}),
+            adjustments_by_sheet: { ...(paperData?.adjustments_by_sheet || {}), [sheetCode!]: draft },
+          }
+        : { ...(paperData || {}), adjustments: draft }
+      await api.patchObject(paperId, { data: nextData })
       await qc.invalidateQueries({ queryKey: ['object', paperId] })
       setSavedAt(new Date().toLocaleTimeString('zh-CN', { hour12: false }))
     } finally {
@@ -175,7 +194,9 @@ export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData }
     <Card className="p-4">
       <div className="flex items-center gap-2 mb-3">
         <Calculator size={16} className="text-violet-600" />
-        <div className="text-sm font-semibold text-slate-900">调整分录</div>
+        <div className="text-sm font-semibold text-slate-900">
+          调整分录{sheetLabel ? <span className="text-slate-500 font-normal"> · {sheetLabel}</span> : null}
+        </div>
         <Badge tone="neutral">
           {draft.length} 条 · {acceptedCount} 已采纳
         </Badge>
@@ -231,7 +252,7 @@ export default function AdjustmentEntriesPanel({ paperId, paperCode, paperData }
                   </span>
                   {adj.reviewer && adj.status !== '待审计' && (
                     <span className="text-[10px] text-slate-500">
-                      by {adj.reviewer} · {adj.reviewed_at?.slice(0, 10)}
+                      {adj.reviewer} · {adj.reviewed_at?.slice(0, 10)}
                     </span>
                   )}
 

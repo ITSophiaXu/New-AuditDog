@@ -17,32 +17,45 @@ type Props = {
   paperId: number
   paperCode: string
   paperData: any
+  /** 可选：按底稿表(sheet)隔离审计说明。传入则每张表各自一份；不传则整稿一份(旧行为)。 */
+  sheetCode?: string
+  sheetLabel?: string
 }
 
-const CURRENT_AUDITOR = '王叙超'  // demo 写死，后续可换登录用户
+const CURRENT_AUDITOR = '审计师'  // 角色名，不写具体人名
 
-export default function AuditNotesPanel({ paperId, paperCode, paperData }: Props) {
+export default function AuditNotesPanel({ paperId, paperCode, paperData, sheetCode, sheetLabel }: Props) {
   const qc = useQueryClient()
-  const aiSuggestion: string = paperData?.audit_conclusion || ''
-  const savedNotes: string = paperData?.auditor_notes || ''
+  const perSheet = !!sheetCode
+  const aiSuggestion: string = perSheet
+    ? (paperData?.notes_suggestion_by_sheet?.[sheetCode!] || '')
+    : (paperData?.audit_conclusion || '')
+  const savedNotes: string = perSheet
+    ? (paperData?.auditor_notes_by_sheet?.[sheetCode!] || '')
+    : (paperData?.auditor_notes || '')
 
-  // 编辑态：本地 draft；切底稿/外部刷新时同步
+  // 编辑态：本地 draft；切底稿/切表/外部刷新时同步
   const [draft, setDraft] = useState<string>(savedNotes || aiSuggestion)
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState<string | null>(null)
 
   useEffect(() => {
     setDraft(savedNotes || aiSuggestion)
-  }, [paperId, savedNotes, aiSuggestion])
+    setSavedAt(null)
+  }, [paperId, sheetCode, savedNotes, aiSuggestion])
 
   const dirty = draft !== (savedNotes || aiSuggestion)
 
   async function save() {
     setSaving(true)
     try {
-      await api.patchObject(paperId, {
-        data: { ...(paperData || {}), auditor_notes: draft },
-      })
+      const nextData = perSheet
+        ? {
+            ...(paperData || {}),
+            auditor_notes_by_sheet: { ...(paperData?.auditor_notes_by_sheet || {}), [sheetCode!]: draft },
+          }
+        : { ...(paperData || {}), auditor_notes: draft }
+      await api.patchObject(paperId, { data: nextData })
       await qc.invalidateQueries({ queryKey: ['object', paperId] })
       setSavedAt(new Date().toLocaleTimeString('zh-CN', { hour12: false }))
     } finally {
@@ -60,10 +73,12 @@ export default function AuditNotesPanel({ paperId, paperCode, paperData }: Props
     <Card className="p-4">
       <div className="flex items-center gap-2 mb-3">
         <FileText size={16} className="text-brand-600" />
-        <div className="text-sm font-semibold text-slate-900">审计说明</div>
-        <div className="text-[11px] text-slate-500">
-          {paperCode} · 由 {CURRENT_AUDITOR} 编辑
+        <div className="text-sm font-semibold text-slate-900">
+          审计说明{sheetLabel ? <span className="text-slate-500 font-normal"> · {sheetLabel}</span> : null}
         </div>
+        {!perSheet && paperCode && (
+          <div className="text-[11px] text-slate-500">{paperCode}</div>
+        )}
         <div className="ml-auto flex items-center gap-2">
           {aiSuggestion && (
             <Button variant="outline" size="sm" onClick={insertAiSuggestion}>
@@ -99,7 +114,7 @@ export default function AuditNotesPanel({ paperId, paperCode, paperData }: Props
         <span>{draft.length} 字</span>
         <span>
           {savedAt ? `已保存 ${savedAt}` : (savedNotes ? '上次编辑已保存' : '未保存')}
-          {' · '}保存到 WorkingPaper.data.auditor_notes
+          {' · '}保存到 {perSheet ? `auditor_notes_by_sheet[${sheetCode}]` : 'WorkingPaper.data.auditor_notes'}
         </span>
       </div>
     </Card>

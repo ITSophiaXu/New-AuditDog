@@ -4,6 +4,7 @@ import type {
   Correction, CorrectionReasonCode, ProposeDeltaResponse, OntologyChange,
   InboxSuggestion, InferTemplateResponse, CompiledRule, RuleCompileResponse,
   AgentToolEntry,
+  ReportReview, ReportReviewSummary,
 } from './types'
 
 const API = '/api'
@@ -197,4 +198,38 @@ export const api = {
     json<{ base: AgentConfig; edits: any }>(`${API}/agents/preview-edit`, {
       method: 'POST', body: JSON.stringify(body),
     }),
+
+  // ---------- Report Review (报告复核) ----------
+  reviewChecklist: () =>
+    json<{ checklist: string }>(`${API}/report-review/checklist`),
+  listReviews: () =>
+    json<ReportReviewSummary[]>(`${API}/report-review/reviews`),
+  getReview: (id: number) =>
+    json<ReportReview>(`${API}/report-review/reviews/${id}`),
+  deleteReview: (id: number) =>
+    json<{ ok: boolean }>(`${API}/report-review/reviews/${id}`, { method: 'DELETE' }),
+  setFindingStatus: (reviewId: number, findingId: string, status: string) =>
+    json<{ ok: boolean }>(`${API}/report-review/reviews/${reviewId}/findings/${findingId}`, {
+      method: 'PATCH', body: JSON.stringify({ status }),
+    }),
+  /** 上传报告 + 复核要求 → 执行复核（multipart） */
+  runReview: async (params: {
+    files: File[]
+    instruction?: string
+    instructionFile?: File | null
+    title?: string
+  }): Promise<ReportReview> => {
+    const fd = new FormData()
+    params.files.forEach((f) => fd.append('files', f))
+    fd.append('instruction', params.instruction ?? '')
+    fd.append('title', params.title ?? '')
+    if (params.instructionFile) fd.append('instruction_file', params.instructionFile)
+    const r = await fetch(`${API}/report-review/run`, { method: 'POST', body: fd })
+    if (!r.ok) {
+      let detail = await r.text()
+      try { detail = JSON.parse(detail).detail || detail } catch {}
+      throw new Error(`${r.status} ${detail}`)
+    }
+    return r.json() as Promise<ReportReview>
+  },
 }

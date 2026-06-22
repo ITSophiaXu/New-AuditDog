@@ -312,3 +312,104 @@ export interface AgentToolEntry {
   description: string
   raw_name: string
 }
+
+// ---------- Report Review (报告复核) ----------
+
+export type ReviewSeverity = 'high' | 'medium' | 'low' | 'info'
+export type FindingStatus = 'open' | 'resolved' | 'dismissed'
+
+export interface SourceRef {
+  file_id: string
+  anchor: string
+  quote: string
+}
+
+export interface ReviewFinding {
+  id: string
+  severity: ReviewSeverity
+  category: string
+  title: string
+  detail: string
+  source_refs: SourceRef[]
+  status?: FindingStatus
+}
+
+export interface ReviewProcedure {
+  code: string
+  name: string
+  category: string
+  description: string
+  outputs: string[]
+}
+
+export interface FindingGroup {
+  category: string
+  label: string
+  description: string
+  count: number
+  high_count: number
+  medium_count: number
+  low_count: number
+  info_count: number
+  finding_ids: string[]
+}
+
+export interface ReviewArtifact {
+  label: string
+  href: string
+  kind: string
+}
+
+export interface ReportBlock {
+  anchor: string
+  kind: 'paragraph' | 'heading' | 'table' | 'sheet_row' | 'line'
+  text: string
+  meta?: Record<string, any>
+}
+
+export interface ReportDoc {
+  file_id: string
+  filename: string
+  kind: 'word' | 'excel' | 'markdown' | 'unknown'
+  note?: string
+  blocks: ReportBlock[]
+}
+
+export interface ReportFileMeta {
+  file_id: string
+  filename: string
+  kind: string
+  block_count: number
+  note?: string
+}
+
+/** 完整复核结果（GET /reviews/{id} 或 POST /run 返回） */
+export interface ReportReview {
+  id: number
+  title: string
+  created_at: string
+  demo: boolean
+  case_study?: boolean
+  checklist: string
+  summary: string
+  findings: ReviewFinding[]
+  review_procedures?: ReviewProcedure[]
+  finding_groups?: FindingGroup[]
+  artifacts?: ReviewArtifact[]
+  limitations?: string[]
+  quality_note?: string
+  files: ReportDoc[]
+  file_meta: ReportFileMeta[]
+}
+
+/** 列表项（GET /reviews 返回） */
+export interface ReportReviewSummary {
+  id: number
+  title: string
+  created_at: string
+  demo: boolean
+  summary: string
+  file_count: number
+  finding_count: number
+  high_count: number
+}

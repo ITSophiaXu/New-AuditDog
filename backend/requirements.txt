@@ -7,3 +7,5 @@ pydantic>=2.9
 python-multipart>=0.0.20
 # 东林样式底稿填写所需（读取客户 TB / Aux / Voucher xlsx）
 openpyxl>=3.1
+# 报告复核所需（读取上传的 Word 审计报告 / 附注 .docx）
+python-docx>=1.1

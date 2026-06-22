@@ -18,9 +18,14 @@ import { cn } from '@/lib/utils'
 import { DonglinPaperView } from '@/components/donglin/DonglinPaperView'
 import WorkbenchProgressBar from '@/components/donglin/WorkbenchProgressBar'
 import WorkbenchKnowledgePanel from '@/components/donglin/WorkbenchKnowledgePanel'
-import { isDonglinFilledDemo, isDonglinPaper } from '@/lib/donglin'
+import { isDonglinFilledDemo, isDonglinPaper, isFreeformPaper, isWalkthroughPaper } from '@/lib/donglin'
 import type { DonglinPaperCode } from '@/lib/donglin'
 import PlanningPaperView from '@/components/donglin/PlanningPaperView'
+import FreeformPaperView from '@/components/donglin/FreeformPaperView'
+import FreeformTaskPanel from '@/components/donglin/FreeformTaskPanel'
+import WalkthroughPaperView from '@/components/donglin/WalkthroughPaperView'
+import WalkthroughTaskPanel from '@/components/donglin/WalkthroughTaskPanel'
+import WalkthroughChatPanel from '@/components/donglin/WalkthroughChatPanel'
 import { type QuoteRef } from '@/components/agent/ChatPanel'
 
 
@@ -29,7 +34,10 @@ type WBCat = { code: string; label: string; letters: string[] }
 type WBStage = { code: string; label: string; name: string; cats: WBCat[] }
 const STAGE_TREE: WBStage[] = [
   { code: 'planning', label: '📋 计划', name: '计划',
-    cats: [{ code: 'X', label: '业务计划', letters: ['X'] }] },
+    cats: [
+      { code: 'X', label: '业务计划', letters: ['X'] },
+      { code: 'WT', label: '了解内控 · 穿行测试', letters: ['__WT__'] },
+    ] },
   { code: 'risk', label: '🎯 风险评估', name: '风险评估',
     cats: [{ code: 'Y', label: '风险评估', letters: ['Y'] }] },
   { code: 'execution', label: '⚙ 执行', name: '执行',
@@ -175,6 +183,10 @@ export default function WorkingPaperWorkbench() {
       for (const c of s.cats) out[s.code][c.code] = []
     }
     for (const p of currentProjectPapers) {
+      // 穿行测试底稿归入「计划 · 了解内控 / 穿行测试」，不进「其他」
+      if ((p.data as any)?.layout === 'walkthrough') {
+        out['planning']['WT'].push(p); continue
+      }
       const letter = getLetter(p)
       let placed = false
       for (const s of STAGE_TREE) {
@@ -218,6 +230,18 @@ export default function WorkingPaperWorkbench() {
   const [openStages, setOpenStages] = useState<Set<string>>(() => new Set(['execution']))
   const [openCats, setOpenCats] = useState<Set<string>>(new Set())
   const [openMains, setOpenMains] = useState<Set<number>>(new Set())
+  // 自动展开当前选中底稿所在的阶段（如穿行测试在「计划」阶段）
+  useEffect(() => {
+    if (!activeId) return
+    for (const s of STAGE_TREE) {
+      for (const c of s.cats) {
+        if ((papersByStageCat[s.code]?.[c.code] || []).some((p) => p.id === activeId)) {
+          setOpenStages((prev) => (prev.has(s.code) ? prev : new Set(prev).add(s.code)))
+          return
+        }
+      }
+    }
+  }, [activeId, papersByStageCat])
   const [openBanmuPhases, setOpenBanmuPhases] = useState<Set<string>>(() => new Set(['phase-1']))
   const toggleBanmuPhase = (id: string) => setOpenBanmuPhases(p => {
     const next = new Set(p); if (next.has(id)) next.delete(id); else next.add(id); return next
@@ -337,11 +361,15 @@ export default function WorkingPaperWorkbench() {
   const activeDonglinCode = isActiveDonglin
     ? ((paper!.data as any)?.index as DonglinPaperCode)
     : null
+  // 自由底稿 (freeform, 不套母版) — 独立渲染分支
+  const isFreeform = !!paper && isFreeformPaper(paper.data as any)
+  // 穿行测试 (walkthrough) — 独立渲染分支
+  const isWalkthrough = !!paper && isWalkthroughPaper(paper.data as any)
   const isActiveDonglinPaper = !!paper && isDonglinPaper(paper.data as any)
   // 有 sheet_data 但不是 5 张 demo → 计划底稿通用视图
   const hasSheetData = !!paper && Object.keys((paper?.data as any)?.sheet_data || {}).length > 0
-  const isPlanningPaper = isActiveDonglinPaper && !isActiveDonglin && hasSheetData
-  const isActiveDonglinEmpty = isActiveDonglinPaper && !isActiveDonglin && !isPlanningPaper
+  const isPlanningPaper = isActiveDonglinPaper && !isActiveDonglin && hasSheetData && !isFreeform
+  const isActiveDonglinEmpty = isActiveDonglinPaper && !isActiveDonglin && !isPlanningPaper && !isFreeform
   const isBanmuPaper = !!paper && (paper.data as any)?.engagement_code === 'ENG-BANMU-2024'
   const isJsdwPlanningPaper = !!paper && (paper.data as any)?.engagement_code === 'ENG-JSDW-2025'
     && ['Y1','Y2','Y3','Y4','Y5','Y8','X1','X4'].includes((paper.data as any)?.index)
@@ -900,6 +928,16 @@ export default function WorkingPaperWorkbench() {
                 />
               )}
 
+              {/* 自由底稿 (freeform, 不套母版) → FreeformPaperView */}
+              {isFreeform && paper && (
+                <FreeformPaperView paperData={paper.data} paperId={paper.id} />
+              )}
+
+              {/* 穿行测试 (walkthrough) → WalkthroughPaperView */}
+              {isWalkthrough && paper && (
+                <WalkthroughPaperView paperData={paper.data} />
+              )}
+
               {/* 计划阶段底稿 (Y/X 系列, sheet_data 已填) → 通用视图 */}
               {isPlanningPaper && paper && (
                 <PlanningPaperView
@@ -1017,7 +1055,11 @@ export default function WorkingPaperWorkbench() {
           {/* Tab content */}
           <div className={cn('flex-1 min-h-0 overflow-hidden', rightCollapsed && 'hidden')}>
             {rightTab === 'rules' && (
-              isBanmuPaper ? (
+              isFreeform && paper ? (
+                <FreeformTaskPanel paperData={paper.data} className="h-full" />
+              ) : isWalkthrough && paper ? (
+                <WalkthroughTaskPanel paperData={paper.data} className="h-full" />
+              ) : isBanmuPaper ? (
                 <BanmuTaskPanel
                   paperIndex={paper ? (paper.data as any)?.index : undefined}
                   paperId={paper?.id}
@@ -1039,18 +1081,22 @@ export default function WorkingPaperWorkbench() {
               )
             )}
             {rightTab === 'audit' && (
-              <AuditConfirmPanel
-                paperId={paper?.id}
-                paperIndex={paper ? ((paper.data as any)?.index as string) : undefined}
-                currentProjectPapers={currentProjectPapers}
-                activeId={activeId}
-                engagementCode={activeEngCode}
-                externalQuote={pendingChatQuote}
-                onExternalQuoteConsumed={() => setPendingChatQuote(undefined)}
-                onNavigate={(id) => nav(`/workbench/${id}`)}
-                onAfterRun={() => qc.invalidateQueries()}
-                className="h-full"
-              />
+              isWalkthrough && paper ? (
+                <WalkthroughChatPanel paperData={paper.data} className="h-full" />
+              ) : (
+                <AuditConfirmPanel
+                  paperId={paper?.id}
+                  paperIndex={paper ? ((paper.data as any)?.index as string) : undefined}
+                  currentProjectPapers={currentProjectPapers}
+                  activeId={activeId}
+                  engagementCode={activeEngCode}
+                  externalQuote={pendingChatQuote}
+                  onExternalQuoteConsumed={() => setPendingChatQuote(undefined)}
+                  onNavigate={(id) => nav(`/workbench/${id}`)}
+                  onAfterRun={() => qc.invalidateQueries()}
+                  className="h-full"
+                />
+              )
             )}
           </div>
         </div>

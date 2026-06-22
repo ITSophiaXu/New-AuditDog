@@ -16,6 +16,7 @@ import LearningInbox from '@/pages/LearningInbox'
 import TemplateUpload from '@/pages/TemplateUpload'
 import RuleAuthoring from '@/pages/RuleAuthoring'
 import ProjectArchive from '@/pages/ProjectArchive'
+import ReportReview from '@/pages/ReportReview'
 
 export default function App() {
   return (
@@ -41,6 +42,8 @@ export default function App() {
         <Route path="templates/upload" element={<TemplateUpload />} />
         <Route path="rules/new" element={<RuleAuthoring />} />
         <Route path="archive" element={<ProjectArchive />} />
+        <Route path="report-review" element={<ReportReview />} />
+        <Route path="report-review/:reviewId" element={<ReportReview />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

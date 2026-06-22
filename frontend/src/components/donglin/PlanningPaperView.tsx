@@ -84,7 +84,7 @@ const FIELD_LABELS: Record<string, string> = {
   bad_debt_provision: '坏账准备', net_balance: '净额（扣坏账）',
   key_risk: '主要风险', related_party_conclusion: '关联方结论', tianshu_assessment: '成都天枢评估',
   // A9 其他应收款
-  key_items: '主要项目', payee: '对方', nature: '性质', amount: '金额',
+  key_items: '主要项目', payee: '对方', nature: '性质', other_receivable_amount: '金额',
   aging_months: '账龄（月）', has_agreement: '是否有协议', repayment_plan: '还款计划',
   compliance_note: '合规提示', compliance_result: '合规结论',
   related_party_amt: '关联方金额', key_concern: '关注点',
@@ -131,7 +131,7 @@ const FIELD_LABELS: Record<string, string> = {
   // 通用
   procedure: '审计程序', status: '状态', responsible: '责任方',
   account_no: '账号', confirmed: '已确认',
-  risk_assessment: '风险评估', conclusion_text: '结论说明',
+  common_risk_assessment: '风险评估', common_conclusion_text: '结论说明',
 }
 
 function L(key: string): string {

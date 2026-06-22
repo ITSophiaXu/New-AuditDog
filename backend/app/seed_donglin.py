@@ -263,6 +263,56 @@ def seed_donglin(skip_if_exists: bool = True) -> dict[str, int]:
                 s.add(wp)
         s.commit()
 
+        # ---- 7b. 自由底稿 A1F (freeform · 不套母版，Agent 按审计程序自拟结构) ----
+        ff_path = DEMO_DIR / "filled_A1F_freeform.json"
+        if ff_path.exists():
+            ff = json.loads(ff_path.read_text(encoding="utf-8"))
+            ff_idx = ff["data"]["index"]
+            ff_exists = next((o for o in s.exec(select(ObjectInstance).where(
+                ObjectInstance.type_code == "WorkingPaper"))
+                if (o.data or {}).get("index") == ff_idx), None)
+            if not ff_exists:
+                s.add(ObjectInstance(
+                    type_code="WorkingPaper",
+                    display_name=ff.get("display_name", "A1 货币资金 · 自由底稿"),
+                    data=ff["data"],
+                ))
+                stats["ObjectInstance"] += 1
+            s.commit()
+
+        # ---- 7c. 中国南玻集团 销售循环穿行测试 (新项目 + walkthrough 底稿) ----
+        wt_path = DEMO_DIR / "filled_CSG_walkthrough.json"
+        if wt_path.exists():
+            wt = json.loads(wt_path.read_text(encoding="utf-8"))
+            eng = wt["engagement"]
+            paper = wt["paper"]
+            eng_code = eng["data"]["code"]
+            # Engagement（按 code 幂等）
+            eng_exists = next((o for o in s.exec(select(ObjectInstance).where(
+                ObjectInstance.type_code == "Engagement"))
+                if (o.data or {}).get("code") == eng_code), None)
+            if not eng_exists:
+                s.add(ObjectInstance(
+                    type_code="Engagement",
+                    display_name=eng.get("display_name", eng_code),
+                    data=eng["data"],
+                ))
+                stats["ObjectInstance"] += 1
+            # WorkingPaper（按 index + engagement_code 幂等）
+            wt_idx = paper["data"]["index"]
+            wt_exists = next((o for o in s.exec(select(ObjectInstance).where(
+                ObjectInstance.type_code == "WorkingPaper"))
+                if (o.data or {}).get("index") == wt_idx
+                and (o.data or {}).get("engagement_code") == eng_code), None)
+            if not wt_exists:
+                s.add(ObjectInstance(
+                    type_code="WorkingPaper",
+                    display_name=paper.get("display_name", "HA7 主营业务收入穿行测试"),
+                    data=paper["data"],
+                ))
+                stats["ObjectInstance"] += 1
+            s.commit()
+
     # ---- 8. Anomaly 实例（Agent 实际发现的异常） ----
     try:
         from .donglin.seed_anomalies import seed_donglin_anomalies

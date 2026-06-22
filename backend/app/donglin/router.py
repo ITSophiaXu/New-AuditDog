@@ -14,6 +14,7 @@ from datetime import datetime
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import FileResponse
 from sqlmodel import Session, select
 
 from ..db import get_session
@@ -38,6 +39,32 @@ def _load(name: str):
     if not p.exists():
         return None
     return json.loads(p.read_text(encoding="utf-8"))
+
+
+@router.get("/freeform-xlsx")
+def freeform_xlsx():
+    """下载 Agent 自由生成的 A1 货币资金底稿 (.xlsx, 不套母版)。"""
+    p = DEMO_DIR / "A1_freeform.xlsx"
+    if not p.exists():
+        raise HTTPException(404, "freeform xlsx not found")
+    return FileResponse(
+        p,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename="货币资金A1_自由底稿_江苏大王2025.xlsx",
+    )
+
+
+@router.get("/walkthrough-xlsx")
+def walkthrough_xlsx():
+    """下载中国南玻集团销售循环穿行测试 · Agent 细节测试回填底稿 (.xlsx)。"""
+    p = DEMO_DIR / "CSG_walkthrough_filled.xlsx"
+    if not p.exists():
+        raise HTTPException(404, "walkthrough xlsx not found")
+    return FileResponse(
+        p,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename="细节测试回填_中国南玻集团股份有限公司.xlsx",
+    )
 
 
 @router.get("/papers")

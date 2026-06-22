@@ -21,6 +21,7 @@ from .rules.router import router as rules_router
 from .donglin.router import router as donglin_router
 from .banmu.router import router as banmu_router
 from .archive_router import router as archive_router
+from .report_review.router import router as report_review_router
 
 app = FastAPI(title="Audit Ontology Prototype", version="0.1.0")
 
@@ -64,6 +65,7 @@ app.include_router(rules_router, prefix="/api", tags=["rules"])
 app.include_router(donglin_router)  # 东林样式底稿填写 (prefix 已含 /api/donglin)
 app.include_router(banmu_router)    # 斑目项目底稿预填 (prefix 已含 /api/banmu)
 app.include_router(archive_router)  # 项目档案 (prefix 已含 /api/archive)
+app.include_router(report_review_router)  # 报告复核 (prefix 已含 /api/report-review)
 
 # 静态资源：东林 demo HTML
 from pathlib import Path as _Path
@@ -71,6 +73,14 @@ from fastapi.staticfiles import StaticFiles as _SF
 _DONGLIN_DATA = _Path(__file__).resolve().parent.parent / "data" / "donglin"
 if _DONGLIN_DATA.exists():
     app.mount("/donglin-static", _SF(directory=str(_DONGLIN_DATA)), name="donglin_static")
+
+_AUDIT_REVIEW_ARTIFACTS = _Path(os.environ.get("AUDIT_REVIEW_ARTIFACTS", "/Users/maxy/audit_review_work"))
+if _AUDIT_REVIEW_ARTIFACTS.exists():
+    app.mount(
+        "/audit-review-artifacts",
+        _SF(directory=str(_AUDIT_REVIEW_ARTIFACTS)),
+        name="audit_review_artifacts",
+    )
 
 
 @app.get("/donglin")

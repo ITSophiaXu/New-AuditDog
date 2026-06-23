@@ -6,8 +6,8 @@ import {
   AlertTriangle, AlertCircle, Info, CircleCheck, Trash2, ListChecks,
   RotateCcw, Link2, Loader2, Download, Layers3,
   FolderOpen, ChevronDown, FileDigit,
-  Brain, Terminal, Building2, MessageSquare, Gauge, ShieldCheck,
-  CheckCircle2, Clock, FileDown, Pause,
+  Brain, Terminal, Building2, MessageSquare,
+  Clock, FileDown, Pause,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { Card } from '@/components/ui/Card'
@@ -376,47 +376,6 @@ export default function ReportReview() {
             </div>
           </div>
 
-          {/* 复核要求 */}
-          <div>
-            <div className="text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
-              <ListChecks size={13} /> 复核要求
-              <span className="text-slate-400 font-normal">（默认已预填，可修改）</span>
-            </div>
-            <Textarea
-              value={instruction}
-              onChange={(e) => setInstruction(e.target.value)}
-              rows={7}
-              className="text-[11px] leading-relaxed font-mono resize-y"
-              placeholder="输入复核要求，或上传 .md 文档…"
-            />
-            <div className="mt-1.5 flex items-center gap-2">
-              <input
-                ref={instrInputRef}
-                type="file"
-                accept=".md,.markdown,.txt,.docx"
-                className="hidden"
-                onChange={(e) => setInstructionFile(e.target.files?.[0] ?? null)}
-              />
-              <Button variant="outline" size="sm" onClick={() => instrInputRef.current?.click()}>
-                <Upload size={12} /> 上传要求文档
-              </Button>
-              {instructionFile && (
-                <span className="flex items-center gap-1 text-[11px] text-slate-500 truncate">
-                  <FileType2 size={12} /> {instructionFile.name}
-                  <button onClick={() => setInstructionFile(null)} className="text-slate-400 hover:text-rose-500">
-                    <X size={12} />
-                  </button>
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] text-slate-600 leading-relaxed">
-            <div className="font-medium text-slate-700 mb-1">复核信息如何确定？</div>
-            <p>公司名称、报告期间、企业类型通常从审计报告正文、财务报表封面和附注自动识别。</p>
-            <p className="mt-1">这些信息会影响报告文本一致性和披露适用性；如文件中缺失或识别失败，后续再由审计师补充确认即可，不必作为上传前必填项。</p>
-          </div>
-
           {/* 执行 */}
           <Button
             variant="primary"
@@ -540,14 +499,11 @@ export default function ReportReview() {
               <EmptyState hasFiles={files.length > 0} running={true} />
             </div>
           ) : (isCaseDemo && docView) ? (
-            <>
-              <ReviewConclusion review={CASE_REVIEW} verdict={PENGSHENG_VERDICT} />
-              <iframe
-                src={PENGSHENG_OPINION_URL}
-                title="审计报告复核意见书"
-                className="w-full flex-1 border-0 bg-white"
-              />
-            </>
+            <iframe
+              src={PENGSHENG_OPINION_URL}
+              title="审计报告复核意见书"
+              className="w-full flex-1 border-0 bg-white"
+            />
           ) : (
             <div className="flex-1 min-h-0 overflow-y-auto">
               <ResultPanel
@@ -674,50 +630,6 @@ function ActivityStream({ subject, events, elapsed, paused, onTogglePause }: {
       {/* 脚注 */}
       <div className="shrink-0 px-7 py-1.5 border-t border-slate-100 bg-white text-[11px] text-slate-400">
         ▏自动滚动 · 可暂停 · 每个工具调用可下钻查看入参 / 返回
-      </div>
-    </div>
-  )
-}
-
-// ── ④ 复核结论卡片（结果页顶部）──────────────────────────────
-function ReviewConclusion({ review, verdict }: { review: TReportReview; verdict: ReviewVerdict }) {
-  const [open, setOpen] = useState(false)
-  const c = { high: 0, medium: 0, low: 0, info: 0 } as Record<ReviewSeverity, number>
-  ;(review.findings || []).forEach((f) => { c[f.severity] = (c[f.severity] || 0) + 1 })
-  const levelStyle: Record<ReviewVerdict['level'], { ring: string; text: string; bg: string }> = {
-    pass:  { ring: 'border-l-emerald-400', text: 'text-emerald-700', bg: 'bg-emerald-50/60' },
-    minor: { ring: 'border-l-amber-400',   text: 'text-amber-700',   bg: 'bg-amber-50/60' },
-    major: { ring: 'border-l-orange-500',  text: 'text-orange-700',  bg: 'bg-orange-50/60' },
-    fail:  { ring: 'border-l-rose-500',    text: 'text-rose-700',    bg: 'bg-rose-50/60' },
-  }
-  const ls = levelStyle[verdict.level]
-  return (
-    <div className={cn('shrink-0 border-b border-slate-200 px-7 py-3', ls.bg)}>
-      <div className={cn('rounded-lg border border-slate-200 bg-white border-l-[5px] px-3.5 py-2.5', ls.ring)}>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Gauge size={15} className={ls.text} />
-          <span className={cn('text-[13px] font-semibold', ls.text)}>{verdict.levelLabel}</span>
-          <div className="flex items-center gap-1 ml-auto">
-            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-white bg-rose-600">高 {c.high}</span>
-            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-white bg-amber-600">中 {c.medium}</span>
-            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-white bg-sky-600">低 {c.low}</span>
-            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 inline-flex items-center gap-1"><CheckCircle2 size={11} /> 勾稽 31 项 0.01 元内</span>
-          </div>
-        </div>
-        <p className="mt-1.5 text-[12px] text-slate-600 leading-relaxed">{verdict.headline}</p>
-        <button onClick={() => setOpen((v) => !v)} className="mt-1 inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-800">
-          <ShieldCheck size={12} className="text-emerald-600" /> 复核中确认可靠 {verdict.reliable.length} 项
-          <ChevronDown size={12} className={cn('transition-transform', open && 'rotate-180')} />
-        </button>
-        {open && (
-          <ul className="mt-1.5 space-y-1">
-            {verdict.reliable.map((r, i) => (
-              <li key={i} className="flex items-start gap-1.5 text-[11.5px] text-slate-600">
-                <CheckCircle2 size={12} className="text-emerald-500 shrink-0 mt-0.5" /> {r}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
   )

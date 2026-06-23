@@ -167,8 +167,8 @@ function MethodsView({ dataSources, methods, formulas }: { dataSources: any[]; m
                   {m.result && <Badge tone="neutral" className="!h-5 ml-auto">{m.result}</Badge>}
                 </div>
                 <div className="mt-1.5 grid gap-1 text-[12px]">
-                  <KV k="📥 读取材料" v={m.materials} />
-                  <KV k="🔍 信息·方法" v={m.method} />
+                  {m.materials && <KV k="📥 读取材料" v={m.materials} />}
+                  {m.method && <KV k="🔍 信息·方法" v={m.method} />}
                   {m.conclusion && <KV k="⚠ 关键结论" v={m.conclusion} accent />}
                 </div>
               </div>

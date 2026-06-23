@@ -6,6 +6,8 @@ import {
   AlertTriangle, AlertCircle, Info, CircleCheck, Trash2, ListChecks,
   RotateCcw, Link2, Loader2, Download, Layers3,
   FolderOpen, ChevronDown, FileDigit,
+  Brain, Terminal, Building2, MessageSquare, Gauge, ShieldCheck,
+  CheckCircle2, Clock, FileDown, Pause,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { Card } from '@/components/ui/Card'
@@ -42,6 +44,45 @@ function kindLabel(kind: string) {
   return { word: 'Word', excel: 'Excel', markdown: '文本', unknown: '未知' }[kind] || kind
 }
 
+// ── 复核维度（10 个角度，来自代理 AGENTS.md）──────────────────
+const REVIEW_DIMENSIONS = [
+  '数据真值提取', '表内勾稽', '表间勾稽', '表与附注勾稽', '正文↔报表↔附注一致',
+  '滚动与重分类', '合并范围(企查查)', '披露合规', '资质核验(企查查)', '业务与三大表联动',
+]
+
+// ── 运行中 · 实时活动流：模拟 SSE 事件序列（复核案例 丙/丁公司）──
+type StreamKind = 'asst' | 'tool' | 'think' | 'qcc'
+interface StreamEvent { kind: StreamKind; label: string; text: string }
+const STREAM_META: Record<StreamKind, { icon: any; tag: string; ring: string; chip: string; iconColor: string }> = {
+  asst:  { icon: MessageSquare, tag: '回复',    ring: 'border-l-brand-400',   chip: 'bg-brand-50 text-brand-700',     iconColor: 'text-brand-500' },
+  tool:  { icon: Terminal,      tag: '工具',    ring: 'border-l-slate-400',   chip: 'bg-slate-100 text-slate-700',    iconColor: 'text-slate-500' },
+  think: { icon: Brain,         tag: '思考',    ring: 'border-l-violet-400',  chip: 'bg-violet-50 text-violet-700',   iconColor: 'text-violet-500' },
+  qcc:   { icon: Building2,     tag: '企查查',  ring: 'border-l-emerald-400', chip: 'bg-emerald-50 text-emerald-700', iconColor: 'text-emerald-600' },
+}
+const CASE_STREAM: StreamEvent[] = [
+  { kind: 'asst',  label: '回复',         text: '已归集 4 套报告 + 6 套 TB + 1 份已签章定稿 PDF，按「年度 × 公司 × 单体/合并」配对完成，开始五方交叉核对。' },
+  { kind: 'tool',  label: '工具 bash',    text: 'extract.py · 用 xlrd / openpyxl / python-docx / pdfplumber 独立重提取报表·附注·TB 共 165 表（不照抄上一轮结论）' },
+  { kind: 'think', label: '思考',         text: '合并资产负债表自检行 −9,709.30 / −10,000.00：资产 ≠ 负债 + 所有者权益，疑漏列「少数股东权益」整行…' },
+  { kind: 'tool',  label: '工具 bash',    text: 'tie_check.py · 31 项表内 / 表间 / 表与附注 / 滚动逐项重算，容差 0.01 元、尾差即判不通过' },
+  { kind: 'think', label: '思考',         text: '比对合并 TB（自平）→ 根因为报告誊抄漏列少数股东权益，非调整分录错误，定性为可整改的列报错误。' },
+  { kind: 'qcc',   label: '企查查',       text: 'get_shareholder_info · 丁公司真实股东 = 丙公司 99% + 郭利梅 1%' },
+  { kind: 'qcc',   label: '企查查',       text: 'get_external_investments · 丙公司持丁公司 99%，实控人王颖夫 → 合并范围方向成立' },
+  { kind: 'think', label: '思考',         text: '实收资本附注控股股东「华高立格…」经企查查多名称变体检索均无精确匹配 → 高风险股东披露错配。' },
+  { kind: 'qcc',   label: '企查查',       text: 'get_company_registration_info · 出具所乙会计师事务所存续在营 · 含「注册会计师业务」· 35 项风险因子全零' },
+  { kind: 'think', label: '思考',         text: '定稿 PDF 第 5 页两处「中国注册会计师:」签名栏空白、无事务所公章 → 高风险出具要件缺失。' },
+  { kind: 'tool',  label: '工具 bash',    text: 'render_pdf.py · 扫描件渲染识读 IMG_signed_p5.png（pymupdf）' },
+  { kind: 'think', label: '思考',         text: '所有者权益变动表表头错标「2017 年度」、本年年初未结转 → 期末 ≠ 资产负债表。' },
+  { kind: 'asst',  label: '回复',         text: '已形成 18 项问题（高 5 / 中 6 / 低 7），勾稽 31 项均 0.01 元内核验。总体判定：重大缺陷 · 整改后需重新复核（4 档第 3 档）。' },
+]
+const STREAM_STEP_MS = 620
+const STREAM_START_MS = 450
+
+// 当前已播放事件数 → 维度执行进度（0..10），近似把活动流映射到 10 维度
+function dimsCompletedFor(playedEvents: number): number {
+  if (playedEvents <= 0) return 0
+  return Math.min(REVIEW_DIMENSIONS.length, Math.round((playedEvents / CASE_STREAM.length) * REVIEW_DIMENSIONS.length))
+}
+
 // 默认展示的真实复核案例：复核案例（丙公司 / 丁公司，2024 & 2025，单体+合并）
 const CASE_REVIEW: TReportReview = PENGSHENG_REVIEW
 
@@ -65,7 +106,47 @@ export default function ReportReview() {
   const [folderPath, setFolderPath] = useState(PENGSHENG_FOLDER)
   const [scanned, setScanned] = useState(true) // 演示：默认已识别复核案例文件夹
   const [showUpload, setShowUpload] = useState(false) // 折叠的"或上传文件"入口
-  const [demoRunning, setDemoRunning] = useState(false) // 文件夹模式的复核中动画
+
+  // —— 运行流程：新建(idle) → 运行中·实时活动流(running) → 复核结果(done) ——
+  const [runPhase, setRunPhase] = useState<'idle' | 'running' | 'done'>('idle')
+  const [streamEvents, setStreamEvents] = useState<StreamEvent[]>([])
+  const [streamElapsed, setStreamElapsed] = useState(0)
+  const [streamPaused, setStreamPaused] = useState(false)
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const demoRunning = runPhase === 'running' // 兼容旧引用
+
+  // —— 复核维度勾选（②新建：来自代理 AGENTS.md，默认全选）——
+  const [selectedDims, setSelectedDims] = useState<boolean[]>(() => REVIEW_DIMENSIONS.map(() => true))
+  const [reviewSubject, setReviewSubject] = useState('丙公司 / 丁公司（咨询·母子公司）')
+  function toggleDim(i: number) {
+    setSelectedDims((prev) => prev.map((v, idx) => (idx === i ? !v : v)))
+  }
+
+  useEffect(() => () => {
+    timersRef.current.forEach(clearTimeout)
+    if (intervalRef.current) clearInterval(intervalRef.current)
+  }, [])
+
+  // 启动「运行中·实时活动流」演示：逐条推送事件，结束后切到结果页
+  function startCaseReview() {
+    timersRef.current.forEach(clearTimeout)
+    timersRef.current = []
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    setActiveId(null); nav('/report-review'); setSelectedFinding(null); setDocView(true)
+    setStreamEvents([]); setStreamElapsed(0); setStreamPaused(false)
+    setRunPhase('running')
+    const t0 = Date.now()
+    const tick = setInterval(() => setStreamElapsed(Math.floor((Date.now() - t0) / 1000)), 250)
+    intervalRef.current = tick
+    CASE_STREAM.forEach((ev, i) => {
+      const id = setTimeout(() => setStreamEvents((prev) => [...prev, ev]), STREAM_START_MS + i * STREAM_STEP_MS)
+      timersRef.current.push(id)
+    })
+    const totalMs = STREAM_START_MS + CASE_STREAM.length * STREAM_STEP_MS + 800
+    const done = setTimeout(() => { clearInterval(tick); intervalRef.current = null; setRunPhase('done') }, totalMs)
+    timersRef.current.push(done)
+  }
 
   // —— 选中的复核 / 定位状态 ——
   const [activeId, setActiveId] = useState<number | null>(reviewId ? Number(reviewId) : null)
@@ -251,6 +332,50 @@ export default function ReportReview() {
             )}
           </div>
 
+          {/* 元信息（②新建：主体 / 年度 / 口径） */}
+          <div>
+            <div className="text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+              <Layers3 size={13} /> 元信息
+              <span className="text-slate-400 font-normal">（从报告/封面自动识别，可改）</span>
+            </div>
+            <div className="space-y-1.5 text-[11px]">
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400 w-14 shrink-0">主体</span>
+                <Input value={reviewSubject} onChange={(e) => setReviewSubject(e.target.value)} className="text-[11px]" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400 w-14 shrink-0">年度/口径</span>
+                <Badge tone="neutral" className="!h-5">2024 & 2025</Badge>
+                <Badge tone="neutral" className="!h-5">单体 + 合并</Badge>
+              </div>
+            </div>
+          </div>
+
+          {/* 复核维度（②新建：10 个角度，可勾选） */}
+          <div>
+            <div className="text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+              <ListChecks size={13} /> 复核维度
+              <span className="text-slate-400 font-normal">（代理 AGENTS.md · {selectedDims.filter(Boolean).length}/{REVIEW_DIMENSIONS.length}）</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1">
+              {REVIEW_DIMENSIONS.map((d, i) => (
+                <button
+                  key={i}
+                  onClick={() => toggleDim(i)}
+                  className={cn(
+                    'flex items-center gap-1.5 px-2 py-1 rounded-md border text-[10.5px] text-left transition-colors',
+                    selectedDims[i] ? 'border-brand-200 bg-brand-50/60 text-slate-700' : 'border-slate-200 bg-white text-slate-400',
+                  )}
+                >
+                  <span className={cn('h-3.5 w-3.5 rounded grid place-items-center shrink-0 text-[9px] text-white', selectedDims[i] ? 'bg-brand-500' : 'bg-slate-200')}>
+                    {selectedDims[i] ? '✓' : ''}
+                  </span>
+                  <span className="truncate">{i + 1} {d}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* 复核要求 */}
           <div>
             <div className="text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
@@ -299,12 +424,8 @@ export default function ReportReview() {
             disabled={(files.length === 0 && !(scanned && folderPath.trim())) || run.isPending || demoRunning}
             onClick={() => {
               if (files.length > 0) { run.mutate(); return }
-              // 文件夹模式：演示展示复核案例复核结果
-              setDemoRunning(true)
-              setActiveId(null)
-              nav('/report-review')
-              setSelectedFinding(null)
-              setTimeout(() => setDemoRunning(false), 1100)
+              // 文件夹模式：演示「运行中·实时活动流」→ 复核结果
+              startCaseReview()
             }}
           >
             {(run.isPending || demoRunning)
@@ -362,7 +483,7 @@ export default function ReportReview() {
 
       {/* ───────── 中栏：复核结果 ───────── */}
       <section className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        {!(run.isPending || demoRunning) && isCaseDemo && (
+        {runPhase !== 'running' && !run.isPending && isCaseDemo && (
           <div className="shrink-0 flex items-center gap-2 px-7 py-2 border-b border-slate-200 bg-white">
             <span className="text-[12px] text-slate-500">展示方式</span>
             <div className="flex rounded-md border border-slate-200 overflow-hidden text-[12px] font-medium">
@@ -379,33 +500,64 @@ export default function ReportReview() {
                 结构化视图
               </button>
             </div>
-            <a
-              href={PENGSHENG_OPINION_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="ml-auto inline-flex items-center gap-1 text-[12px] text-brand-600 hover:underline"
-            >
-              <Download size={12} /> 新窗口打开
-            </a>
+            <div className="ml-auto flex items-center gap-1.5">
+              <a
+                href={PENGSHENG_OPINION_URL}
+                download="审计报告复核意见书_复核案例.html"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-slate-200 text-[12px] text-slate-600 hover:bg-slate-50"
+                title="下载复核意见书 HTML"
+              >
+                <FileDown size={12} /> 下载 HTML
+              </a>
+              <button
+                onClick={() => window.open(PENGSHENG_OPINION_URL, '_blank')}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-slate-200 text-[12px] text-slate-600 hover:bg-slate-50"
+                title="在新窗口打开后可打印 / 另存为 PDF"
+              >
+                <Download size={12} /> 导出 PDF
+              </button>
+              <button
+                onClick={startCaseReview}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-slate-200 text-[12px] text-slate-600 hover:bg-slate-50"
+                title="重放复核（实时活动流）"
+              >
+                <RotateCcw size={12} /> 重新复核
+              </button>
+            </div>
           </div>
         )}
-        <div className="flex-1 min-h-0 overflow-y-auto">
-          {(run.isPending || demoRunning) ? (
-            <EmptyState hasFiles={files.length > 0 || (scanned && !!folderPath.trim())} running={true} />
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          {runPhase === 'running' ? (
+            <ActivityStream
+              subject={reviewSubject}
+              events={streamEvents}
+              elapsed={streamElapsed}
+              paused={streamPaused}
+              onTogglePause={() => setStreamPaused((v) => !v)}
+            />
+          ) : run.isPending ? (
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <EmptyState hasFiles={files.length > 0} running={true} />
+            </div>
           ) : (isCaseDemo && docView) ? (
-            <iframe
-              src={PENGSHENG_OPINION_URL}
-              title="审计报告复核意见书"
-              className="w-full h-full border-0 bg-white"
-            />
+            <>
+              <ReviewConclusion review={CASE_REVIEW} verdict={PENGSHENG_VERDICT} />
+              <iframe
+                src={PENGSHENG_OPINION_URL}
+                title="审计报告复核意见书"
+                className="w-full flex-1 border-0 bg-white"
+              />
+            </>
           ) : (
-            <ResultPanel
-              review={displayReview}
-              selectedFinding={selectedFinding}
-              onLocate={locate}
-              onSetStatus={(fid, status) => { if (activeId) setStatus.mutate({ fid, status }) }}
-              verdict={displayReview === CASE_REVIEW ? PENGSHENG_VERDICT : null}
-            />
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <ResultPanel
+                review={displayReview}
+                selectedFinding={selectedFinding}
+                onLocate={locate}
+                onSetStatus={(fid, status) => { if (activeId) setStatus.mutate({ fid, status }) }}
+                verdict={displayReview === CASE_REVIEW ? PENGSHENG_VERDICT : null}
+              />
+            </div>
           )}
         </div>
       </section>
@@ -432,6 +584,140 @@ function EmptyState({ hasFiles, running }: { hasFiles: boolean; running: boolean
               ? '已识别文件夹/文件，点击左下「复核该文件夹」开始。'
               : '在左侧输入一个文件夹地址（内含审计报告与 TB），填写复核要求，即可一键复核。复核意见会按高/中/低分级，并附复核程序与边界。'}
         </p>
+      </div>
+    </div>
+  )
+}
+
+// ── ③ 运行中 · 实时活动流 ─────────────────────────────────────
+function ActivityStream({ subject, events, elapsed, paused, onTogglePause }: {
+  subject: string
+  events: StreamEvent[]
+  elapsed: number
+  paused: boolean
+  onTogglePause: () => void
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!paused && scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+  }, [events.length, paused])
+
+  const total = CASE_STREAM.length
+  const stage = Math.min(8, Math.max(1, Math.ceil((events.length / total) * 8)))
+  const completedDims = dimsCompletedFor(events.length)
+  const allDone = events.length >= total
+
+  return (
+    <div className="flex-1 min-h-0 flex flex-col bg-slate-50/40">
+      {/* 运行状态条 */}
+      <div className="shrink-0 px-7 py-2.5 border-b border-slate-200 bg-white flex items-center gap-3 flex-wrap">
+        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-medium border border-amber-200">
+          <Loader2 size={11} className="animate-spin" /> running
+        </span>
+        <span className="text-[13px] font-medium text-slate-800">{subject} · 2024–2025 合并复核</span>
+        <span className="inline-flex items-center gap-1 text-[11px] text-slate-500"><Clock size={12} /> 已 {elapsed}s · 阶段 {stage}/8</span>
+        <span className="ml-auto text-[11px] text-emerald-600 inline-flex items-center gap-1"><Building2 size={12} /> 企查查核验中…</span>
+      </div>
+      {/* 维度执行进度 */}
+      <div className="shrink-0 px-7 py-2 border-b border-slate-100 bg-white/70 flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] uppercase tracking-widest text-slate-400 mr-1">维度执行</span>
+        {REVIEW_DIMENSIONS.map((d, i) => {
+          const done = i < completedDims
+          const active = i === completedDims && !allDone
+          return (
+            <span
+              key={i}
+              title={`${i + 1} ${d}`}
+              className={cn('inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] border',
+                done ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : active ? 'bg-amber-50 text-amber-700 border-amber-200'
+                    : 'bg-slate-50 text-slate-400 border-slate-200')}
+            >
+              <span className={cn('h-2.5 w-2.5 rounded-full grid place-items-center text-[7px] text-white',
+                done ? 'bg-emerald-500' : active ? 'bg-amber-500 animate-pulse' : 'bg-slate-300')}>
+                {done ? '✓' : ''}
+              </span>
+              {i + 1}
+            </span>
+          )
+        })}
+      </div>
+      {/* 活动流头 */}
+      <div className="shrink-0 px-7 pt-3 pb-1 flex items-center gap-2">
+        <span className="text-[13px] font-semibold text-slate-800">实时活动流</span>
+        <span className="text-[11px] text-slate-400">SSE · 思考 / 工具 / 企查查</span>
+        <button onClick={onTogglePause} className="ml-auto inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-800">
+          {paused ? <Play size={11} /> : <Pause size={11} />}{paused ? '继续滚动' : '暂停滚动'}
+        </button>
+      </div>
+      {/* 事件流 */}
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto px-7 pb-3 space-y-1.5">
+        {events.map((ev, i) => {
+          const m = STREAM_META[ev.kind]
+          const Icon = m.icon
+          return (
+            <div key={i} className={cn('flex items-start gap-2 rounded-md border border-slate-100 bg-white px-3 py-2 border-l-[3px]', m.ring)}>
+              <Icon size={14} className={cn('shrink-0 mt-0.5', m.iconColor)} />
+              <div className="min-w-0 flex-1 text-[12px] leading-relaxed text-slate-700">
+                <span className={cn('inline-block px-1.5 py-0.5 rounded text-[10px] font-medium mr-1.5 align-middle', m.chip)}>{ev.label}</span>
+                {ev.text}
+              </div>
+            </div>
+          )
+        })}
+        {!allDone && (
+          <div className="flex items-center gap-2 px-3 py-2 text-[12px] text-slate-400">
+            <Loader2 size={13} className="animate-spin" /> Agent 思考中…
+          </div>
+        )}
+      </div>
+      {/* 脚注 */}
+      <div className="shrink-0 px-7 py-1.5 border-t border-slate-100 bg-white text-[11px] text-slate-400">
+        ▏自动滚动 · 可暂停 · 每个工具调用可下钻查看入参 / 返回
+      </div>
+    </div>
+  )
+}
+
+// ── ④ 复核结论卡片（结果页顶部）──────────────────────────────
+function ReviewConclusion({ review, verdict }: { review: TReportReview; verdict: ReviewVerdict }) {
+  const [open, setOpen] = useState(false)
+  const c = { high: 0, medium: 0, low: 0, info: 0 } as Record<ReviewSeverity, number>
+  ;(review.findings || []).forEach((f) => { c[f.severity] = (c[f.severity] || 0) + 1 })
+  const levelStyle: Record<ReviewVerdict['level'], { ring: string; text: string; bg: string }> = {
+    pass:  { ring: 'border-l-emerald-400', text: 'text-emerald-700', bg: 'bg-emerald-50/60' },
+    minor: { ring: 'border-l-amber-400',   text: 'text-amber-700',   bg: 'bg-amber-50/60' },
+    major: { ring: 'border-l-orange-500',  text: 'text-orange-700',  bg: 'bg-orange-50/60' },
+    fail:  { ring: 'border-l-rose-500',    text: 'text-rose-700',    bg: 'bg-rose-50/60' },
+  }
+  const ls = levelStyle[verdict.level]
+  return (
+    <div className={cn('shrink-0 border-b border-slate-200 px-7 py-3', ls.bg)}>
+      <div className={cn('rounded-lg border border-slate-200 bg-white border-l-[5px] px-3.5 py-2.5', ls.ring)}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Gauge size={15} className={ls.text} />
+          <span className={cn('text-[13px] font-semibold', ls.text)}>{verdict.levelLabel}</span>
+          <div className="flex items-center gap-1 ml-auto">
+            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-white bg-rose-600">高 {c.high}</span>
+            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-white bg-amber-600">中 {c.medium}</span>
+            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-white bg-sky-600">低 {c.low}</span>
+            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 inline-flex items-center gap-1"><CheckCircle2 size={11} /> 勾稽 31 项 0.01 元内</span>
+          </div>
+        </div>
+        <p className="mt-1.5 text-[12px] text-slate-600 leading-relaxed">{verdict.headline}</p>
+        <button onClick={() => setOpen((v) => !v)} className="mt-1 inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-800">
+          <ShieldCheck size={12} className="text-emerald-600" /> 复核中确认可靠 {verdict.reliable.length} 项
+          <ChevronDown size={12} className={cn('transition-transform', open && 'rotate-180')} />
+        </button>
+        {open && (
+          <ul className="mt-1.5 space-y-1">
+            {verdict.reliable.map((r, i) => (
+              <li key={i} className="flex items-start gap-1.5 text-[11.5px] text-slate-600">
+                <CheckCircle2 size={12} className="text-emerald-500 shrink-0 mt-0.5" /> {r}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )

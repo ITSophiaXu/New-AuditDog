@@ -16,6 +16,8 @@ import { Button } from '@/components/ui/Button'
 import { Textarea, Input } from '@/components/ui/Input'
 import { cn } from '@/lib/utils'
 import { zh } from '@/locales/zh'
+import DetailTestResultPanel from '@/components/detail-test/DetailTestResultPanel'
+import BankReconResultPanel from '@/components/bank-recon/BankReconResultPanel'
 import {
   PENGSHENG_REVIEW, PENGSHENG_PROMPT, PENGSHENG_FOLDER, PENGSHENG_FOLDER_FILES,
   PENGSHENG_VERDICT, type ReviewVerdict,
@@ -1340,9 +1342,9 @@ function ResultCenterPanel({ tasks, selectedTaskId, onSelectTask, onDownloadAnno
                 )}
               </>
             ) : (
-              <button type="button" className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[12px] text-slate-600">
-                查看任务摘要
-              </button>
+              <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[12px] text-slate-600">
+                已在下方直接展示结果
+              </span>
             )}
           </div>
           {selected.type === 'report-review' && selected.status === 'completed' && (
@@ -1364,6 +1366,16 @@ function ResultCenterPanel({ tasks, selectedTaskId, onSelectTask, onDownloadAnno
                   />
                 </div>
               )}
+            </div>
+          )}
+          {selected.type === 'bank-recon' && selected.status === 'completed' && (
+            <div className="mt-6 pt-5 border-t border-slate-200">
+              <BankReconResultPanel xlsxUrl="/cases/bank-recon-result-a.xlsx" embedded />
+            </div>
+          )}
+          {selected.type === 'detail-test' && selected.status === 'completed' && (
+            <div className="mt-6 pt-5 border-t border-slate-200">
+              <DetailTestResultPanel xlsxUrl="/cases/detail-test-result-a.xlsx" embedded />
             </div>
           )}
         </div>

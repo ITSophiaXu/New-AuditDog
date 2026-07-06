@@ -2,8 +2,8 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import {
-  Home, BookOpen, Search, ClipboardList, Bot, Plug, Sparkles, Target,
-  Inbox, PanelLeftClose, PanelLeftOpen, FolderOpen, FileCheck2,
+  Home, ClipboardList, Target,
+  PanelLeftClose, PanelLeftOpen, FolderOpen, FileCheck2, BellRing, TableProperties,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { zh } from '@/locales/zh'
@@ -14,6 +14,7 @@ type NavItem = {
   label: string
   icon: any
   demo?: boolean
+  activeMatch?: (pathname: string, search: string) => boolean
 }
 type NavSection = { title: string; items: NavItem[] }
 
@@ -28,20 +29,11 @@ const SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: '知识 & 智能体',
+    title: '任务与结果',
     items: [
-      { to: '/knowledge', label: zh.nav.knowledge, icon: BookOpen, demo: true },
-      { to: '/agents', label: zh.nav.agents, icon: Bot, demo: true },
-    ],
-  },
-  {
-    title: '管理 / 复核',
-    items: [
-      { to: '/report-review', label: zh.nav.reportReview, icon: FileCheck2, demo: true },
-      { to: '/explorer', label: zh.nav.explorer, icon: Search },
-      { to: '/learning-inbox', label: zh.nav.learningInbox, icon: Inbox, demo: true },
-      { to: '/mcp', label: zh.nav.mcp, icon: Plug },
-      { to: '/scenarios', label: zh.nav.scenarios, icon: Sparkles },
+      { to: '/report-review', label: zh.nav.reportReview, icon: FileCheck2, demo: true, activeMatch: (pathname, search) => pathname.startsWith('/report-review') && !search.includes('view=result-center') },
+      { to: '/detail-test', label: zh.nav.detailTest, icon: TableProperties, demo: true },
+      { to: '/report-review?view=result-center', label: '结果中心', icon: BellRing, demo: true, activeMatch: (pathname, search) => pathname.startsWith('/report-review') && search.includes('view=result-center') },
     ],
   },
 ]
@@ -110,8 +102,9 @@ export default function AppShell() {
                 <div className="border-t border-slate-800/60 mb-1 mx-2" />
               )}
               <div className="flex flex-col gap-0.5">
-                {sec.items.map(({ to, label, icon: I, demo }) => {
-                  const active = to === '/' ? loc.pathname === '/' : loc.pathname.startsWith(to)
+                {sec.items.map(({ to, label, icon: I, demo, activeMatch }) => {
+                  const pathOnly = to.split('?')[0]
+                  const active = activeMatch ? activeMatch(loc.pathname, loc.search) : (pathOnly === '/' ? loc.pathname === '/' : loc.pathname.startsWith(pathOnly))
                   return (
                     <NavLink
                       key={to}

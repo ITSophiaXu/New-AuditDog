@@ -17,6 +17,7 @@ import TemplateUpload from '@/pages/TemplateUpload'
 import RuleAuthoring from '@/pages/RuleAuthoring'
 import ProjectArchive from '@/pages/ProjectArchive'
 import ReportReview from '@/pages/ReportReview'
+import DetailTest from '@/pages/DetailTest'
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="archive" element={<ProjectArchive />} />
         <Route path="report-review" element={<ReportReview />} />
         <Route path="report-review/:reviewId" element={<ReportReview />} />
+        <Route path="detail-test" element={<DetailTest />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

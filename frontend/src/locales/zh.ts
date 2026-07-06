@@ -16,6 +16,7 @@ export const zh = {
     templateUpload: '导入模板',
     ruleAuthoring: '写一条规则',
     reportReview: '报告复核',
+    detailTest: '细节测试',
   },
   common: {
     save: '保存',

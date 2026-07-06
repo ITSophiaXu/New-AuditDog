@@ -468,118 +468,43 @@ export default function ReportReview() {
           onSetDocView={setDocView}
         />
       ) : (
-        <div className="h-full flex bg-slate-50/40">
-          <ReportReviewSidebarPanel
-            reviewSubject={reviewSubject}
-            setReviewSubject={setReviewSubject}
-            materialCounts={materialCounts}
-            expandedMaterialDetails={expandedMaterialDetails}
-            toggleMaterialDetails={toggleMaterialDetails}
-            uploadedMaterials={uploadedMaterials}
-            removeMaterialFile={removeMaterialFile}
-            setMaterialRef={setMaterialRef}
-            addMaterialFiles={addMaterialFiles}
-            openFolderPicker={openFolderPicker}
-            expandedDemoFolders={expandedDemoFolders}
-            toggleDemoFolder={toggleDemoFolder}
-            selectedDims={selectedDims}
-            toggleDim={toggleDim}
-            hasMaterialReady={hasMaterialReady}
-            demoRunning={demoRunning}
-            runError={run.isError ? (run.error as Error).message : null}
-            startCaseReview={startCaseReview}
-            reviews={reviews}
-            activeId={activeId}
-            setActiveId={setActiveId}
-            del={del}
-            nav={nav}
-            setSelectedFinding={setSelectedFinding}
-          />
-          <section className="flex-1 min-w-0 flex flex-col overflow-hidden">
-            {runPhase === 'done' && showResultPage && isCaseDemo && (
-              <div className="shrink-0 flex items-center gap-2 px-7 py-2 border-b border-slate-200 bg-white">
-                <span className="text-[12px] text-slate-500">展示方式</span>
-                <div className="flex rounded-md border border-slate-200 overflow-hidden text-[12px] font-medium">
-                  <button
-                    onClick={() => setDocView(true)}
-                    className={cn('px-3 py-1 transition-colors', docView ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50')}
-                  >
-                    复核意见书原版
-                  </button>
-                  <button
-                    onClick={() => setDocView(false)}
-                    className={cn('px-3 py-1 transition-colors border-l border-slate-200', !docView ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50')}
-                  >
-                    结构化视图
-                  </button>
-                </div>
-                <div className="ml-auto flex items-center gap-1.5">
-                  <a
-                    href={PENGSHENG_OPINION_URL}
-                    download="审计报告复核意见书_复核案例.html"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-slate-200 text-[12px] text-slate-600 hover:bg-slate-50"
-                    title="下载复核意见书 HTML"
-                  >
-                    <FileDown size={12} /> 下载 HTML
-                  </a>
-                  <button
-                    onClick={() => window.open(PENGSHENG_OPINION_URL, '_blank')}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-slate-200 text-[12px] text-slate-600 hover:bg-slate-50"
-                    title="在新窗口打开后可打印 / 另存为 PDF"
-                  >
-                    <Download size={12} /> 导出 PDF
-                  </button>
-                  <button
-                    onClick={() => resetReviewFlow(true)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-slate-200 text-[12px] text-slate-600 hover:bg-slate-50"
-                    title="重新上传材料并复核"
-                  >
-                    <RotateCcw size={12} /> 重新复核
-                  </button>
-                </div>
-              </div>
-            )}
-            <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-              {runPhase === 'running' ? (
-                <ProcessingPanel
-                  subject={reviewSubject}
-                  events={streamEvents}
-                  elapsed={streamElapsed}
-                  progress={Math.min(100, Math.max(8, Math.round((streamEvents.length / CASE_STREAM.length) * 100)))}
-                />
-              ) : runPhase === 'done' && !showResultPage ? (
-                <CompletedPanel
-                  onViewResult={openResultCenter}
-                  onDownloadAnnotated={() => setShowDownloadPanel(true)}
-                  onDownloadReport={() => window.open(PENGSHENG_OPINION_URL, '_blank')}
-                  onRestart={() => resetReviewFlow(true)}
-                />
-              ) : run.isPending ? (
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  <EmptyState hasFiles={hasMaterialReady} running={true} />
-                </div>
-              ) : (runPhase === 'done' && showResultPage && isCaseDemo && docView) ? (
-                <iframe
-                  src={PENGSHENG_OPINION_URL}
-                  title="审计报告复核意见书"
-                  className="w-full flex-1 border-0 bg-white"
-                />
-              ) : runPhase === 'done' && showResultPage ? (
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  <ResultPanel
-                    review={displayReview}
-                    selectedFinding={selectedFinding}
-                    onLocate={locate}
-                    onSetStatus={(fid, status) => { if (activeId) setStatus.mutate({ fid, status }) }}
-                    verdict={displayReview === CASE_REVIEW ? PENGSHENG_VERDICT : null}
-                  />
-                </div>
-              ) : (
-                <UploadIntroPanel totalMaterialCount={totalMaterialCount} />
-              )}
-            </div>
-          </section>
-        </div>
+        <ReportReviewWorkbench
+          reviewSubject={reviewSubject}
+          setReviewSubject={setReviewSubject}
+          materialCounts={materialCounts}
+          totalMaterialCount={totalMaterialCount}
+          expandedMaterialDetails={expandedMaterialDetails}
+          toggleMaterialDetails={toggleMaterialDetails}
+          uploadedMaterials={uploadedMaterials}
+          removeMaterialFile={removeMaterialFile}
+          setMaterialRef={setMaterialRef}
+          addMaterialFiles={addMaterialFiles}
+          openFolderPicker={openFolderPicker}
+          expandedDemoFolders={expandedDemoFolders}
+          toggleDemoFolder={toggleDemoFolder}
+          selectedDims={selectedDims}
+          toggleDim={toggleDim}
+          hasMaterialReady={hasMaterialReady}
+          demoRunning={demoRunning}
+          runError={run.isError ? (run.error as Error).message : null}
+          startCaseReview={startCaseReview}
+          runPhase={runPhase}
+          showResultPage={showResultPage}
+          events={streamEvents}
+          elapsed={streamElapsed}
+          progress={Math.min(100, Math.max(8, Math.round((streamEvents.length / CASE_STREAM.length) * 100)))}
+          onViewResult={openResultCenter}
+          onDownloadAnnotated={() => setShowDownloadPanel(true)}
+          onDownloadReport={() => window.open(PENGSHENG_OPINION_URL, '_blank')}
+          onRestart={() => resetReviewFlow(true)}
+          docView={docView}
+          onSetDocView={setDocView}
+          review={displayReview}
+          selectedFinding={selectedFinding}
+          onLocate={locate}
+          onSetStatus={(fid: string, status: FindingStatus) => { if (activeId) setStatus.mutate({ fid, status }) }}
+          verdict={displayReview === CASE_REVIEW ? PENGSHENG_VERDICT : null}
+        />
       )}
 
       {showCompletionToast && demoTask?.status === 'completed' && (
@@ -1015,6 +940,298 @@ function ReportReviewSidebarPanel({
         )}
       </div>
     </aside>
+  )
+}
+
+function ReportReviewWorkbench({
+  reviewSubject, setReviewSubject, materialCounts, totalMaterialCount, expandedMaterialDetails, toggleMaterialDetails,
+  uploadedMaterials, removeMaterialFile, setMaterialRef, addMaterialFiles, openFolderPicker,
+  expandedDemoFolders, toggleDemoFolder, selectedDims, toggleDim, hasMaterialReady, demoRunning,
+  runError, startCaseReview, runPhase, showResultPage, events, elapsed, progress, onViewResult, onDownloadAnnotated,
+  onDownloadReport, onRestart, docView, onSetDocView, review, selectedFinding, onLocate, onSetStatus, verdict,
+}: {
+  reviewSubject: string
+  setReviewSubject: (v: string) => void
+  materialCounts: Record<MaterialSlot, number>
+  totalMaterialCount: number
+  expandedMaterialDetails: Record<MaterialSlot, boolean>
+  toggleMaterialDetails: (slot: MaterialSlot) => void
+  uploadedMaterials: Record<MaterialSlot, File[]>
+  removeMaterialFile: (slot: MaterialSlot, idx: number) => void
+  setMaterialRef: (slot: MaterialSlot, el: HTMLInputElement | null) => void
+  addMaterialFiles: (slot: MaterialSlot, list: FileList | null) => void
+  openFolderPicker: (slot: MaterialSlot) => void
+  expandedDemoFolders: Record<string, boolean>
+  toggleDemoFolder: (key: string) => void
+  selectedDims: boolean[]
+  toggleDim: (i: number) => void
+  hasMaterialReady: boolean
+  demoRunning: boolean
+  runError: string | null
+  startCaseReview: () => void
+  runPhase: 'idle' | 'running' | 'done'
+  showResultPage: boolean
+  events: StreamEvent[]
+  elapsed: number
+  progress: number
+  onViewResult: () => void
+  onDownloadAnnotated: () => void
+  onDownloadReport: () => void
+  onRestart: () => void
+  docView: boolean
+  onSetDocView: (v: boolean) => void
+  review: TReportReview
+  selectedFinding: string | null
+  onLocate: (ref: SourceRef, findingId: string) => void
+  onSetStatus: (fid: string, status: FindingStatus) => void
+  verdict?: ReviewVerdict | null
+}) {
+  const activeStep = runPhase === 'idle' ? 1 : runPhase === 'running' ? 2 : 3
+  return (
+    <div className="max-w-[1600px] mx-auto px-8 py-6 space-y-5">
+      <div className="flex items-center gap-3">
+        <div>
+          <div className="text-xs text-slate-500 mb-1">{zh.nav.reportReview} · 审计工作台</div>
+          <h1 className="text-2xl font-semibold text-slate-900">报告复核</h1>
+        </div>
+        <Badge tone="brand" className="ml-2">演示</Badge>
+      </div>
+
+      <div className="flex items-center gap-3 text-[13px]">
+        {[1, 2, 3].map((n) => (
+          <div key={n} className="flex items-center gap-3">
+            <div className={cn('inline-flex items-center gap-2 rounded-full px-3 py-1.5 border',
+              activeStep === n ? 'border-brand-300 bg-brand-50 text-brand-700' : activeStep > n ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-white text-slate-500')}>
+              <span className={cn('h-5 w-5 rounded-full grid place-items-center text-[11px] font-semibold',
+                activeStep === n ? 'bg-brand-600 text-white' : activeStep > n ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600')}>{n}</span>
+              {n === 1 ? '上传复核材料' : n === 2 ? '运行复核' : '复核结果'}
+            </div>
+            {n < 3 && <span className="text-slate-300">›</span>}
+          </div>
+        ))}
+      </div>
+
+      {runPhase === 'idle' && (
+        <div className="grid grid-cols-[minmax(0,1fr)_360px] gap-5">
+          <div className="space-y-4">
+            <Card className="p-5">
+              <div className="text-sm font-semibold text-slate-900 mb-3">项目信息</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <div className="text-[12px] text-slate-500 mb-1.5">项目 / 被审计单位（脱敏）</div>
+                  <Input value={`${reviewSubject} · 2025 报告复核`} onChange={(e) => setReviewSubject(e.target.value.replace(' · 2025 报告复核', ''))} />
+                </div>
+                <div>
+                  <div className="text-[12px] text-slate-500 mb-1.5">报告年度</div>
+                  <Input value="2025" readOnly />
+                </div>
+                <div>
+                  <div className="text-[12px] text-slate-500 mb-1.5">模式</div>
+                  <Input value="一家单位 · 一个会计年度" readOnly />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <div className="text-sm font-semibold text-slate-900 mb-3">上传复核材料</div>
+              <div className="space-y-3">
+                {MATERIAL_SLOTS.map((slot) => {
+                  const demo = demoSummaryForSlot(slot.key)
+                  const detailOpen = expandedMaterialDetails[slot.key]
+                  const showingUploaded = uploadedMaterials[slot.key].length > 0
+                  return (
+                    <div key={slot.key} className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div>
+                          <div className="text-[12px] font-medium text-slate-800">{slot.title}</div>
+                          <div className="text-[10px] text-slate-400">
+                            {slot.key === 'workingPapers' && !showingUploaded
+                              ? `已上传：${demo.folderCount} 个文件夹 / ${demo.fileCount} 个文件`
+                              : `已上传：${materialCounts[slot.key]} 个文件`}
+                          </div>
+                        </div>
+                        {(showingUploaded || demo.items.length > 0) && (
+                          <button type="button" onClick={() => toggleMaterialDetails(slot.key)} className="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-800">
+                            {detailOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                            {detailOpen ? '收起明细' : '查看明细'}
+                          </button>
+                        )}
+                      </div>
+                      <input id={`report-material-${slot.key}`} ref={(el) => setMaterialRef(slot.key, el)} type="file" multiple={slot.multi ?? false} accept={slot.accepts} className="hidden" onChange={(e) => addMaterialFiles(slot.key, e.target.files)} />
+                      <div className="flex gap-2">
+                        <button type="button" onClick={() => document.getElementById(`report-material-${slot.key}`)?.click()} className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-600 hover:bg-slate-50">
+                          <Upload size={12} /> 选择文件
+                        </button>
+                        {slot.allowFolder && (
+                          <button type="button" onClick={() => openFolderPicker(slot.key)} className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-600 hover:bg-slate-50">
+                            <FolderOpen size={12} /> 选择文件夹
+                          </button>
+                        )}
+                      </div>
+                      <div className="mt-1 text-[10px] text-slate-400">支持多次追加上传；文件夹模式会自动带上子文件夹内文件。</div>
+                      {showingUploaded && detailOpen && (
+                        <div className="mt-2 space-y-1 max-h-40 overflow-y-auto pr-1">
+                          {uploadedMaterials[slot.key].map((f, i) => {
+                            const Ic = fileIcon(f.name)
+                            return (
+                              <div key={f.name + i} className="flex items-center gap-2 px-2 py-1 rounded-md bg-white border border-slate-100 text-[11px]">
+                                <Ic size={12} className="text-slate-400 shrink-0" />
+                                <span className="truncate flex-1 text-slate-700">{f.name}</span>
+                                <button onClick={() => removeMaterialFile(slot.key, i)} className="text-slate-400 hover:text-rose-500 shrink-0"><X size={12} /></button>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                      {!showingUploaded && detailOpen && demo.items.length > 0 && (
+                        <div className="mt-2 space-y-1 max-h-48 overflow-y-auto pr-1">
+                          {demo.items.map((f, i) => {
+                            const Ic = f.kind === 'excel' ? FileSpreadsheet : f.kind === 'pdf' ? FileDigit : FileText
+                            if (f.isFolder) {
+                              const folderOpen = !!expandedDemoFolders[`${slot.key}:${f.name}`]
+                              const previewChildren = folderOpen ? (f.children || []) : (f.children || []).slice(0, 5)
+                              return (
+                                <div key={f.name + i} className="rounded-md bg-white border border-slate-100 text-[10.5px]">
+                                  <button type="button" onClick={() => toggleDemoFolder(`${slot.key}:${f.name}`)} className="w-full flex items-start gap-2 px-2 py-1.5 text-left">
+                                    {folderOpen ? <ChevronDown size={12} className="text-slate-400 shrink-0 mt-0.5" /> : <ChevronRight size={12} className="text-slate-400 shrink-0 mt-0.5" />}
+                                    <FolderOpen size={12} className="text-slate-400 shrink-0 mt-0.5" />
+                                    <div className="min-w-0 flex-1">
+                                      <div className="truncate text-slate-700">{f.name}</div>
+                                      <div className="text-[9px] text-slate-400">{f.note}</div>
+                                    </div>
+                                  </button>
+                                  {folderOpen && (
+                                    <div className="px-7 pb-2 space-y-1">
+                                      {previewChildren.map((child: string) => <div key={child} className="truncate text-[10px] text-slate-500">• {child}</div>)}
+                                      {(f.children?.length || 0) > previewChildren.length && <div className="text-[9px] text-slate-400">还有 {(f.children?.length || 0) - previewChildren.length} 个文件…</div>}
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            }
+                            return (
+                              <div key={f.name + i} className="flex items-start gap-2 px-2 py-1 rounded-md bg-white border border-slate-100 text-[10.5px]">
+                                <Ic size={12} className="text-slate-400 shrink-0 mt-0.5" />
+                                <div className="min-w-0 flex-1">
+                                  <div className="truncate text-slate-700">{f.name}</div>
+                                  <div className="text-[9px] text-slate-400">{f.note}</div>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </Card>
+
+            <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <div className="text-[12px] text-slate-500">材料已识别：<b className="text-slate-700">{totalMaterialCount}</b> 个</div>
+              <Button variant="primary" onClick={startCaseReview} disabled={!hasMaterialReady || demoRunning}>
+                {demoRunning ? <><Loader2 size={14} className="animate-spin" /> 复核中…</> : <><Play size={14} /> 开始复核</>}
+              </Button>
+            </div>
+            {runError && <div className="text-[11px] text-rose-600 bg-rose-50 border border-rose-100 rounded-md px-2 py-1.5">复核失败：{runError}</div>}
+          </div>
+
+          <aside className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+            <div className="px-4 py-3 border-b border-slate-200 bg-slate-50">
+              <div className="text-sm font-semibold text-slate-900">📋 输入材料要求</div>
+            </div>
+            <div className="p-4 space-y-4 text-[12px] text-slate-600 leading-6">
+              <div className="rounded-lg border border-slate-200 bg-slate-50/70 px-3 py-2">
+                <b>原则</b>：工商与外部事实材料不需要人工提供，系统会直接连接企查查抓取。审计师只需要整理并提交底稿、试算平衡表、财务报表、附注、最终审计报告。
+              </div>
+              <div>
+                <div className="font-medium text-slate-800 mb-1">标准输入包目录</div>
+                <pre className="rounded-lg bg-slate-50 p-3 text-[11px] leading-5 overflow-x-auto">{`报告复核项目包/\n├─ 01_底稿/\n│  ├─ 母公司/\n│  ├─ 子公司/\n│  └─ 分公司/\n├─ 02_试算平衡表/\n├─ 03_财务报表与附注/\n└─ 04_审计报告/`}</pre>
+              </div>
+              <div>
+                <div className="font-medium text-slate-800 mb-1">底稿</div>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>xlsx 优先，一个科目一份底稿，或一个文件内按科目明确分 sheet。</li>
+                  <li>文件名带科目名，例如：A5-应收账款.xlsx、P6-研发费用.xlsx。</li>
+                  <li>至少能识别：科目名称、期末审定数；期初审定数、审计调整、重分类调整尽量保留。</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-medium text-slate-800 mb-1">试算平衡表</div>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>必须拆分为：母公司单体 TB、每个子公司/分公司单体 TB、合并 TB。</li>
+                  <li>单体 TB 建议一个报表一个 sheet；合并 TB 建议按口径和报表拆 sheet。</li>
+                  <li>主体名称和主体代码不强制写在表内，系统默认优先用文件名识别主体。</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-medium text-slate-800 mb-1">财务报表与附注</div>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>财务报表：xls / xlsx，至少包含资产负债表、利润表、现金流量表、所有者权益变动表。</li>
+                  <li>附注优先 docx / doc，使用最终版，不要只给扫描件。</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-medium text-slate-800 mb-1">审计报告</div>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>只提交最终版 PDF，不要提交中间 Word 草稿。</li>
+                  <li>建议命名：审计报告-合并-最终版.pdf；单体报告请单独命名。</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-medium text-slate-800 mb-1">最低提交标准</div>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>底稿：xlsx</li>
+                  <li>单体 TB：每主体一份 xlsx</li>
+                  <li>合并 TB：一份结构化 xlsx</li>
+                  <li>财务报表：一份结构化 xls/xlsx</li>
+                  <li>财务报表附注：docx/doc</li>
+                  <li>审计报告：最终版 pdf</li>
+                </ul>
+              </div>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {runPhase === 'running' && (
+        <ProcessingPanel subject={reviewSubject} events={events} elapsed={elapsed} progress={progress} />
+      )}
+
+      {runPhase === 'done' && !showResultPage && (
+        <CompletedPanel
+          onViewResult={onViewResult}
+          onDownloadAnnotated={onDownloadAnnotated}
+          onDownloadReport={onDownloadReport}
+          onRestart={onRestart}
+        />
+      )}
+
+      {runPhase === 'done' && showResultPage && (
+        <div className="space-y-5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-sm text-slate-500">结果展示方式</div>
+            <div className="flex items-center gap-2">
+              <button onClick={() => onSetDocView(true)} className={cn('px-3 py-1 rounded-md text-[12px] border', docView ? 'border-brand-300 bg-brand-50 text-brand-700' : 'border-slate-200 text-slate-600 hover:bg-slate-50')}>复核意见书原版</button>
+              <button onClick={() => onSetDocView(false)} className={cn('px-3 py-1 rounded-md text-[12px] border', !docView ? 'border-brand-300 bg-brand-50 text-brand-700' : 'border-slate-200 text-slate-600 hover:bg-slate-50')}>结构化视图</button>
+              <Button variant="outline" size="sm" onClick={onDownloadReport}><Download size={13} /> 下载报告</Button>
+              <Button variant="outline" size="sm" onClick={onRestart}><RotateCcw size={13} /> 重新复核</Button>
+            </div>
+          </div>
+          {docView ? (
+            <iframe src={PENGSHENG_OPINION_URL} title="审计报告复核意见书" className="w-full h-[1080px] border border-slate-200 rounded-2xl bg-white" />
+          ) : (
+            <ResultPanel
+              review={review}
+              selectedFinding={selectedFinding}
+              onLocate={onLocate}
+              onSetStatus={onSetStatus}
+              verdict={verdict}
+            />
+          )}
+        </div>
+      )}
+    </div>
   )
 }
 

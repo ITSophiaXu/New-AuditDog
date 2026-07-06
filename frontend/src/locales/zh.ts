@@ -16,6 +16,7 @@ export const zh = {
     templateUpload: '导入模板',
     ruleAuthoring: '写一条规则',
     reportReview: '报告复核',
+    bankRecon: '双向核对',
     detailTest: '细节测试',
   },
   common: {

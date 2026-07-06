@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import {
   Home, ClipboardList, Target,
-  PanelLeftClose, PanelLeftOpen, FolderOpen, FileCheck2, BellRing, TableProperties,
+  PanelLeftClose, PanelLeftOpen, FolderOpen, FileCheck2, BellRing, TableProperties, ArrowLeftRight,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { zh } from '@/locales/zh'
@@ -32,6 +32,7 @@ const SECTIONS: NavSection[] = [
     title: '任务与结果',
     items: [
       { to: '/report-review', label: zh.nav.reportReview, icon: FileCheck2, demo: true, activeMatch: (pathname, search) => pathname.startsWith('/report-review') && !search.includes('view=result-center') },
+      { to: '/bank-recon', label: zh.nav.bankRecon, icon: ArrowLeftRight, demo: true },
       { to: '/detail-test', label: zh.nav.detailTest, icon: TableProperties, demo: true },
       { to: '/report-review?view=result-center', label: '结果中心', icon: BellRing, demo: true, activeMatch: (pathname, search) => pathname.startsWith('/report-review') && search.includes('view=result-center') },
     ],

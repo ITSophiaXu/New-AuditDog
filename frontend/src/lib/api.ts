@@ -5,6 +5,7 @@ import type {
   InboxSuggestion, InferTemplateResponse, CompiledRule, RuleCompileResponse,
   AgentToolEntry,
   ReportReview, ReportReviewSummary,
+  AnnualAuditProjectPayload, AnnualAuditProjectSnapshot, AnnualAuditRunResult,
 } from './types'
 
 const API = '/api'
@@ -198,6 +199,59 @@ export const api = {
     json<{ base: AgentConfig; edits: any }>(`${API}/agents/preview-edit`, {
       method: 'POST', body: JSON.stringify(body),
     }),
+
+  // ---------- Annual audit E2E product ----------
+  getAnnualAuditProject: (engagementCode: string) =>
+    json<AnnualAuditProjectSnapshot>(
+      `${API}/annual-audit/projects/${encodeURIComponent(engagementCode)}`,
+    ),
+  createAnnualAuditProject: (body: AnnualAuditProjectPayload) =>
+    json<AnnualAuditProjectSnapshot>(`${API}/annual-audit/projects`, {
+      method: 'POST', body: JSON.stringify(body),
+    }),
+  updateAnnualAuditProject: (
+    engagementCode: string,
+    body: Partial<AnnualAuditProjectPayload>,
+  ) => json<AnnualAuditProjectSnapshot>(
+    `${API}/annual-audit/projects/${encodeURIComponent(engagementCode)}`,
+    { method: 'PATCH', body: JSON.stringify(body) },
+  ),
+  uploadAnnualAuditMaterials: async (
+    engagementCode: string,
+    category: 'account_set' | 'supplementary',
+    files: File[],
+  ): Promise<{ ok: boolean; created: ObjectInstance[]; project: AnnualAuditProjectSnapshot }> => {
+    const fd = new FormData()
+    fd.append('category', category)
+    files.forEach((file) => fd.append('files', file))
+    const r = await fetch(
+      `${API}/annual-audit/projects/${encodeURIComponent(engagementCode)}/materials`,
+      { method: 'POST', body: fd },
+    )
+    if (!r.ok) {
+      let detail = await r.text()
+      try { detail = JSON.parse(detail).detail || detail } catch {}
+      throw new Error(`${r.status} ${detail}`)
+    }
+    return r.json()
+  },
+  runAnnualAudit: (engagementCode: string, overwriteExisting = false) =>
+    json<AnnualAuditRunResult>(
+      `${API}/annual-audit/projects/${encodeURIComponent(engagementCode)}/run?overwrite_existing=${overwriteExisting}`,
+      { method: 'POST', body: '{}' },
+    ),
+  resolveAnnualAuditTask: (
+    engagementCode: string,
+    taskId: number,
+    body: { status: string; resolution?: string; resolved_by?: string },
+  ) => json<{ ok: boolean; task: ObjectInstance }>(
+    `${API}/annual-audit/projects/${encodeURIComponent(engagementCode)}/tasks/${taskId}`,
+    { method: 'PATCH', body: JSON.stringify(body) },
+  ),
+  annualAuditPaperExportUrl: (engagementCode: string, paperIndex: string) =>
+    `${API}/annual-audit/projects/${encodeURIComponent(engagementCode)}/papers/${encodeURIComponent(paperIndex)}/export`,
+  annualAuditPackageExportUrl: (engagementCode: string) =>
+    `${API}/annual-audit/projects/${encodeURIComponent(engagementCode)}/export`,
 
   // ---------- Report Review (报告复核) ----------
   reviewChecklist: () =>

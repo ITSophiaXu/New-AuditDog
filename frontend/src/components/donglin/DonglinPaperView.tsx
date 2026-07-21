@@ -41,6 +41,11 @@ interface Props {
   paperCode: DonglinPaperCode
   paperId: number
   paperData: any
+  engagementCode?: string
+  entityName?: string
+  periodStart?: string
+  periodEnd?: string
+  refillEnabled?: boolean
   /** Optional: parent (URL) controlled active sheet. If omitted, internal state is used. */
   activeSheetProp?: string | null
   /** Notify parent (for syncing URL) when user clicks a sheet tab inside. */
@@ -48,7 +53,16 @@ interface Props {
 }
 
 export function DonglinPaperView({
-  paperCode, paperId, paperData, activeSheetProp, onActiveSheetChange,
+  paperCode,
+  paperId,
+  paperData,
+  engagementCode,
+  entityName,
+  periodStart,
+  periodEnd,
+  refillEnabled = true,
+  activeSheetProp,
+  onActiveSheetChange,
 }: Props) {
   const qc = useQueryClient()
   const [internalActiveSheet, setInternalActiveSheet] = useState<string>('')
@@ -94,6 +108,7 @@ export function DonglinPaperView({
     try {
       await donglinApi.fill(paperCode)
       await qc.invalidateQueries({ queryKey: ['object', paperId] })
+      await qc.invalidateQueries({ queryKey: ['objects', 'WorkingPaper'] })
       await qc.invalidateQueries({ queryKey: ['donglin-provenance', paperCode] })
     } finally {
       setRefilling(false)
@@ -113,18 +128,22 @@ export function DonglinPaperView({
         <Badge tone="amber">{paperCode}</Badge>
         <span className="text-sm font-medium text-slate-700">{DONGLIN_PAPER_TITLE_ZH[paperCode] || paperCode}</span>
         <div className="ml-auto flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={refill}
-            disabled={refilling}
-          >
-            <RefreshCw size={13} className={refilling ? 'animate-spin' : ''} />
-            {refilling ? '填稿中…' : '让 Agent 重新填'}
-          </Button>
+          {refillEnabled && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refill}
+              disabled={refilling}
+            >
+              <RefreshCw size={13} className={refilling ? 'animate-spin' : ''} />
+              {refilling ? '填稿中…' : '让 Agent 重新填'}
+            </Button>
+          )}
           <a
-            href={donglinApi.exportXlsxUrl(paperCode)}
-            download={`甲所审计_甲公司_${paperCode}.xlsm`}
+            href={engagementCode
+              ? api.annualAuditPaperExportUrl(engagementCode, paperCode)
+              : donglinApi.exportXlsxUrl(paperCode)}
+            download={`${entityName || '年审项目'}_${paperCode}.xlsx`}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium bg-emerald-600 hover:bg-emerald-700 text-white"
             title={`下载当前底稿 ${paperCode} 的 .xlsm 文件（含 AI 填写结果）`}
           >
@@ -174,11 +193,11 @@ export function DonglinPaperView({
         rowLimit={rowLimit}
         onLoadMore={() => setRowLimit((n) => n + 100)}
         paperMeta={{
-          auditEntity: '甲公司（通风机械）',
+          auditEntity: entityName || '被审计单位',
           paperCode: paperCode,
           paperTitle: (DONGLIN_PAPER_TITLE_ZH[paperCode] || `${paperCode} 底稿`)
             + (curSheet === 'summary' ? '' : ` · ${DONGLIN_SHEET_LABEL_ZH[curSheet] || curSheet}`),
-          period: '2025-01-01 至 2025-12-31',
+          period: `${periodStart || '2025-01-01'} 至 ${periodEnd || '2025-12-31'}`,
           preparer: paperData?.filled_by || '审计师',
           preparedAt: paperData?.filled_at?.slice(0, 10) || '2026-02-28',
           reviewer: '项目经理',
@@ -224,4 +243,3 @@ function sheetLabel(code: string): string {
     interest_recalc: '利息重算',
   } as Record<string, string>)[code] || code
 }
-

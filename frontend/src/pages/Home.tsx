@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import {
   Briefcase, ClipboardList, Bot, Network, Sparkles, ArrowRight,
-  TrendingUp, AlertTriangle, Plug, BookOpen, AlertCircle,
+  TrendingUp, AlertTriangle, Plug, BookOpen, AlertCircle, CirclePlus, PlayCircle,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { Card } from '@/components/ui/Card'
@@ -97,23 +97,28 @@ export default function Home() {
         <div className="absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-brand-400/10 blur-3xl" />
         <div className="relative">
           <div className="text-xs tracking-widest text-brand-200 uppercase mb-2">
-            Palantir-style Audit Platform · 原型
+            ANNUAL AUDIT AGENT · E2E PRODUCT
           </div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">把会计师的专业知识，沉淀为可执行的本体</h1>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">从账套和客户资料，到全科目底稿、财务报表与附注</h1>
           <p className="text-slate-300 max-w-2xl text-sm leading-relaxed">
-            把底稿模板、审计规则、行业经验建模为<strong className="text-white">本体（Ontology）</strong>，
-            让 AI 智能体直接读取上下文、写回底稿、应用规则、识别异常 —
-            从年报底稿填写出发，延伸到方案生成、异常分析、专项审计。
+            创建年审项目，上传账套与 PBC，确认会计准则和重要性水平，
+            由<strong className="text-white">年审Agent</strong>按依赖顺序执行计划、风险评估、各科目审计和报告阶段，
+            并把需要审计师判断的事项明确留在任务中心。
           </p>
           <div className="mt-5 flex gap-3">
-            <Link to="/workbench">
+            <Link to="/annual-audit">
               <Button variant="primary" className="bg-white text-slate-900 hover:bg-slate-100">
-                <ClipboardList size={16} /> 打开底稿工作台
+                <ArrowRight size={16} /> 进入完整年审流程
               </Button>
             </Link>
-            <Link to="/knowledge">
+            <Link to="/annual-audit/new?step=0">
               <Button variant="ghost" className="text-white hover:bg-white/10">
-                <BookOpen size={16} /> 浏览审计知识库
+                <CirclePlus size={16} /> 创建年审项目
+              </Button>
+            </Link>
+            <Link to="/workbench?eng=ENG-JSDW-2025">
+              <Button variant="ghost" className="text-white hover:bg-white/10">
+                <PlayCircle size={16} /> 打开江苏大王样例
               </Button>
             </Link>
           </div>
@@ -134,7 +139,10 @@ export default function Home() {
           <div className="px-5 py-4 border-b border-slate-100 flex items-center">
             <div className="text-sm font-semibold text-slate-900">进行中项目</div>
             <Badge tone="neutral" className="ml-2">{engagements.length}</Badge>
-            <Link to="/explorer/Engagement" className="ml-auto text-xs text-brand-600 hover:text-brand-700 flex items-center gap-1">
+            <Link to="/annual-audit/new?step=0" className="ml-auto">
+              <Button variant="primary" size="sm"><CirclePlus size={13} /> 新建年审项目</Button>
+            </Link>
+            <Link to="/explorer/Engagement" className="ml-3 text-xs text-brand-600 hover:text-brand-700 flex items-center gap-1">
               查看全部 <ArrowRight size={12} />
             </Link>
           </div>
@@ -169,6 +177,12 @@ export default function Home() {
                       <div className="text-xs text-slate-500 truncate">
                         {(e.data?.code as string) || '—'} · 期间 {(e.data?.period as string) || '—'} · 合伙人 {(e.data?.partner as string) || '—'}
                       </div>
+                      {(e.data as any)?.project_type === 'annual_audit' && (
+                        <div className="mt-1 flex items-center gap-1.5 text-[10px] text-slate-500">
+                          <span className="rounded bg-slate-100 px-1.5 py-0.5">{String((e.data as any)?.accounting_standard || '准则待确认')}</span>
+                          <span className="rounded bg-brand-50 text-brand-700 px-1.5 py-0.5">{String((e.data as any)?.workflow_status || '待执行')}</span>
+                        </div>
+                      )}
                       <StageDots dots={stageDots} />
                     </div>
                     <Badge tone={e.data?.status === '已完成' ? 'green' : 'amber'}>{(e.data?.status as string) || '—'}</Badge>

@@ -27,6 +27,9 @@ type Props = {
   paperIndex: string | undefined
   paperId?: number
   isPlanningPaper?: boolean
+  paperData?: any
+  engagementName?: string
+  accountingStandard?: string
   className?: string
 }
 
@@ -47,7 +50,56 @@ function extractRefs(refs: string[]) {
 const norm = (s: string) =>
   s.replace(/(?:算法|方法|规则|计算)$/g, '').trim().toLowerCase()
 
-export default function WorkbenchKnowledgePanel({ paperCode, paperIndex, paperId, isPlanningPaper, className }: Props) {
+function fallbackGuidance(paperIndex?: string) {
+  const letter = (paperIndex || '').match(/^([A-Z]+)/)?.[1] || ''
+  if (['X', 'Y'].includes(letter)) {
+    return {
+      methods: [
+        { code: 'PLAN-01', name: '项目承接与风险识别', description: '结合客户背景、行业、前期事项和独立性结果形成总体计划。' },
+        { code: 'MAT-01', name: '重要性水平与风险应对', description: '测算 PM、TE 和明显微小金额，并据此设计审计程序。' },
+      ],
+      standards: [
+        { code: 'CSA-1201', name: '计划审计工作' },
+        { code: 'CSA-1211', name: '识别和评估重大错报风险' },
+        { code: 'CSA-1221', name: '计划和执行审计工作时的重要性' },
+      ],
+    }
+  }
+  if (['Z', 'ZK', 'ZS'].includes(letter)) {
+    return {
+      methods: [
+        { code: 'FS-01', name: '审定TB生成报表与附注', description: '将科目审定结果映射到主表和附注并执行跨表勾稽。' },
+        { code: 'REPORT-01', name: '报告层面复核', description: '汇总未更正错报、披露缺口和意见影响。' },
+      ],
+      standards: [
+        { code: 'CSA-1501', name: '对财务报表形成审计意见和出具审计报告' },
+        { code: 'CAS-DISCLOSURE', name: '适用财务报告编制基础的列报与披露要求' },
+      ],
+    }
+  }
+  return {
+    methods: [
+      { code: 'SUB-01', name: '账表勾稽与明细核对', description: '将总账、明细账、报表列报和外部证据逐层核对。' },
+      { code: 'SUB-02', name: '分析性程序与细节测试', description: '按余额、发生额、账龄和风险执行抽样、函证、重算或截止测试。' },
+    ],
+    standards: [
+      { code: 'CSA-1301', name: '审计证据' },
+      { code: 'CSA-1312', name: '函证' },
+      { code: 'CSA-1314', name: '审计抽样' },
+    ],
+  }
+}
+
+export default function WorkbenchKnowledgePanel({
+  paperCode,
+  paperIndex,
+  paperId,
+  isPlanningPaper,
+  paperData,
+  engagementName,
+  accountingStandard,
+  className,
+}: Props) {
   const qc = useQueryClient()
   const [refilling, setRefilling] = useState(false)
   const [openGroups, setOpenGroups] = useState<Set<string>>(
@@ -208,32 +260,35 @@ export default function WorkbenchKnowledgePanel({ paperCode, paperIndex, paperId
   const { data: planningPaperObj } = useQuery({
     queryKey: ['object', paperId],
     queryFn: () => api.getObject(paperId!),
-    enabled: !!paperId && isPlanningPaper && !paperCode,
+    enabled: !!paperId && !paperCode && !paperData,
     staleTime: 30 * 1000,
   })
 
   if (!paperCode) {
-    if (isPlanningPaper) {
-      const sd = (planningPaperObj?.object?.data as any)?.sheet_data || {}
-      const META_KEYS = new Set(['preparer', 'prepared_at', 'reviewer', 'reviewed_at'])
-      const contentKeys = Object.keys(sd).filter(k => !META_KEYS.has(k))
-      const preparer = sd.preparer || sd.prepared_by || ''
-      const preparedAt = sd.prepared_at || ''
-      // Count filled fields
-      const totalFields = contentKeys.reduce((n, k) => {
-        const v = sd[k]
-        if (v && typeof v === 'object') return n + Object.keys(v).filter(f => v[f]).length
-        return n + (v ? 1 : 0)
-      }, 0)
+    const resolvedPaperData = paperData || planningPaperObj?.object?.data || {}
+    const sd = (resolvedPaperData as any)?.sheet_data || {}
+    const META_KEYS = new Set(['preparer', 'prepared_at', 'reviewer', 'reviewed_at'])
+    const contentKeys = Object.keys(sd).filter(k => !META_KEYS.has(k))
+    const preparer = sd.preparer || sd.prepared_by || ''
+    const preparedAt = sd.prepared_at || ''
+    const fallback = fallbackGuidance(paperIndex)
+    const methods = (resolvedPaperData as any)?.methods || fallback.methods
+    const standards = (resolvedPaperData as any)?.standards || fallback.standards
+    const totalFields = contentKeys.reduce((n, k) => {
+      const v = sd[k]
+      if (v && typeof v === 'object') return n + Object.keys(v).filter(f => v[f]).length
+      return n + (v ? 1 : 0)
+    }, 0)
 
-      const DATA_SOURCES = [
-        { icon: '🏢', label: '企查查', desc: '公司注册信息、股权结构、主要人员' },
-        { icon: '📂', label: '上年底稿', desc: '延续性底稿、历史调整事项' },
-        { icon: '🧠', label: '行业知识库', desc: '行业背景、审计重点识别' },
-        { icon: '💬', label: '访谈记录', desc: '管理层问答、关注事项' },
-      ]
+    const DATA_SOURCES: Array<{ icon: string; label: string; desc: string }> =
+      (resolvedPaperData as any)?.data_sources || [
+      { icon: '📊', label: '账套数据', desc: '试算平衡表、辅助账和序时账' },
+      { icon: '📂', label: '客户补充材料', desc: '合同、函证、盘点和管理层资料' },
+      { icon: '🧠', label: '审计知识库', desc: '会计准则、审计准则、事务所方法和行业知识' },
+      { icon: '🧾', label: '其他科目底稿', desc: '审定TB、调整分录和跨表勾稽结果' },
+    ]
 
-      const SECTION_LABELS: Record<string, string> = {
+    const SECTION_LABELS: Record<string, string> = {
         entity_understanding: '了解被审计单位',
         key_contacts: '关键人员',
         company_info: '企业基本情况',
@@ -246,17 +301,19 @@ export default function WorkbenchKnowledgePanel({ paperCode, paperIndex, paperId
         independence: '独立性声明',
         engagement_letter: '业务约定书',
         client_acceptance: '客户接受',
-      }
+    }
 
-      return (
+    return (
         <div className={cn('flex flex-col h-full overflow-auto', className)}>
           {/* Header */}
           <div className="px-3 py-2.5 border-b border-amber-100 bg-gradient-to-r from-amber-50 to-orange-50/40 shrink-0">
-            <div className="text-[10px] text-amber-600 uppercase tracking-wider">填写方法</div>
+            <div className="text-[10px] text-amber-600 uppercase tracking-wider">方法与准则</div>
             <div className="text-sm font-semibold text-slate-900 truncate">
-              ★ 甲会计师事务所 · 甲公司 2025 — 已由 Agent 填稿
+              ★ {engagementName || '年审项目'} — {isPlanningPaper ? '计划底稿' : '科目底稿'}方法依据
             </div>
-            <div className="text-[11px] text-slate-500 mt-0.5">{paperIndex}</div>
+            <div className="text-[11px] text-slate-500 mt-0.5">
+              {paperIndex}{accountingStandard ? ` · ${accountingStandard}` : ''}
+            </div>
           </div>
 
           <div className="p-3 space-y-3 text-xs">
@@ -294,6 +351,31 @@ export default function WorkbenchKnowledgePanel({ paperCode, paperIndex, paperId
               </div>
             )}
 
+            <div className="space-y-1">
+              <div className="font-semibold text-slate-700 flex items-center gap-1">
+                <Calculator size={12} /> 本底稿执行方法
+              </div>
+              {methods.map((method: any) => (
+                <div key={method.code || method.name} className="rounded border border-violet-200 bg-violet-50/50 px-2 py-1.5">
+                  <div className="text-[10px] font-mono font-semibold text-violet-700">{method.code}</div>
+                  <div className="text-[11px] font-semibold text-violet-900">{method.name}</div>
+                  <div className="text-[10px] leading-relaxed text-violet-700 mt-0.5">{method.description}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-1">
+              <div className="font-semibold text-slate-700 flex items-center gap-1">
+                <BookOpen size={12} /> 引用准则
+              </div>
+              {standards.map((standard: any) => (
+                <div key={standard.code || standard.name} className="rounded border border-teal-200 bg-teal-50/50 px-2 py-1.5">
+                  <span className="text-[10px] font-mono font-semibold text-teal-700">{standard.code}</span>
+                  <div className="text-[11px] text-teal-900">{standard.name}</div>
+                </div>
+              ))}
+            </div>
+
             {/* Data sources */}
             <div className="space-y-1">
               <div className="font-semibold text-slate-700 flex items-center gap-1">
@@ -319,18 +401,10 @@ export default function WorkbenchKnowledgePanel({ paperCode, paperIndex, paperId
             )}
 
             <p className="text-slate-400 border-t border-slate-100 pt-2 leading-relaxed">
-              计划阶段底稿无本体知识引用统计（OT / Rule / 准则），
-              填表依据为上述数据来源，无需执行阶段的凭证/TB追溯。
+              方法、准则、数据源和人工判断点均随底稿保留；审计师确认后进入项目操作轨迹。
             </p>
           </div>
         </div>
-      )
-    }
-    return (
-      <div className={cn('p-4 text-xs text-slate-500', className)}>
-        <BookOpen size={14} className="text-slate-300 inline mr-1" />
-        本张底稿没有 AI 填稿（仅 5 张 Demo 有完整的本体知识引用：A1 / A6 / A9 / A24 / B1）
-      </div>
     )
   }
   if (!myRun && !prov) {

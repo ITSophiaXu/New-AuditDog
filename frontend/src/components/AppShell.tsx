@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import {
   Home, ClipboardList, Target,
   PanelLeftClose, PanelLeftOpen, FolderOpen, FileCheck2, BellRing, TableProperties, ArrowLeftRight,
+  CirclePlus,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { zh } from '@/locales/zh'
@@ -23,6 +24,7 @@ const SECTIONS: NavSection[] = [
     title: '我的工作',
     items: [
       { to: '/', label: zh.nav.home, icon: Home },
+      { to: '/annual-audit', label: '年审项目', icon: CirclePlus, demo: true },
       { to: '/workbench', label: zh.nav.workbench, icon: ClipboardList, demo: true },
       { to: '/archive', label: zh.nav.archive, icon: FolderOpen, demo: true },
       { to: '/special-audit', label: zh.nav.specialAudit, icon: Target, demo: true },

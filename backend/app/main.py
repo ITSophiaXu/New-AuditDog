@@ -22,6 +22,10 @@ from .donglin.router import router as donglin_router
 from .banmu.router import router as banmu_router
 from .archive_router import router as archive_router
 from .report_review.router import router as report_review_router
+from .annual_audit.router import (
+    ensure_annual_audit_demo,
+    router as annual_audit_router,
+)
 
 app = FastAPI(title="Audit Ontology Prototype", version="0.1.0")
 
@@ -44,6 +48,7 @@ def _startup() -> None:
     init_db()
     if os.environ.get("AUDIT_ONTOLOGY_SKIP_SEED", "0") != "1":
         run_seed()
+    ensure_annual_audit_demo()
 
 
 @app.get("/api/health")
@@ -66,6 +71,7 @@ app.include_router(donglin_router)  # 甲所样式底稿填写 (prefix 已含 /a
 app.include_router(banmu_router)    # 己公司项目底稿预填 (prefix 已含 /api/banmu)
 app.include_router(archive_router)  # 项目档案 (prefix 已含 /api/archive)
 app.include_router(report_review_router)  # 报告复核 (prefix 已含 /api/report-review)
+app.include_router(annual_audit_router)  # 年审项目 E2E 产品流程
 
 # 静态资源：甲所 demo HTML
 from pathlib import Path as _Path

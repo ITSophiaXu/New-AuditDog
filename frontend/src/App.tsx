@@ -19,6 +19,8 @@ import ProjectArchive from '@/pages/ProjectArchive'
 import ReportReview from '@/pages/ReportReview'
 import DetailTest from '@/pages/DetailTest'
 import BankReconciliation from '@/pages/BankReconciliation'
+import AnnualAuditProjectSetup from '@/pages/AnnualAuditProjectSetup'
+import AnnualAuditHub from '@/pages/AnnualAuditHub'
 
 export default function App() {
   return (
@@ -33,6 +35,9 @@ export default function App() {
         <Route path="explorer/:code" element={<ObjectExplorer />} />
         <Route path="workbench" element={<WorkingPaperWorkbench />} />
         <Route path="workbench/:paperId" element={<WorkingPaperWorkbench />} />
+        <Route path="annual-audit" element={<AnnualAuditHub />} />
+        <Route path="annual-audit/new" element={<AnnualAuditProjectSetup />} />
+        <Route path="annual-audit/:projectCode" element={<AnnualAuditProjectSetup />} />
         <Route path="special-audit" element={<SpecialAuditWorkbench />} />
         <Route path="special-audit/new" element={<SpecialAuditNew />} />
         <Route path="special-audit/:caseId" element={<SpecialAuditWorkbench />} />

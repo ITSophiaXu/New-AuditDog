@@ -6,6 +6,29 @@ Palantir Foundry 风格的「本体 + 智能体」原型平台，面向会计师
 > 此仓库 fork 自 `leizhai2025/pilot-demo`，并集成了 **甲会计师事务所审计本体 + 甲公司 2025 年度案例底稿填写过程**（位于 `backend/data/donglin/` 与 `backend/app/donglin/`）。
 > 上游为通用骨架；本仓库为真实案例落地。
 
+## 年审 Agent E2E 最小产品
+
+首页点击“创建年审项目”后，可按四步完成：
+
+1. 录入被审计单位、期间、行业和项目组信息。
+2. 上传账套数据与客户补充材料；文件按项目和版本归档。
+3. 确认适用会计准则、PM、TE、明显微小金额和总体审计策略。
+4. 按依赖顺序执行计划、风险评估、全科目审计、财务报表和附注生成。
+
+工作台左侧列出计划、风险评估、各待审科目和报告底稿；中间以 Excel 风格展示审定表、明细表、账龄、审计程序、四张主表和附注；右侧集中展示审计师待办、执行方法、准则依据和 Agent 对话。单张底稿可导出为 XLSX，全项目可导出为 ZIP。
+
+内置 `ENG-JSDW-2025` 江苏大王样例，可从首页直接进入，也可在新建项目时选择载入样例资料。
+
+### 年审项目 API
+
+- `POST /api/annual-audit/projects` — 创建项目和标准底稿目录
+- `GET/PATCH /api/annual-audit/projects/{code}` — 查询或更新项目
+- `POST /api/annual-audit/projects/{code}/materials` — 上传账套或补充材料
+- `POST /api/annual-audit/projects/{code}/run` — 执行年审工作流；默认保留已有底稿，可用 `overwrite_existing=true` 明确重建
+- `PATCH /api/annual-audit/projects/{code}/tasks/{task_id}` — 记录人工处理结论
+- `GET /api/annual-audit/projects/{code}/papers/{index}/export` — 导出单张底稿
+- `GET /api/annual-audit/projects/{code}/export` — 导出全部底稿
+
 ## 甲会计师事务所本体扩展
 
 ### 本体规模（接入数据库后）
@@ -131,7 +154,7 @@ npm install
 npm run dev
 ```
 
-打开 <http://127.0.0.1:5173>。
+打开 <http://127.0.0.1:5174>。
 
 ## LLM 配置
 
@@ -182,6 +205,7 @@ audit-ontology/
 ## 已知限制（v1）
 
 - 无登录 / 多租户 / 操作审计日志
+- 自定义项目已支持文件归档、参数确认、标准底稿生成和人工任务闭环；账套字段识别与审计程序结果目前为确定性原型，生产使用前需接入真实账套解析、抽样、函证和证据校验服务
 - 规则评估为占位实现（每条规则默认通过）；真实校验逻辑应在 `agents/runner.py:apply_rule` 内
 - MCP 调用为 stub —— 没有真实启动外部 server。`tools` 列表来自数据库种子
 - 仅简体中文；i18n 留作 v2

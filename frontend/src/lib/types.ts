@@ -413,3 +413,65 @@ export interface ReportReviewSummary {
   finding_count: number
   high_count: number
 }
+
+// ---------- Annual audit product workflow ----------
+
+export interface AnnualAuditProjectPayload {
+  client_name: string
+  year: number
+  period_start: string
+  period_end: string
+  industry: string
+  credit_code: string
+  accounting_standard: string
+  report_framework: string
+  materiality_basis: string
+  pm: number
+  te: number
+  trivial_threshold: number
+  audit_strategy: string
+  first_year: boolean
+  partner: string
+  manager: string
+  preparer: string
+  reviewer: string
+  report_date: string
+  notes: string
+  use_demo_data: boolean
+}
+
+export interface AnnualAuditRequirement {
+  key: string
+  label: string
+  required: boolean
+  status: 'ready' | 'missing'
+  count: number
+}
+
+export interface AnnualAuditMetrics {
+  paper_count: number
+  ai_filled_papers: number
+  completed_papers: number
+  open_tasks: number
+  account_set_files: number
+  supplementary_files: number
+}
+
+export interface AnnualAuditProjectSnapshot {
+  project: ObjectInstance
+  materials: ObjectInstance[]
+  tasks: ObjectInstance[]
+  papers: ObjectInstance[]
+  requirements: AnnualAuditRequirement[]
+  metrics: AnnualAuditMetrics
+  first_paper_id: number | null
+}
+
+export interface AnnualAuditRunResult {
+  ok: boolean
+  engagement_code: string
+  filled_papers: number
+  task_count: number
+  first_paper_id: number | null
+  workflow_status: string
+}

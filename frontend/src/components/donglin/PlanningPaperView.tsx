@@ -9,6 +9,10 @@ interface Props {
   paperIndex: string
   paperName: string
   paperData: any
+  entityName?: string
+  periodEnd?: string
+  accountingStandard?: string
+  firmName?: string
   /** 当前选中的 sheet_data key（来自左侧导航 ?sheet= 参数）*/
   activeSheet?: string | null
   onActiveSheetChange?: (sheet: string) => void
@@ -132,6 +136,15 @@ const FIELD_LABELS: Record<string, string> = {
   procedure: '审计程序', status: '状态', responsible: '责任方',
   account_no: '账号', confirmed: '已确认',
   common_risk_assessment: '风险评估', common_conclusion_text: '结论说明',
+  subject_name: '审计科目', audit_cycle: '业务循环',
+  opening_balance: '期初余额', closing_balance: '期末余额',
+  proposed_adjustment: '拟议调整',
+  trivial_threshold: '明显微小金额', audit_conclusion: '审计结论',
+  ledger_detail: '科目明细表', audit_procedures: '审计程序执行表',
+  inventory_aging: '存货库龄分析', pbc_status: '客户资料清单',
+  audit_plan: '总体审计计划', financial_statement: '财务报表',
+  tie_out_checks: '报表勾稽检查', notes_index: '附注目录',
+  disclosure_checks: '披露完整性检查', items: '调整与错报事项',
 }
 
 function L(key: string): string {
@@ -272,9 +285,10 @@ const firmCell: React.CSSProperties = { padding: '3px 12px', borderRight: '1px s
 const metaLabel: React.CSSProperties = { padding: '3px 8px', textAlign: 'right', fontSize: 11, color: '#64748b', whiteSpace: 'nowrap' }
 const metaVal: React.CSSProperties = { padding: '3px 8px', fontSize: 11.5, color: '#1e293b', minWidth: 100 }
 
-function ExcelHeader({ paperIndex, paperName, meta }: {
+function ExcelHeader({ paperIndex, paperName, firmName, meta }: {
   paperIndex: string
   paperName: string
+  firmName: string
   meta: { entity: string; period: string; preparer: string; reviewer: string; preparedAt: string; reviewedAt: string }
 }) {
   return (
@@ -283,7 +297,7 @@ function ExcelHeader({ paperIndex, paperName, meta }: {
         <tbody>
           <tr>
             <td style={{ ...firmCell, width: '70%' }}>
-              <strong style={{ color: '#1e3a8a' }}>甲会计师事务所有限公司</strong>
+              <strong style={{ color: '#1e3a8a' }}>{firmName}</strong>
             </td>
             <td style={metaLabel}>编&nbsp;&nbsp;制：</td>
             <td style={metaVal}>{meta.preparer}</td>
@@ -327,7 +341,17 @@ function ExcelHeader({ paperIndex, paperName, meta }: {
 // ---- 主组件 ----
 const PAPER_META_KEYS = new Set(['preparer', 'prepared_at', 'reviewer', 'reviewed_at'])
 
-export default function PlanningPaperView({ paperIndex, paperName, paperData, activeSheet, onActiveSheetChange }: Props) {
+export default function PlanningPaperView({
+  paperIndex,
+  paperName,
+  paperData,
+  entityName,
+  periodEnd,
+  accountingStandard,
+  firmName = '年审Agent · 审计工作底稿',
+  activeSheet,
+  onActiveSheetChange,
+}: Props) {
   const sheetData = (paperData?.sheet_data || {}) as Record<string, any>
   // 过滤掉编制者等元数据 key，只保留底稿内容 key
   const allKeys = Object.keys(sheetData).filter(k => !PAPER_META_KEYS.has(k))
@@ -338,11 +362,11 @@ export default function PlanningPaperView({ paperIndex, paperName, paperData, ac
   const status = paperData?.review_status || 'AI 初稿'
   const filledBy = sheetData?.preparer || paperData?.filled_by || 'AI Agent'
   const filledAt = sheetData?.prepared_at?.slice(0, 10) || paperData?.filled_at?.slice(0, 10) || ''
-  const entity = (sheetData?.company_info?.name) || '甲公司（通风机械）'
+  const entity = entityName || sheetData?.company_info?.client_name || sheetData?.company_info?.name || '被审计单位'
 
   const meta = {
     entity,
-    period: '2025-12-31',
+    period: periodEnd || paperData?.period_end || '2025-12-31',
     preparer: filledBy,
     preparedAt: filledAt || '2026-02-28',
     reviewer: '项目经理',
@@ -395,6 +419,13 @@ export default function PlanningPaperView({ paperIndex, paperName, paperData, ac
           })}
         </div>
       )}
+
+      <ExcelHeader
+        paperIndex={paperIndex}
+        paperName={accountingStandard ? `${paperName} · ${accountingStandard}` : paperName}
+        firmName={firmName}
+        meta={meta}
+      />
 
       {/* Sections */}
       <div className="divide-y divide-slate-100">

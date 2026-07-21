@@ -25,6 +25,7 @@ frontend/vite.config.js
 backend/data/*.db
 backend/data/*.db-*
 backend/data/evidence/*
+backend/data/annual_audit_uploads/*
 
 # Editor
 .vscode/

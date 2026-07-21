@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   ClipboardList, Sparkles, Building2,
   FileSpreadsheet, ChevronLeft, ChevronUp, ChevronDown,
   ChevronRight, MessageSquare, RefreshCw, AlertTriangle,
   PanelRightClose, PanelRightOpen, PanelLeftClose, PanelLeftOpen,
+  BookOpen, Bot, CheckCircle2, Download, ListTodo, Loader2, Play, Settings, UploadCloud,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { Card } from '@/components/ui/Card'
@@ -27,6 +28,7 @@ import WalkthroughPaperView from '@/components/donglin/WalkthroughPaperView'
 import WalkthroughTaskPanel from '@/components/donglin/WalkthroughTaskPanel'
 import WalkthroughChatPanel from '@/components/donglin/WalkthroughChatPanel'
 import { type QuoteRef } from '@/components/agent/ChatPanel'
+import AnnualAuditTaskPanel from '@/components/donglin/AnnualAuditTaskPanel'
 
 
 // ─── 阶段 → 类别（letter）映射 ──────────────────────────────
@@ -159,7 +161,15 @@ export default function WorkingPaperWorkbench() {
   const activePaper = papers.find((p) => p.id === activeId)
   const activeEngCode = (activePaper?.data as any)?.engagement_code as string | undefined
   const activeEngagement = engagements.find((e) => (e.data as any)?.code === activeEngCode)
+  const activeEngagementData = (activeEngagement?.data || {}) as any
   const isBanmuProject = activeEngCode === 'ENG-BANMU-2024'
+  const { data: annualAuditProject } = useQuery({
+    queryKey: ['annual-audit-project', activeEngCode],
+    queryFn: () => api.getAnnualAuditProject(activeEngCode!),
+    enabled: !!activeEngCode && activeEngagementData.project_type === 'annual_audit',
+    retry: false,
+  })
+  const isAnnualAuditProject = (annualAuditProject?.project.data as any)?.project_type === 'annual_audit'
 
   // 项目切换器
   const [showProjectSwitcher, setShowProjectSwitcher] = useState(false)
@@ -329,15 +339,15 @@ export default function WorkingPaperWorkbench() {
     setSearchParams(next, { replace: true })
   }
 
-  // 右侧 tab + 收起 — 2 个: 任务 / 对话
-  const [rightTab, setRightTab] = useState<'rules' | 'audit'>('rules')
+  // 右侧 tab + 收起 — 待办 / 方法准则 / Agent
+  const [rightTab, setRightTab] = useState<'tasks' | 'knowledge' | 'agent'>('tasks')
   const [rightCollapsed, setRightCollapsed] = useState<boolean>(false)
 
   // 任务区域"询问"按钮 → 切换到对话区域并携带引用
   const [pendingChatQuote, setPendingChatQuote] = useState<QuoteRef | undefined>()
   function handleAskInChat(quote: QuoteRef) {
     setPendingChatQuote(quote)
-    setRightTab('audit')
+    setRightTab('agent')
     setRightCollapsed(false)
   }
   useEffect(() => {
@@ -368,8 +378,13 @@ export default function WorkingPaperWorkbench() {
   const isActiveDonglinPaper = !!paper && isDonglinPaper(paper.data as any)
   // 有 sheet_data 但不是 5 张 demo → 计划底稿通用视图
   const hasSheetData = !!paper && Object.keys((paper?.data as any)?.sheet_data || {}).length > 0
-  const isPlanningPaper = isActiveDonglinPaper && !isActiveDonglin && hasSheetData && !isFreeform
-  const isActiveDonglinEmpty = isActiveDonglinPaper && !isActiveDonglin && !isPlanningPaper && !isFreeform
+  const isPlanningPaper = !isActiveDonglin && hasSheetData && !isFreeform && !isWalkthrough
+  const isActiveDonglinEmpty = (
+    isActiveDonglinPaper
+    || isAnnualAuditProject
+    || activeEngagementData.project_type === 'annual_audit'
+  )
+    && !isActiveDonglin && !isPlanningPaper && !isFreeform && !isWalkthrough
   const isBanmuPaper = !!paper && (paper.data as any)?.engagement_code === 'ENG-BANMU-2024'
   const isJsdwPlanningPaper = !!paper && (paper.data as any)?.engagement_code === 'ENG-JSDW-2025'
     && ['Y1','Y2','Y3','Y4','Y5','Y8','X1','X4'].includes((paper.data as any)?.index)
@@ -385,7 +400,7 @@ export default function WorkingPaperWorkbench() {
       qc.invalidateQueries({ queryKey: ['object', paper.id] })
       qc.invalidateQueries({ queryKey: ['objects', 'FillDecision'] })
       qc.invalidateQueries({ queryKey: ['objects', 'WorkingPaper'] })
-      setRightTab('audit')
+      setRightTab('tasks')
       setRightCollapsed(false)
     } catch (e: any) {
       alert(`填稿失败：${e.message}`)
@@ -438,12 +453,42 @@ export default function WorkingPaperWorkbench() {
       qc.invalidateQueries({ queryKey: ['object', paper.id] })
       qc.invalidateQueries({ queryKey: ['objects', 'FillDecision'] })
       qc.invalidateQueries({ queryKey: ['objects', 'WorkingPaper'] })
-      setRightTab('audit')
+      setRightTab('tasks')
       setRightCollapsed(false)
     } catch (e: any) {
       alert(`填稿失败：${e.message}`)
     } finally {
       setFillingPaper(false)
+    }
+  }
+
+  const [runningWorkflow, setRunningWorkflow] = useState(false)
+  async function handleRunAnnualAudit() {
+    if (!activeEngCode) return
+    const overwriteExisting = (annualAuditProject?.metrics.ai_filled_papers || 0) > 0
+    if (
+      overwriteExisting
+      && !window.confirm('重新执行将覆盖 Agent 已生成的底稿内容。审计师已手工修改的内容也会被重建，是否继续？')
+    ) {
+      return
+    }
+    setRunningWorkflow(true)
+    try {
+      const result = await api.runAnnualAudit(activeEngCode, overwriteExisting)
+      await qc.invalidateQueries({ queryKey: ['objects', 'Engagement'] })
+      await qc.invalidateQueries({ queryKey: ['objects', 'WorkingPaper'] })
+      await qc.invalidateQueries({ queryKey: ['objects', 'AuditTask'] })
+      await qc.invalidateQueries({ queryKey: ['annual-audit-project', activeEngCode] })
+      if (activeId) await qc.invalidateQueries({ queryKey: ['object', activeId] })
+      if (!activeId && result.first_paper_id) {
+        nav(`/workbench/${result.first_paper_id}?sheet=summary`)
+      }
+      setRightTab('tasks')
+      setRightCollapsed(false)
+    } catch (e: any) {
+      alert(`年审工作流执行失败：${e.message}`)
+    } finally {
+      setRunningWorkflow(false)
     }
   }
 
@@ -458,6 +503,91 @@ export default function WorkingPaperWorkbench() {
         totalPapers={currentProjectPapers.length}
         statusCounts={statusCounts}
       />
+      {isAnnualAuditProject && activeEngCode && annualAuditProject && (
+        <div className="shrink-0 border-b border-slate-200 bg-white">
+          <div className="px-4 py-2 flex items-center gap-1.5 border-b border-slate-100">
+            <Link to="/annual-audit" className="text-[10px] font-semibold text-brand-700 mr-1 hover:underline">
+              年审 E2E
+            </Link>
+            <Link to={`/annual-audit/${encodeURIComponent(activeEngCode)}?step=0`}>
+              <AnnualJourneyStep number={1} label="创建项目" done icon={<Settings size={11} />} />
+            </Link>
+            <span className="text-slate-300">→</span>
+            <Link to={`/annual-audit/${encodeURIComponent(activeEngCode)}?step=1`}>
+              <AnnualJourneyStep
+                number={2}
+                label="上传材料"
+                done={annualAuditProject.metrics.account_set_files > 0}
+                icon={<UploadCloud size={11} />}
+              />
+            </Link>
+            <span className="text-slate-300">→</span>
+            <Link to={`/annual-audit/${encodeURIComponent(activeEngCode)}?step=2`}>
+              <AnnualJourneyStep
+                number={3}
+                label="计划参数"
+                done={annualAuditProject.requirements.some((item) => item.key === 'planning' && item.status === 'ready')}
+                icon={<BookOpen size={11} />}
+              />
+            </Link>
+            <span className="text-slate-300">→</span>
+            <button onClick={handleRunAnnualAudit} disabled={runningWorkflow}>
+              <AnnualJourneyStep
+                number={4}
+                label={runningWorkflow
+                  ? '执行中…'
+                  : annualAuditProject.metrics.ai_filled_papers > 0
+                    ? '重新执行审计'
+                    : '执行审计'}
+                done={annualAuditProject.metrics.ai_filled_papers > 0}
+                active={runningWorkflow}
+                icon={runningWorkflow ? <Loader2 size={11} className="animate-spin" /> : <Play size={11} />}
+              />
+            </button>
+            <span className="text-slate-300">→</span>
+            <button onClick={() => { setRightTab('tasks'); setRightCollapsed(false) }}>
+              <AnnualJourneyStep
+                number={5}
+                label={`复核交付${annualAuditProject.metrics.open_tasks ? ` · ${annualAuditProject.metrics.open_tasks}待办` : ''}`}
+                done={annualAuditProject.metrics.ai_filled_papers > 0 && annualAuditProject.metrics.open_tasks === 0}
+                active={annualAuditProject.metrics.open_tasks > 0}
+                icon={<CheckCircle2 size={11} />}
+              />
+            </button>
+            <span className="ml-auto rounded bg-brand-50 px-2 py-1 text-[10px] font-medium text-brand-700">
+              {(annualAuditProject.project.data as any)?.workflow_status || '待执行'}
+            </span>
+            <a
+              href={api.annualAuditPackageExportUrl(activeEngCode)}
+              className="h-7 px-2 rounded border border-slate-200 bg-white text-[10px] text-slate-600 hover:bg-slate-50 inline-flex items-center gap-1"
+            >
+              <Download size={11} /> 导出全部
+            </a>
+          </div>
+          <div className="px-4 py-1.5 flex items-center gap-2 text-[10px] text-slate-500">
+            <span className="font-semibold text-slate-700">当前项目</span>
+            <span>{activeEngagement?.display_name}</span>
+            {annualAuditProject.requirements.map((item) => (
+              <span
+                key={item.key}
+                className={cn(
+                  'rounded border px-1.5 py-0.5',
+                  item.status === 'ready'
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                    : 'border-rose-200 bg-rose-50 text-rose-700',
+                )}
+              >
+                {item.status === 'ready' ? '✓' : '!'} {item.label}
+              </span>
+            ))}
+            <span>
+              {(annualAuditProject.project.data as any)?.accounting_standard || '准则待确认'}
+              {' · '}PM ¥{Number((annualAuditProject.project.data as any)?.pm || 0).toLocaleString()}
+              {' · '}TE ¥{Number((annualAuditProject.project.data as any)?.te || 0).toLocaleString()}
+            </span>
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 flex min-h-0">
         {/* Left: 4 级树 (可收起) */}
@@ -860,6 +990,9 @@ export default function WorkingPaperWorkbench() {
                   <div className="flex items-center gap-2 mb-1">
                     <h1 className="text-xl font-semibold text-slate-900">{paper.display_name}</h1>
                     <span className="font-mono text-xs text-slate-500">{(paper.data as any)?.index}</span>
+                    {(paper.data as any)?.cycle && (
+                      <Badge tone="neutral" className="!h-5">{(paper.data as any)?.cycle}</Badge>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-500">
                     <span>项目：{engByCode((paper.data as any)?.engagement_code || '—')}</span>
@@ -875,6 +1008,14 @@ export default function WorkingPaperWorkbench() {
                     )}
                   </div>
                 </div>
+                {isAnnualAuditProject && activeEngCode && (
+                  <a
+                    href={api.annualAuditPaperExportUrl(activeEngCode, (paper.data as any)?.index || String(paper.id))}
+                    className="h-8 px-3 rounded-md border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50 inline-flex items-center gap-1.5"
+                  >
+                    <Download size={13} /> 下载本底稿
+                  </a>
+                )}
                 <Badge
                   tone={
                     currentPaperState === '完成' ? 'green'
@@ -893,7 +1034,7 @@ export default function WorkingPaperWorkbench() {
                 <div className="flex items-center gap-2">
                   {pendingDecisionsForPaper.length > 0 && (
                     <button
-                      onClick={() => { setRightTab('audit'); setRightCollapsed(false) }}
+                      onClick={() => { setRightTab('tasks'); setRightCollapsed(false) }}
                       className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800 hover:bg-amber-100 transition-colors"
                     >
                       <AlertTriangle size={14} className="shrink-0 text-amber-500" />
@@ -923,6 +1064,11 @@ export default function WorkingPaperWorkbench() {
                   paperCode={activeDonglinCode}
                   paperId={paper.id}
                   paperData={paper.data}
+                  engagementCode={activeEngCode}
+                  entityName={activeEngagementData.client_name || activeEngagementData.company_name}
+                  periodStart={activeEngagementData.period_start}
+                  periodEnd={activeEngagementData.period_end || activeEngagementData.period}
+                  refillEnabled={activeEngCode === 'ENG-JSDW-2025'}
                   activeSheetProp={activeSheetParam}
                   onActiveSheetChange={(s) => setActiveSheetParam(s)}
                 />
@@ -944,6 +1090,9 @@ export default function WorkingPaperWorkbench() {
                   paperIndex={(paper.data as any)?.index || ''}
                   paperName={paper.display_name || ''}
                   paperData={paper.data}
+                  entityName={activeEngagementData.client_name || activeEngagementData.company_name}
+                  periodEnd={activeEngagementData.period_end || activeEngagementData.period}
+                  accountingStandard={activeEngagementData.accounting_standard}
                   activeSheet={activeSheetParam}
                   onActiveSheetChange={(s) => setActiveSheetParam(s)}
                 />
@@ -964,7 +1113,9 @@ export default function WorkingPaperWorkbench() {
                         <span className="font-mono px-1.5 py-0.5 mx-1 rounded bg-slate-100">
                           {(paper.data as any)?.index} {paper.display_name?.replace(/^[A-Z]+\d*\s+/, '')}
                         </span>
-                        {isBanmuPaper
+                        {(isAnnualAuditProject || activeEngagementData.project_type === 'annual_audit')
+                          ? '请先完成账套与客户材料上传、计划参数确认，再执行年审工作流。Agent 将按依赖顺序生成本底稿及相关审计任务。'
+                          : isBanmuPaper
                           ? '点击下方按钮，AI 将根据己公司账套数据和甲所知识自动预填此底稿，遇到需要人工判断的节点会暂停等待。'
                           : isJsdwPlanningPaper
                           ? '点击下方按钮，AI 将根据甲公司账套数据和甲所知识自动预填此底稿，遇到需要人工判断（如适用会计准则）的节点会暂停等待。'
@@ -974,7 +1125,29 @@ export default function WorkingPaperWorkbench() {
                         }
                       </div>
                       <div className="flex items-center gap-2">
-                        {(isBanmuPaper || isJsdwPlanningPaper) ? (
+                        {(isAnnualAuditProject || activeEngagementData.project_type === 'annual_audit') ? (
+                          <>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              disabled={runningWorkflow}
+                              onClick={handleRunAnnualAudit}
+                            >
+                              {runningWorkflow
+                                ? <><Loader2 size={13} className="animate-spin" /> 正在执行年审工作流…</>
+                                : <><Play size={13} /> 执行年审工作流</>
+                              }
+                            </Button>
+                            {activeEngCode && (
+                              <Link
+                                to={`/annual-audit/${encodeURIComponent(activeEngCode)}?step=1`}
+                                className="text-xs text-brand-700 hover:underline inline-flex items-center gap-1"
+                              >
+                                返回上传材料与计划设置 →
+                              </Link>
+                            )}
+                          </>
+                        ) : (isBanmuPaper || isJsdwPlanningPaper) ? (
                           <Button
                             variant="primary"
                             size="sm"
@@ -997,11 +1170,15 @@ export default function WorkingPaperWorkbench() {
                             <Sparkles size={13} /> 让 Agent 用本体知识填写
                           </Button>
                         )}
-                        {!isBanmuPaper && !isJsdwPlanningPaper && (
+                        {!isAnnualAuditProject
+                          && activeEngagementData.project_type !== 'annual_audit'
+                          && !isBanmuPaper
+                          && !isJsdwPlanningPaper
+                          && (
                           <a href="/ontology" className="text-xs text-brand-700 hover:underline inline-flex items-center gap-1">
                             查看相关本体对象 →
                           </a>
-                        )}
+                          )}
                       </div>
                     </div>
                   </div>
@@ -1025,26 +1202,34 @@ export default function WorkingPaperWorkbench() {
                 <PanelRightOpen size={14} />
               </button>
               <div className="w-6 h-px bg-slate-200 my-1" />
-              <button onClick={() => { setRightTab('rules'); setRightCollapsed(false) }}
-                      className={cn('p-1.5 rounded text-slate-500 hover:text-violet-700 hover:bg-violet-50', rightTab === 'rules' && 'text-violet-700')}
-                      title="任务"><ClipboardList size={14} /></button>
-              <button onClick={() => { setRightTab('audit'); setRightCollapsed(false) }}
-                      className={cn('p-1.5 rounded hover:bg-amber-50', rightTab === 'audit' ? 'text-amber-600' : 'text-slate-500 hover:text-amber-600')}
-                      title="对话">
+              <button onClick={() => { setRightTab('tasks'); setRightCollapsed(false) }}
+                      className={cn('p-1.5 rounded text-slate-500 hover:text-amber-700 hover:bg-amber-50', rightTab === 'tasks' && 'text-amber-700')}
+                      title="待办"><ListTodo size={14} /></button>
+              <button onClick={() => { setRightTab('knowledge'); setRightCollapsed(false) }}
+                      className={cn('p-1.5 rounded text-slate-500 hover:text-violet-700 hover:bg-violet-50', rightTab === 'knowledge' && 'text-violet-700')}
+                      title="方法准则"><BookOpen size={14} /></button>
+              <button onClick={() => { setRightTab('agent'); setRightCollapsed(false) }}
+                      className={cn('p-1.5 rounded hover:bg-brand-50', rightTab === 'agent' ? 'text-brand-600' : 'text-slate-500 hover:text-brand-600')}
+                      title="Agent">
                 <MessageSquare size={14} />
               </button>
             </div>
           ) : (
             <div className="flex border-b border-slate-200 bg-slate-50/60 shrink-0">
-              <button onClick={() => setRightTab('rules')}
+              <button onClick={() => setRightTab('tasks')}
                       className={cn('flex-1 px-2 py-2 text-[12px] font-medium flex items-center justify-center gap-1.5 border-b-2 transition-colors',
-                        rightTab === 'rules' ? 'border-violet-600 text-violet-700 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700')}>
-                <ClipboardList size={13} /> 任务
+                        rightTab === 'tasks' ? 'border-amber-500 text-amber-700 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700')}>
+                <ListTodo size={13} /> 待办
               </button>
-              <button onClick={() => setRightTab('audit')}
+              <button onClick={() => setRightTab('knowledge')}
                       className={cn('flex-1 px-2 py-2 text-[12px] font-medium flex items-center justify-center gap-1.5 border-b-2 transition-colors',
-                        rightTab === 'audit' ? 'border-amber-500 text-amber-700 bg-white' : 'border-transparent text-slate-500 hover:text-amber-600')}>
-                <MessageSquare size={13} /> 对话
+                        rightTab === 'knowledge' ? 'border-violet-600 text-violet-700 bg-white' : 'border-transparent text-slate-500 hover:text-violet-600')}>
+                <BookOpen size={13} /> 方法准则
+              </button>
+              <button onClick={() => setRightTab('agent')}
+                      className={cn('flex-1 px-2 py-2 text-[12px] font-medium flex items-center justify-center gap-1.5 border-b-2 transition-colors',
+                        rightTab === 'agent' ? 'border-brand-600 text-brand-700 bg-white' : 'border-transparent text-slate-500 hover:text-brand-600')}>
+                <Bot size={13} /> Agent
               </button>
               <button onClick={() => setRightCollapsed(true)} className="px-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 border-l border-slate-200" title="收起侧栏">
                 <PanelRightClose size={13} />
@@ -1054,7 +1239,7 @@ export default function WorkingPaperWorkbench() {
 
           {/* Tab content */}
           <div className={cn('flex-1 min-h-0 overflow-hidden', rightCollapsed && 'hidden')}>
-            {rightTab === 'rules' && (
+            {rightTab === 'tasks' && (
               isFreeform && paper ? (
                 <FreeformTaskPanel paperData={paper.data} className="h-full" />
               ) : isWalkthrough && paper ? (
@@ -1068,6 +1253,13 @@ export default function WorkingPaperWorkbench() {
                   onAskInChat={handleAskInChat}
                   className="h-full"
                 />
+              ) : isAnnualAuditProject && activeEngCode ? (
+                <AnnualAuditTaskPanel
+                  engagementCode={activeEngCode}
+                  paperIndex={paper ? (paper.data as any)?.index : undefined}
+                  onAskInChat={handleAskInChat}
+                  className="h-full"
+                />
               ) : (
                 paper && (
                   <WorkbenchKnowledgePanel
@@ -1075,12 +1267,27 @@ export default function WorkingPaperWorkbench() {
                     paperIndex={(paper.data as any)?.index}
                     paperId={paper.id}
                     isPlanningPaper={isPlanningPaper}
+                    paperData={paper.data}
+                    engagementName={activeEngagement?.display_name}
+                    accountingStandard={activeEngagementData.accounting_standard}
                     className="h-full"
                   />
                 )
               )
             )}
-            {rightTab === 'audit' && (
+            {rightTab === 'knowledge' && paper && (
+              <WorkbenchKnowledgePanel
+                paperCode={activeDonglinCode}
+                paperIndex={(paper.data as any)?.index}
+                paperId={paper.id}
+                isPlanningPaper={isPlanningPaper}
+                paperData={paper.data}
+                engagementName={activeEngagement?.display_name}
+                accountingStandard={activeEngagementData.accounting_standard}
+                className="h-full"
+              />
+            )}
+            {rightTab === 'agent' && (
               isWalkthrough && paper ? (
                 <WalkthroughChatPanel paperData={paper.data} className="h-full" />
               ) : (
@@ -1104,6 +1311,29 @@ export default function WorkingPaperWorkbench() {
 
       <CorrectionLayer />
     </div>
+  )
+}
+
+function AnnualJourneyStep({
+  number, label, done, active, icon,
+}: {
+  number: number
+  label: string
+  done?: boolean
+  active?: boolean
+  icon: ReactNode
+}) {
+  return (
+    <span className={cn(
+      'h-7 px-2 rounded-md border inline-flex items-center gap-1 text-[10px] font-medium transition-colors',
+      done && 'border-emerald-200 bg-emerald-50 text-emerald-700',
+      active && !done && 'border-amber-200 bg-amber-50 text-amber-700',
+      !done && !active && 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
+    )}>
+      <span className="font-mono text-[9px] opacity-70">{number}</span>
+      {icon}
+      {label}
+    </span>
   )
 }
 
